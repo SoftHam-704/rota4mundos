@@ -1,7 +1,7 @@
 import { prisma } from "../../config/database.js";
 import { ApiResponse } from "../../utils/apiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { logger } from "../../config/logger.js";
+import logger from "../../config/logger.js";
 
 // POST /api/sponsors/interesse  — público
 export const createInterest = asyncHandler(async (req, res) => {
