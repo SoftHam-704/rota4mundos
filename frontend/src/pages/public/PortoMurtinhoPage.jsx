@@ -1,5 +1,6 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Ruler, Calendar,
@@ -189,6 +190,73 @@ function SectionTitle({ children, light = false, className = "" }) {
 
 /* ─── page ───────────────────────────────────────────────────── */
 
+function InfograficoSection() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <section className="bg-primary-950 py-16">
+                <div className="container-custom">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7 }}
+                        className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 max-w-4xl mx-auto cursor-zoom-in group"
+                        onClick={() => setOpen(true)}
+                    >
+                        <img
+                            src="/infografico-porto-murtinho.png"
+                            alt="Infográfico editorial Porto Murtinho"
+                            className="w-full h-auto"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 rounded-full p-3">
+                                <ZoomIn className="w-6 h-6 text-white" />
+                            </div>
+                        </div>
+                    </motion.div>
+                    <p className="text-center text-white/30 text-xs mt-3">Clique para ampliar</p>
+                </div>
+            </section>
+
+            {/* Lightbox */}
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+                        onClick={() => setOpen(false)}
+                    >
+                        {/* Botão fechar */}
+                        <button
+                            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+                            onClick={() => setOpen(false)}
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+
+                        {/* Imagem ampliada */}
+                        <motion.img
+                            initial={{ scale: 0.85, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.85, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            src="/infografico-porto-murtinho.png"
+                            alt="Infográfico editorial Porto Murtinho"
+                            className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
+}
+
 export default function PortoMurtinhoPage() {
     const heroRef = useRef(null);
 
@@ -303,7 +371,7 @@ export default function PortoMurtinhoPage() {
                                 { icon: Ruler, val: "17.502 km²", sub: "Território" },
                                 { icon: MapPin, val: "437 km", sub: "de Campo Grande" },
                             ].map((s, i) => (
-                                <div key={i} className="glass-effect rounded-2xl px-5 py-3 flex items-center gap-3">
+                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
                                     <s.icon className="w-4 h-4 text-secondary-400 flex-shrink-0" />
                                     <div>
                                         <div className="text-white font-bold text-sm leading-none">{s.val}</div>
@@ -315,6 +383,9 @@ export default function PortoMurtinhoPage() {
                     </div>
                 </div>
             </section>
+
+            {/* ── INFOGRÁFICO ──────────────────────────────────── */}
+            <InfograficoSection />
 
             {/* ── RESUMO EXECUTIVO ─────────────────────────────── */}
             <section className="section-padding bg-white">

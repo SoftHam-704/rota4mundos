@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, X, Globe, ChevronDown, User, LogOut } from "lucide-react";
+
 import { useAuthStore } from "../stores/authStore.js";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -46,16 +47,18 @@ export default function Navbar() {
             <div className="container-custom">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-400 flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:shadow-primary-500/50 transition-shadow">
-                            <Globe className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="hidden sm:block">
-                            <span className={`font-display font-bold text-lg leading-tight ${isScrolled ? "text-primary-900" : "text-white"}`}>
-                                Rota Bioceânica
+                    <Link to="/" className="flex items-center gap-2.5 group">
+                        <img
+                            src="/logo-icon.png"
+                            alt="Rota 4 Mundos"
+                            className="h-8 w-8 object-contain"
+                        />
+                        <div className="hidden sm:block leading-tight">
+                            <span className={`font-display font-bold text-lg transition-colors ${isScrolled ? "text-primary-900" : "text-white"}`}>
+                                Rota 4 Mundos
                             </span>
-                            <span className={`block text-xs ${isScrolled ? "text-primary-500" : "text-white/70"}`}>
-                                Portal Oficial
+                            <span className={`block text-[10px] font-sans tracking-[0.18em] uppercase transition-colors ${isScrolled ? "text-primary-400" : "text-white/50"}`}>
+                                Bioceanic Route
                             </span>
                         </div>
                     </Link>

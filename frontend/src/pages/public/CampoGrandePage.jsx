@@ -1,12 +1,13 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Ruler, Calendar,
     Train, Fish, Trees, Leaf, Utensils, Music, Camera,
     Clock, Phone, Flame, Star, ChevronRight, Globe,
-    Building2, GraduationCap, Plane,
+    Building2, GraduationCap, Plane, ZoomIn, X,
 } from "lucide-react";
+import InfograficoCampoGrande from "../../components/infograficos/InfograficoCampoGrande.jsx";
 
 /* ─── data ──────────────────────────────────────────────────── */
 
@@ -275,6 +276,75 @@ function STitle({ children, light = false, className = "" }) {
             className={`font-display text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 ${light ? "text-white" : "text-primary-950"} ${className}`}>
             {children}
         </motion.h2>
+    );
+}
+
+/* ─── infográfico lightbox ───────────────────────────────────── */
+function InfograficoSection() {
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <section className="py-16 bg-[#0d1f35]">
+                <div className="container-custom">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-8"
+                    >
+                        <span className="text-xs font-semibold text-amber-400/70 uppercase tracking-widest">Infográfico</span>
+                        <h2 className="font-display text-2xl md:text-3xl font-bold text-white mt-1">
+                            Campo Grande em Dados
+                        </h2>
+                        <p className="text-white/40 text-sm mt-2">Clique para ampliar</p>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        onClick={() => setOpen(true)}
+                        className="cursor-zoom-in relative group"
+                    >
+                        <InfograficoCampoGrande />
+                        <div className="absolute inset-0 rounded-3xl bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3">
+                                <ZoomIn className="w-6 h-6 text-white" />
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] bg-black/92 flex items-center justify-center p-4 overflow-y-auto"
+                        onClick={() => setOpen(false)}
+                    >
+                        <button
+                            onClick={() => setOpen(false)}
+                            className="fixed top-4 right-4 z-[101] bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 transition-colors"
+                        >
+                            <X className="w-5 h-5 text-white" />
+                        </button>
+                        <motion.div
+                            initial={{ scale: 0.88, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.88, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                            className="w-full max-w-5xl my-8"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <InfograficoCampoGrande />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }
 
@@ -861,6 +931,9 @@ export default function CampoGrandePage() {
                     </div>
                 </div>
             </section>
+
+            {/* ── INFOGRÁFICO ──────────────────────────────────── */}
+            <InfograficoSection />
 
             {/* ── CTA FINAL ────────────────────────────────────── */}
             <section className="py-20 bg-gradient-to-br from-red-700 via-amber-600 to-secondary-600 relative overflow-hidden">
