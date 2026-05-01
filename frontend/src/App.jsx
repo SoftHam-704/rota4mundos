@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import ChatWidget from "./components/ChatWidget.jsx";
 import { useAuthStore } from "./stores/authStore.js";
 
 import PublicLayout from "./layouts/PublicLayout.jsx";
@@ -16,6 +17,7 @@ import ArticlesPage from "./pages/public/ArticlesPage.jsx";
 import ArticleDetailPage from "./pages/public/ArticleDetailPage.jsx";
 import LoginPage from "./pages/public/LoginPage.jsx";
 import RegisterPage from "./pages/public/RegisterPage.jsx";
+import ApoiePage from "./pages/public/ApoiePage.jsx";
 
 import DashboardPage from "./pages/admin/DashboardPage.jsx";
 import AdminCitiesPage from "./pages/admin/AdminCitiesPage.jsx";
@@ -32,6 +34,7 @@ function App() {
     return (
         <>
         <ScrollToTop />
+        <ChatWidget />
         <Routes>
             {/* Rotas públicas */}
             <Route element={<PublicLayout />}>
@@ -45,6 +48,7 @@ function App() {
                 <Route path="/noticias/:slug" element={<ArticleDetailPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/registro" element={<RegisterPage />} />
+                <Route path="/apoie" element={<ApoiePage />} />
             </Route>
 
             {/* Rotas administrativas */}

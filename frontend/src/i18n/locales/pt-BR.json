@@ -25,9 +25,20 @@
     "cities": {
         "title": "Cidades da Rota",
         "subtitle": "Pontos estratégicos de desenvolvimento",
+        "sectionTitle": "CIDADES QUE",
+        "sectionTitleHighlight": "CONTAM HISTÓRIAS",
+        "sectionDescription": "Do Pantanal ao Pacífico — Brasil, Paraguai, Argentina e Chile. Cada parada da rota carrega uma história que o mundo ainda não conhece.",
+        "routeIndicator": "Atlântico → Pacífico",
+        "viewAll": "Ver todas as cidades da rota",
         "explore": "Explorar",
         "population": "População",
-        "economy": "Economia"
+        "economy": "Economia",
+        "countries": {
+            "brazil": "Brasil",
+            "paraguay": "Paraguai",
+            "argentina": "Argentina",
+            "chile": "Chile"
+        }
     },
     "newsletter": {
         "title": "Fique por dentro",

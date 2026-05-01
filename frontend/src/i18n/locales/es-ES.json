@@ -25,9 +25,20 @@
     "cities": {
         "title": "Ciudades de la Ruta",
         "subtitle": "Puntos estratégicos de desarrollo",
+        "sectionTitle": "CIUDADES QUE",
+        "sectionTitleHighlight": "CUENTAN HISTORIAS",
+        "sectionDescription": "Del Pantanal al Pacífico — Brasil, Paraguay, Argentina y Chile. Cada parada de la ruta lleva una historia que el mundo aún no conoce.",
+        "routeIndicator": "Atlántico → Pacífico",
+        "viewAll": "Ver todas las ciudades de la ruta",
         "explore": "Explorar",
         "population": "Población",
-        "economy": "Economía"
+        "economy": "Economía",
+        "countries": {
+            "brazil": "Brasil",
+            "paraguay": "Paraguay",
+            "argentina": "Argentina",
+            "chile": "Chile"
+        }
     },
     "newsletter": {
         "title": "Manténgase informado",

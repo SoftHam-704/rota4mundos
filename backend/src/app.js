@@ -15,13 +15,22 @@ import commentRoutes from "./modules/comments/comment.routes.js";
 import newsletterRoutes from "./modules/newsletter/newsletter.routes.js";
 import settingsRoutes from "./modules/settings/settings.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
+import sponsorRoutes from "./modules/sponsors/sponsor.routes.js";
+import chatRoutes from "./modules/chat/chat.routes.js";
 
 const app = express();
 
-// Configuração de CORS
+// Configuração de CORS — aceita múltiplas origens separadas por vírgula
+const allowedOrigins = env.CORS_ORIGIN.split(",").map(o => o.trim());
 app.use(
     cors({
-        origin: env.CORS_ORIGIN,
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+                callback(null, true);
+            } else {
+                callback(new Error(`CORS bloqueado: ${origin}`));
+            }
+        },
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -63,6 +72,8 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/sponsors", sponsorRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Serve arquivos estáticos de uploads em desenvolvimento
 if (env.NODE_ENV === "development") {

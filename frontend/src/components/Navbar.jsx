@@ -1,224 +1,262 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { Menu, X, Globe, ChevronDown, User, LogOut } from "lucide-react";
-
 import { useAuthStore } from "../stores/authStore.js";
 import { motion, AnimatePresence } from "framer-motion";
 
+const NAV_LINKS = [
+    { to: "/",       label: "Home" },
+    { to: "/cidades", label: "Destinos" },
+    { to: "/noticias", label: "Notícias" },
+    { to: "/apoie",   label: "Apoie" },
+];
+
 export default function Navbar() {
-    const { t, i18n } = useTranslation();
     const { isAuthenticated, user, logout } = useAuthStore();
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isLangOpen, setIsLangOpen] = useState(false);
+    const [isScrolled, setIsScrolled]         = useState(false);
+    const [isMobileOpen, setIsMobileOpen]     = useState(false);
+    const [isLangOpen, setIsLangOpen]         = useState(false);
     const location = useLocation();
 
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 50);
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        const onScroll = () => setIsScrolled(window.scrollY > 50);
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const languages = [
-        { code: "pt-BR", label: "PT", flag: "🇧🇷" },
-        { code: "en-US", label: "EN", flag: "🇺🇸" },
-        { code: "es-ES", label: "ES", flag: "🇪🇸" },
-    ];
+    // fecha menus ao navegar
+    useEffect(() => {
+        setIsMobileOpen(false);
+        setIsLangOpen(false);
+    }, [location.pathname]);
 
-    const navLinks = [
-        { to: "/", label: t("nav.home") },
-        { to: "/cidades", label: t("nav.cities") },
-        { to: "/noticias", label: t("nav.news") },
-    ];
-
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path) =>
+        path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
     return (
         <motion.nav
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                    ? "bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-200/50"
-                    : "bg-transparent"
-                }`}
+            style={{
+                position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+                transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+                background: isScrolled
+                    ? "rgba(6,27,51,0.92)"
+                    : "transparent",
+                backdropFilter: isScrolled ? "blur(20px)" : "none",
+                borderBottom: isScrolled
+                    ? "1px solid rgba(255,255,255,0.07)"
+                    : "1px solid transparent",
+                boxShadow: isScrolled
+                    ? "0 4px 32px rgba(0,0,0,0.35)"
+                    : "none",
+            }}
         >
-            <div className="container-custom">
-                <div className="flex items-center justify-between h-20">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2.5 group">
-                        <img
-                            src="/logo-icon.png"
-                            alt="Rota 4 Mundos"
-                            className="h-8 w-8 object-contain"
-                        />
-                        <div className="hidden sm:block leading-tight">
-                            <span className={`font-display font-bold text-lg transition-colors ${isScrolled ? "text-primary-900" : "text-white"}`}>
+            <div className="container-rota">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "72px" }}>
+
+                    {/* ── Logo ── */}
+                    <Link to="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+                        <img src="/logo-icon.png" alt="Rota 4 Mundos" style={{ height: "32px", width: "32px", objectFit: "contain" }} />
+                        <div style={{ lineHeight: 1.1 }}>
+                            <span style={{
+                                fontFamily: '"Bebas Neue", sans-serif',
+                                fontSize: "1.15rem", color: "#fff",
+                                letterSpacing: "0.06em", display: "block",
+                            }}>
                                 Rota 4 Mundos
                             </span>
-                            <span className={`block text-[10px] font-sans tracking-[0.18em] uppercase transition-colors ${isScrolled ? "text-primary-400" : "text-white/50"}`}>
+                            <span style={{
+                                fontSize: "9px", color: "rgba(255,255,255,0.3)",
+                                fontFamily: "Inter, sans-serif",
+                                letterSpacing: "0.18em", textTransform: "uppercase",
+                            }}>
                                 Bioceanic Route
                             </span>
                         </div>
                     </Link>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden lg:flex items-center gap-1">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.to}
-                                to={link.to}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isActive(link.to)
-                                        ? isScrolled
-                                            ? "bg-primary-50 text-primary-600"
-                                            : "bg-white/20 text-white"
-                                        : isScrolled
-                                            ? "text-slate-600 hover:text-primary-600 hover:bg-slate-50"
-                                            : "text-white/80 hover:text-white hover:bg-white/10"
-                                    }`}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-
-                        {/* Language Switcher */}
-                        <div className="relative ml-2">
-                            <button
-                                onClick={() => setIsLangOpen(!isLangOpen)}
-                                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isScrolled ? "text-slate-600 hover:bg-slate-50" : "text-white/80 hover:bg-white/10"
-                                    }`}
-                            >
-                                <Globe className="w-4 h-4" />
-                                <span>{i18n.language.toUpperCase().split("-")[0]}</span>
-                                <ChevronDown className="w-3 h-3" />
-                            </button>
-
-                            <AnimatePresence>
-                                {isLangOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 py-2 min-w-[140px]"
-                                    >
-                                        {languages.map((lang) => (
-                                            <button
-                                                key={lang.code}
-                                                onClick={() => {
-                                                    i18n.changeLanguage(lang.code);
-                                                    setIsLangOpen(false);
-                                                }}
-                                                className={`w-full px-4 py-2 text-left text-sm hover:bg-slate-50 transition-colors flex items-center gap-2 ${i18n.language === lang.code ? "text-primary-600 font-medium" : "text-slate-600"
-                                                    }`}
-                                            >
-                                                <span>{lang.flag}</span>
-                                                <span>{lang.label}</span>
-                                            </button>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-
-                        {/* Auth Buttons */}
-                        {isAuthenticated ? (
-                            <div className="flex items-center gap-3 ml-4">
-                                {user?.role === "ADMIN" || user?.role === "EDITOR" ? (
-                                    <Link
-                                        to="/admin"
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${isScrolled
-                                                ? "bg-primary-50 text-primary-600 hover:bg-primary-100"
-                                                : "bg-white/20 text-white hover:bg-white/30"
-                                            }`}
-                                    >
-                                        {t("nav.admin")}
-                                    </Link>
-                                ) : null}
-                                <button
-                                    onClick={logout}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isScrolled
-                                            ? "text-slate-600 hover:bg-slate-50"
-                                            : "text-white/80 hover:bg-white/10"
-                                        }`}
+                    {/* ── Desktop links ── */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px" }} className="hidden-mobile">
+                        {NAV_LINKS.map((link) => {
+                            const active = isActive(link.to);
+                            return (
+                                <Link
+                                    key={link.to}
+                                    to={link.to}
+                                    style={{
+                                        padding: "7px 14px",
+                                        borderRadius: "8px",
+                                        fontSize: "13px",
+                                        fontWeight: active ? 700 : 500,
+                                        fontFamily: "Inter, sans-serif",
+                                        color: active ? "#fff" : "rgba(255,255,255,0.55)",
+                                        background: active ? "rgba(255,255,255,0.1)" : "transparent",
+                                        border: active ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent",
+                                        textDecoration: "none",
+                                        transition: "all 0.2s",
+                                        letterSpacing: link.to === "/apoie" ? "0.04em" : "normal",
+                                    }}
+                                    onMouseEnter={e => {
+                                        if (!active) {
+                                            e.currentTarget.style.color = "#fff";
+                                            e.currentTarget.style.background = "rgba(255,255,255,0.07)";
+                                        }
+                                    }}
+                                    onMouseLeave={e => {
+                                        if (!active) {
+                                            e.currentTarget.style.color = "rgba(255,255,255,0.55)";
+                                            e.currentTarget.style.background = "transparent";
+                                        }
+                                    }}
                                 >
-                                    <LogOut className="w-4 h-4" />
-                                    {t("nav.logout")}
-                                </button>
-                            </div>
-                        ) : (
-                            <Link
-                                to="/login"
-                                className={`ml-4 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${isScrolled
-                                        ? "bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/25"
-                                        : "bg-white text-primary-900 hover:bg-white/90 shadow-lg"
-                                    }`}
-                            >
-                                <span className="flex items-center gap-2">
-                                    <User className="w-4 h-4" />
-                                    {t("nav.login")}
-                                </span>
-                            </Link>
-                        )}
+                                    {link.to === "/apoie"
+                                        ? <span style={{ color: "#F4A261" }}>Apoie ✦</span>
+                                        : link.label
+                                    }
+                                </Link>
+                            );
+                        })}
+
+                        {/* auth */}
+                        <div style={{ marginLeft: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                            {isAuthenticated ? (
+                                <>
+                                    {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
+                                        <Link to="/admin" style={{
+                                            padding: "7px 14px", borderRadius: "8px",
+                                            fontSize: "13px", fontWeight: 600,
+                                            fontFamily: "Inter, sans-serif",
+                                            color: "#2A9D8F", textDecoration: "none",
+                                            border: "1px solid rgba(42,157,143,0.3)",
+                                            transition: "all 0.2s",
+                                        }}>
+                                            Admin
+                                        </Link>
+                                    )}
+                                    <button onClick={logout} style={{
+                                        display: "flex", alignItems: "center", gap: "6px",
+                                        padding: "7px 14px", borderRadius: "8px",
+                                        fontSize: "13px", fontWeight: 500,
+                                        fontFamily: "Inter, sans-serif",
+                                        color: "rgba(255,255,255,0.5)",
+                                        background: "transparent", border: "none",
+                                        cursor: "pointer", transition: "color 0.2s",
+                                    }}>
+                                        <LogOut size={14} /> Sair
+                                    </button>
+                                </>
+                            ) : (
+                                <Link to="/login" style={{
+                                    display: "flex", alignItems: "center", gap: "6px",
+                                    padding: "8px 18px", borderRadius: "10px",
+                                    fontSize: "13px", fontWeight: 700,
+                                    fontFamily: "Inter, sans-serif",
+                                    color: "#061B33", textDecoration: "none",
+                                    background: "linear-gradient(135deg, #F4A261, #E9C46A)",
+                                    transition: "opacity 0.2s",
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+                                onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                                >
+                                    <User size={13} /> Entrar
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Mobile Menu Button */}
+                    {/* ── Mobile burger ── */}
                     <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className={`lg:hidden p-2 rounded-lg transition-colors ${isScrolled ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10"
-                            }`}
+                        onClick={() => setIsMobileOpen(!isMobileOpen)}
+                        className="show-mobile"
+                        style={{
+                            background: "rgba(255,255,255,0.07)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            borderRadius: "8px", padding: "8px",
+                            color: "#fff", cursor: "pointer",
+                            display: "none",
+                        }}
                     >
-                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* ── Mobile menu ── */}
             <AnimatePresence>
-                {isMobileMenuOpen && (
+                {isMobileOpen && (
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="lg:hidden bg-white border-t border-slate-100 shadow-xl"
+                        style={{
+                            background: "rgba(6,27,51,0.97)",
+                            backdropFilter: "blur(20px)",
+                            borderTop: "1px solid rgba(255,255,255,0.07)",
+                            overflow: "hidden",
+                        }}
                     >
-                        <div className="container-custom py-4 space-y-2">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.to}
-                                    to={link.to}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`block px-4 py-3 rounded-lg text-sm font-medium ${isActive(link.to) ? "bg-primary-50 text-primary-600" : "text-slate-600 hover:bg-slate-50"
-                                        }`}
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
-                            <div className="border-t border-slate-100 pt-2 flex gap-2">
-                                {languages.map((lang) => (
-                                    <button
-                                        key={lang.code}
-                                        onClick={() => i18n.changeLanguage(lang.code)}
-                                        className={`px-3 py-2 rounded-lg text-sm ${i18n.language === lang.code ? "bg-primary-50 text-primary-600" : "text-slate-600"
-                                            }`}
+                        <div className="container-rota" style={{ padding: "16px 1.5rem 24px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                            {NAV_LINKS.map((link) => {
+                                const active = isActive(link.to);
+                                return (
+                                    <Link
+                                        key={link.to}
+                                        to={link.to}
+                                        onClick={() => setIsMobileOpen(false)}
+                                        style={{
+                                            padding: "12px 16px", borderRadius: "10px",
+                                            fontSize: "14px", fontWeight: active ? 700 : 500,
+                                            fontFamily: "Inter, sans-serif",
+                                            color: active ? "#fff" : "rgba(255,255,255,0.55)",
+                                            background: active ? "rgba(255,255,255,0.08)" : "transparent",
+                                            textDecoration: "none",
+                                        }}
                                     >
-                                        {lang.flag} {lang.label}
+                                        {link.to === "/apoie"
+                                            ? <span style={{ color: "#F4A261" }}>✦ Apoie o projeto</span>
+                                            : link.label
+                                        }
+                                    </Link>
+                                );
+                            })}
+
+                            <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", marginTop: "8px", paddingTop: "12px" }}>
+                                {isAuthenticated ? (
+                                    <button onClick={logout} style={{
+                                        display: "flex", alignItems: "center", gap: "8px",
+                                        padding: "12px 16px", borderRadius: "10px",
+                                        fontSize: "14px", color: "rgba(255,255,255,0.5)",
+                                        fontFamily: "Inter, sans-serif",
+                                        background: "none", border: "none", cursor: "pointer",
+                                    }}>
+                                        <LogOut size={15} /> Sair
                                     </button>
-                                ))}
+                                ) : (
+                                    <Link to="/login" onClick={() => setIsMobileOpen(false)} style={{
+                                        display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                                        padding: "13px", borderRadius: "12px",
+                                        fontSize: "14px", fontWeight: 700,
+                                        fontFamily: "Inter, sans-serif",
+                                        color: "#061B33", textDecoration: "none",
+                                        background: "linear-gradient(135deg, #F4A261, #E9C46A)",
+                                    }}>
+                                        <User size={15} /> Entrar
+                                    </Link>
+                                )}
                             </div>
-                            {!isAuthenticated && (
-                                <Link
-                                    to="/login"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block w-full text-center px-4 py-3 rounded-xl bg-primary-500 text-white font-semibold"
-                                >
-                                    {t("nav.login")}
-                                </Link>
-                            )}
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .hidden-mobile { display: none !important; }
+                    .show-mobile   { display: flex !important; }
+                }
+            `}</style>
         </motion.nav>
     );
 }

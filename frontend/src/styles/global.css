@@ -227,3 +227,11 @@
     min-height: 300px;
     font-family: "Inter", sans-serif;
 }
+
+/* Glass cards — dark sections */
+.city-glass-card:hover,
+.article-glass-card:hover {
+    border-color: rgba(255,255,255,0.14) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}

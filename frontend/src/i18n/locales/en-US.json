@@ -25,9 +25,20 @@
     "cities": {
         "title": "Route Cities",
         "subtitle": "Strategic development points",
+        "sectionTitle": "CITIES THAT",
+        "sectionTitleHighlight": "TELL STORIES",
+        "sectionDescription": "From the Pantanal to the Pacific — Brazil, Paraguay, Argentina and Chile. Each stop on the route carries a story the world doesn't know yet.",
+        "routeIndicator": "Atlantic → Pacific",
+        "viewAll": "See all route cities",
         "explore": "Explore",
         "population": "Population",
-        "economy": "Economy"
+        "economy": "Economy",
+        "countries": {
+            "brazil": "Brazil",
+            "paraguay": "Paraguay",
+            "argentina": "Argentina",
+            "chile": "Chile"
+        }
     },
     "newsletter": {
         "title": "Stay Updated",

@@ -10,7 +10,7 @@ const envSchema = z.object({
     DATABASE_URL: z.string().min(1, "DATABASE_URL é obrigatória"),
     JWT_SECRET: z.string().min(32, "JWT_SECRET deve ter no mínimo 32 caracteres"),
     JWT_EXPIRES_IN: z.string().default("7d"),
-    CORS_ORIGIN: z.string().default("*"),
+    CORS_ORIGIN: z.string().default("http://localhost:5173"),
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().default("us-east-1"),
@@ -20,6 +20,9 @@ const envSchema = z.object({
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     APP_BASE_URL: z.string().default("http://localhost:3333"),
+    OPENAI_API_KEY: z.string().optional(),
+    GEMINI_API_KEY: z.string().optional(),
+    AI_PROVIDER_ORDER: z.string().default("openai,gemini"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
