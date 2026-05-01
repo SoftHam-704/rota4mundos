@@ -1,0 +1,44 @@
+{
+    "nav": {
+        "home": "Início",
+        "cities": "Cidades",
+        "news": "Notícias",
+        "about": "Sobre",
+        "invest": "Invista",
+        "admin": "Admin",
+        "login": "Entrar",
+        "logout": "Sair"
+    },
+    "hero": {
+        "title": "A Ponte entre o Atlântico e o Pacífico",
+        "subtitle": "Rota Bioceânica — 4 Países, Uma História",
+        "description": "Da fronteira pantaneira de Mato Grosso do Sul às baías chilenas do Pacífico, a Rota Bioceânica atravessa povos indígenas, heranças mennonitas, folclore andino e paisagens de rara beleza em mais de 3.500 km de história e identidade viva.",
+        "ctaPrimary": "Explorar as Cidades",
+        "ctaSecondary": "Conheça a Rota",
+        "stats": {
+            "distance": "3.500 km",
+            "countries": "4 Países",
+            "cities": "12 Cidades",
+            "time": "UNESCO"
+        }
+    },
+    "cities": {
+        "title": "Cidades da Rota",
+        "subtitle": "Pontos estratégicos de desenvolvimento",
+        "explore": "Explorar",
+        "population": "População",
+        "economy": "Economia"
+    },
+    "newsletter": {
+        "title": "Fique por dentro",
+        "description": "Receba as últimas novidades sobre investimentos e oportunidades na Rota Bioceânica.",
+        "placeholder": "Seu melhor email",
+        "button": "Inscrever-se",
+        "success": "Inscrição realizada com sucesso!"
+    },
+    "footer": {
+        "rights": "Todos os direitos reservados.",
+        "contact": "Contato",
+        "partners": "Parceiros"
+    }
+}

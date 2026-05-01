@@ -1,0 +1,229 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+    ADMIN
+    EDITOR
+    LEITOR
+}
+
+enum ArticleStatus {
+    DRAFT
+    PUBLISHED
+    SCHEDULED
+    ARCHIVED
+}
+
+enum CommentStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+model User {
+    id            String    @id @default(uuid())
+    name          String
+    email         String    @unique
+    passwordHash  String
+    role          UserRole  @default(LEITOR)
+    avatarUrl     String?
+    isActive      Boolean   @default(true)
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    lastLoginAt   DateTime?
+
+    articles      Article[]
+    comments      Comment[]
+    auditLogs     AuditLog[]
+
+    @@map("users")
+}
+
+model City {
+    id           String      @id @default(uuid())
+    name         String
+    state        String
+    country      String
+    slug         String      @unique
+    description  String      @db.Text
+    history      String?     @db.Text
+    population   Int?
+    economy      String?     @db.Text
+    latitude     Decimal?    @db.Decimal(10, 7)
+    longitude    Decimal?    @db.Decimal(10, 7)
+    isHighlight  Boolean     @default(false)
+    order        Int         @default(0)
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @updatedAt
+
+    images       CityImage[]
+    statistics   CityStatistic?
+
+    @@map("cities")
+}
+
+model CityImage {
+    id        String   @id @default(uuid())
+    cityId    String
+    url       String
+    altText   String?
+    isMain    Boolean  @default(false)
+    createdAt DateTime @default(now())
+
+    city      City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+    @@map("city_images")
+}
+
+model CityStatistic {
+    id               String  @id @default(uuid())
+    cityId           String  @unique
+    gdp              Decimal? @db.Decimal(15, 2)
+    literacyRate     Decimal? @db.Decimal(5, 2)
+    lifeExpectancy   Decimal? @db.Decimal(5, 2)
+    unemploymentRate Decimal? @db.Decimal(5, 2)
+    yearData         Int?
+
+    city             City    @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+    @@map("city_statistics")
+}
+
+model Category {
+    id          String    @id @default(uuid())
+    name        String    @unique
+    slug        String    @unique
+    description String?   @db.Text
+    color       String?
+    createdAt   DateTime  @default(now())
+
+    articles    Article[]
+
+    @@map("categories")
+}
+
+model Tag {
+    id        String       @id @default(uuid())
+    name      String       @unique
+    slug      String       @unique
+    createdAt DateTime     @default(now())
+
+    articles  ArticleTag[]
+
+    @@map("tags")
+}
+
+model Article {
+    id            String        @id @default(uuid())
+    title         String
+    slug          String        @unique
+    excerpt       String?       @db.Text
+    content       String        @db.Text
+    status        ArticleStatus @default(DRAFT)
+    publishedAt   DateTime?
+    scheduledFor  DateTime?
+    featuredImage String?
+    viewCount     Int           @default(0)
+    authorId      String
+    categoryId    String?
+    lang          String        @default("pt")
+    metaTitle     String?
+    metaDesc      String?
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
+
+    author        User          @relation(fields: [authorId], references: [id])
+    category      Category?     @relation(fields: [categoryId], references: [id])
+    tags          ArticleTag[]
+    comments      Comment[]
+
+    @@map("articles")
+}
+
+model ArticleTag {
+    articleId String
+    tagId     String
+
+    article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+    tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@id([articleId, tagId])
+    @@map("article_tags")
+}
+
+model Comment {
+    id          String        @id @default(uuid())
+    articleId   String
+    userId      String?
+    authorName  String?
+    authorEmail String?
+    content     String        @db.Text
+    status      CommentStatus @default(PENDING)
+    createdAt   DateTime      @default(now())
+
+    article     Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+    user        User?         @relation(fields: [userId], references: [id])
+
+    @@map("comments")
+}
+
+model NewsletterSubscriber {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    name      String?
+    interests String[]
+    lang      String   @default("pt")
+    active    Boolean  @default(true)
+    token     String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("newsletter_subscribers")
+}
+
+model SiteSetting {
+    id          String   @id @default(uuid())
+    key         String   @unique
+    value       String   @db.Text
+    type        String   @default("string")
+    description String?
+    updatedAt   DateTime @updatedAt
+
+    @@map("site_settings")
+}
+
+model AuditLog {
+    id        String   @id @default(uuid())
+    userId    String?
+    action    String
+    entity    String
+    entityId  String?
+    metadata  String?  @db.Text
+    ipAddress String?
+    userAgent String?
+    createdAt DateTime @default(now())
+
+    user      User?    @relation(fields: [userId], references: [id])
+
+    @@map("audit_logs")
+}
+
+model Media {
+    id        String   @id @default(uuid())
+    filename  String
+    originalName String
+    mimeType  String
+    size      Int
+    url       String
+    s3Key     String?
+    folder    String   @default("uploads")
+    createdAt DateTime @default(now())
+
+    @@map("media")
+}

@@ -1,0 +1,44 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "cities": "Ciudades",
+        "news": "Noticias",
+        "about": "Nosotros",
+        "invest": "Invierta",
+        "admin": "Admin",
+        "login": "Ingresar",
+        "logout": "Salir"
+    },
+    "hero": {
+        "title": "El Puente entre el Atlántico y el Pacífico",
+        "subtitle": "Ruta Bioceánica — 4 Países, Una Historia",
+        "description": "Desde la frontera pantanera de Mato Grosso do Sul hasta las bahías chilenas del Pacífico, la Ruta Bioceánica atraviesa pueblos indígenas, herencias menonitas, folclore andino y paisajes de rara belleza en más de 3.500 km de historia e identidad viva.",
+        "ctaPrimary": "Explorar las Ciudades",
+        "ctaSecondary": "Conozca la Ruta",
+        "stats": {
+            "distance": "3.500 km",
+            "countries": "4 Países",
+            "cities": "12 Ciudades",
+            "time": "UNESCO"
+        }
+    },
+    "cities": {
+        "title": "Ciudades de la Ruta",
+        "subtitle": "Puntos estratégicos de desarrollo",
+        "explore": "Explorar",
+        "population": "Población",
+        "economy": "Economía"
+    },
+    "newsletter": {
+        "title": "Manténgase informado",
+        "description": "Reciba las últimas noticias sobre inversiones y oportunidades en la Ruta Bioceánica.",
+        "placeholder": "Su mejor correo",
+        "button": "Suscribirse",
+        "success": "¡Suscripción realizada con éxito!"
+    },
+    "footer": {
+        "rights": "Todos los derechos reservados.",
+        "contact": "Contacto",
+        "partners": "Socios"
+    }
+}
