@@ -39,6 +39,14 @@ const countries = [
                 featuredLink: "/cidades/bonito",
                 featuredTeaser: "Visibilidade de 40m, dourados mansos e uma lei de 1997 que a ONU chama de referência mundial",
             },
+            {
+                name: "Jardim",
+                essence:
+                    "Porta da Serra da Bodoquena e vizinha histórica de Bonito. Lagoa Misteriosa, Buraco das Araras e rios cristalinos formam um ecoturismo ainda mais íntimo e autêntico.",
+                highlight: "Serra da Bodoquena — aquífero calcário único no mundo",
+                featuredLink: "/cidades/jardim",
+                featuredTeaser: "A Lagoa Misteriosa, o Buraco das Araras e as águas que a geologia calcária tornou mágicas",
+            },
         ],
         signature: ["Pantanal", "Fronteira", "Ecoturismo"],
     },
@@ -58,6 +66,8 @@ const countries = [
                 essence:
                     "Portal de entrada para o Chaco. A travessia começa aqui, com presença marcante das comunidades Ayoreo e paisagens abertas que anunciam mundos distintos.",
                 highlight: "Biodiversidade única do bioma Chaco",
+                featuredLink: "/cidades/carmelo-peralta",
+                featuredTeaser: "A Ponte Bioceânica, o Rio Paraguai e o Chaco que conecta oceanos e culturas",
             },
             {
                 name: "Mariscal Estigarribia",
@@ -271,11 +281,11 @@ export default function InvestmentSection() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap justify-end gap-1.5 max-w-[160px]">
+                                    <div className="flex flex-wrap justify-end gap-1 max-w-[180px]">
                                         {country.signature.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="text-xs px-2 py-0.5 rounded-full bg-white/15 text-white/70 font-medium"
+                                                className="text-[10px] px-2 py-0.5 rounded-full bg-white/15 text-white/70 font-medium whitespace-nowrap"
                                             >
                                                 {tag}
                                             </span>
