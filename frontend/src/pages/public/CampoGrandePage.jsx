@@ -7,7 +7,6 @@ import {
     Clock, Phone, Flame, Star, ChevronRight, Globe,
     Building2, GraduationCap, Plane, ZoomIn, X,
 } from "lucide-react";
-import InfograficoCampoGrande from "../../components/infograficos/InfograficoCampoGrande.jsx";
 
 /* ─── data ──────────────────────────────────────────────────── */
 
@@ -284,35 +283,28 @@ function InfograficoSection() {
     const [open, setOpen] = useState(false);
     return (
         <>
-            <section className="py-16 bg-[#0d1f35]">
+            <section className="bg-primary-950 py-16">
                 <div className="container-custom">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-center mb-8"
-                    >
-                        <span className="text-xs font-semibold text-amber-400/70 uppercase tracking-widest">Infográfico</span>
-                        <h2 className="font-display text-2xl md:text-3xl font-bold text-white mt-1">
-                            Campo Grande em Dados
-                        </h2>
-                        <p className="text-white/40 text-sm mt-2">Clique para ampliar</p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
+                        transition={{ duration: 0.7 }}
+                        className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 max-w-4xl mx-auto cursor-zoom-in group"
                         onClick={() => setOpen(true)}
-                        className="cursor-zoom-in relative group"
                     >
-                        <InfograficoCampoGrande />
-                        <div className="absolute inset-0 rounded-3xl bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3">
+                        <img
+                            src="/infografico-campo-grande.png"
+                            alt="Infográfico editorial Campo Grande"
+                            className="w-full h-auto"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 rounded-full p-3">
                                 <ZoomIn className="w-6 h-6 text-white" />
                             </div>
                         </div>
                     </motion.div>
+                    <p className="text-center text-white/30 text-xs mt-3">Clique para ampliar</p>
                 </div>
             </section>
 
@@ -322,25 +314,26 @@ function InfograficoSection() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-black/92 flex items-center justify-center p-4 overflow-y-auto"
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
                         onClick={() => setOpen(false)}
                     >
                         <button
+                            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
                             onClick={() => setOpen(false)}
-                            className="fixed top-4 right-4 z-[101] bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 transition-colors"
                         >
-                            <X className="w-5 h-5 text-white" />
+                            <X className="w-6 h-6" />
                         </button>
-                        <motion.div
-                            initial={{ scale: 0.88, opacity: 0 }}
+                        <motion.img
+                            initial={{ scale: 0.85, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.88, opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                            className="w-full max-w-5xl my-8"
+                            exit={{ scale: 0.85, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            src="/infografico-campo-grande.png"
+                            alt="Infográfico editorial Campo Grande"
+                            className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
-                        >
-                            <InfograficoCampoGrande />
-                        </motion.div>
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -445,6 +438,9 @@ export default function CampoGrandePage() {
                     </div>
                 </div>
             </section>
+
+            {/* ── INFOGRÁFICO ──────────────────────────────────── */}
+            <InfograficoSection />
 
             {/* ── CAPITAL MORENA ───────────────────────────────── */}
             <section className="section-padding bg-white">
@@ -931,9 +927,6 @@ export default function CampoGrandePage() {
                     </div>
                 </div>
             </section>
-
-            {/* ── INFOGRÁFICO ──────────────────────────────────── */}
-            <InfograficoSection />
 
             {/* ── CTA FINAL ────────────────────────────────────── */}
             <section className="py-20 bg-gradient-to-br from-red-700 via-amber-600 to-secondary-600 relative overflow-hidden">

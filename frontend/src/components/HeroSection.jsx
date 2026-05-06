@@ -110,21 +110,22 @@ function AtmosphereCanvas() {
 /* ─── Mapa SVG da rota ──────────────────────────────────────── */
 function RouteMap() {
     const cities = [
-        { x: 68,  y: 62, label: "Porto Murtinho", sub: "Brasil",    color: "#22c55e", flag: "🇧🇷" },
-        { x: 210, y: 48, label: "Carmelo Peralta", sub: "Paraguai", color: "#2dd4bf", flag: "🇵🇾" },
-        { x: 340, y: 40, label: "Resistencia",    sub: "Argentina", color: "#60a5fa", flag: "🇦🇷" },
-        { x: 480, y: 52, label: "Mendoza",        sub: "Argentina", color: "#818cf8", flag: "🇦🇷" },
-        { x: 600, y: 42, label: "Iquique",        sub: "Chile",     color: "#f87171", flag: "🇨🇱" },
+        { x: 48,  y: 62, label: "Campo Grande",    sub: "🇧🇷 Brasil",    color: "#22c55e", above: true  },
+        { x: 160, y: 72, label: "Porto Murtinho",  sub: "🇧🇷 Brasil",    color: "#4ade80", above: false },
+        { x: 275, y: 54, label: "Carmelo Peralta", sub: "🇵🇾 Paraguai",  color: "#2dd4bf", above: true  },
+        { x: 390, y: 46, label: "Resistencia",     sub: "🇦🇷 Argentina", color: "#60a5fa", above: false },
+        { x: 505, y: 58, label: "Mendoza",         sub: "🇦🇷 Argentina", color: "#818cf8", above: true  },
+        { x: 620, y: 48, label: "Iquique",         sub: "🇨🇱 Chile",     color: "#f87171", above: false },
     ];
 
     return (
-        <div style={{ width: "100%" }}>
-            <svg viewBox="0 0 680 110" width="100%" style={{ overflow: "visible", display: "block" }}>
+        <div style={{ width: "100%", overflow: "hidden" }}>
+            <svg viewBox="0 0 680 135" width="100%" style={{ overflow: "visible", display: "block" }}>
                 <defs>
                     <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%"   stopColor="#22c55e" />
-                        <stop offset="25%"  stopColor="#2dd4bf" />
-                        <stop offset="60%"  stopColor="#60a5fa" />
+                        <stop offset="30%"  stopColor="#2dd4bf" />
+                        <stop offset="65%"  stopColor="#60a5fa" />
                         <stop offset="100%" stopColor="#f87171" />
                     </linearGradient>
                     <filter id="glow">
@@ -132,28 +133,40 @@ function RouteMap() {
                         <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                     </filter>
                 </defs>
-                <path d="M68,62 Q130,30 210,48 Q270,62 340,40 Q400,22 480,52 Q540,72 600,42"
+                <path d="M48,62 Q100,48 160,72 Q215,82 275,54 Q330,32 390,46 Q448,60 505,58 Q560,48 620,48"
                     fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" strokeLinecap="round" />
-                <path d="M68,62 Q130,30 210,48 Q270,62 340,40 Q400,22 480,52 Q540,72 600,42"
+                <path d="M48,62 Q100,48 160,72 Q215,82 275,54 Q330,32 390,46 Q448,60 505,58 Q560,48 620,48"
                     fill="none" stroke="url(#rg)" strokeWidth="2.5" strokeLinecap="round"
                     filter="url(#glow)"
                     style={{ strokeDasharray: 900, strokeDashoffset: 900, animation: "route-draw 2.8s cubic-bezier(.4,0,.2,1) forwards 1.8s" }}
                 />
                 {cities.map((c, i) => (
                     <g key={i}>
-                        <circle cx={c.x} cy={c.y} r={13} fill={c.color} opacity={0.12}
-                            style={{ animation: "pulse-dot 2.5s ease-in-out infinite", animationDelay: `${i * 0.4}s` }} />
-                        <circle cx={c.x} cy={c.y} r={7} fill={c.color} opacity={0.25} />
-                        <circle cx={c.x} cy={c.y} r={4.5} fill={c.color} filter="url(#glow)" />
-                        <circle cx={c.x} cy={c.y} r={2} fill="white" />
-                        <text x={c.x} y={c.y - 18} textAnchor="middle" fill="rgba(255,255,255,0.9)"
-                            fontSize="9" fontWeight="700" fontFamily="Inter, sans-serif" letterSpacing="0.03em">
-                            {c.label}
-                        </text>
-                        <text x={c.x} y={c.y - 9} textAnchor="middle" fill={c.color}
-                            fontSize="7.5" fontWeight="600" fontFamily="Inter, sans-serif">
-                            {c.flag} {c.sub}
-                        </text>
+                        <circle cx={c.x} cy={c.y} r={5} fill={c.color} filter="url(#glow)" />
+                        <circle cx={c.x} cy={c.y} r={2.5} fill="white" />
+                        {c.above ? (
+                            <>
+                                <text x={c.x} y={c.y - 16} textAnchor="middle" fill="rgba(255,255,255,0.92)"
+                                    fontSize="10.5" fontWeight="700" fontFamily="Inter, sans-serif" letterSpacing="0.02em">
+                                    {c.label}
+                                </text>
+                                <text x={c.x} y={c.y - 5} textAnchor="middle" fill={c.color}
+                                    fontSize="8.5" fontWeight="600" fontFamily="Inter, sans-serif">
+                                    {c.sub}
+                                </text>
+                            </>
+                        ) : (
+                            <>
+                                <text x={c.x} y={c.y + 14} textAnchor="middle" fill="rgba(255,255,255,0.92)"
+                                    fontSize="10.5" fontWeight="700" fontFamily="Inter, sans-serif" letterSpacing="0.02em">
+                                    {c.label}
+                                </text>
+                                <text x={c.x} y={c.y + 25} textAnchor="middle" fill={c.color}
+                                    fontSize="8.5" fontWeight="600" fontFamily="Inter, sans-serif">
+                                    {c.sub}
+                                </text>
+                            </>
+                        )}
                     </g>
                 ))}
             </svg>
@@ -248,7 +261,7 @@ export default function HeroSection() {
 
             {/* Conteúdo */}
             <motion.div style={{ y: contentY, opacity, position: "relative", zIndex: 20, width: "100%" }}>
-                <div className="container-rota" style={{ paddingTop: "80px", paddingBottom: "40px" }}>
+                <div className="container-rota" style={{ paddingTop: "clamp(120px, 18vh, 150px)", paddingBottom: "40px" }}>
                     <div className="hero-grid" style={{ minHeight: "calc(100svh - 160px)" }}>
 
                         {/* Coluna esquerda */}
@@ -257,7 +270,7 @@ export default function HeroSection() {
                             <motion.div
                                 initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginBottom: "28px", padding: "7px 18px", borderRadius: "100px", background: "rgba(244,162,97,0.1)", border: "1px solid rgba(244,162,97,0.28)", backdropFilter: "blur(12px)" }}
+                                style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginBottom: "clamp(18px, 3vh, 28px)", padding: "7px 18px", borderRadius: "100px", background: "rgba(244,162,97,0.1)", border: "1px solid rgba(244,162,97,0.28)", backdropFilter: "blur(12px)" }}
                             >
                                 <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#F4A261", boxShadow: "0 0 10px rgba(244,162,97,0.9)", animation: "pulse-dot 2s ease-in-out infinite", flexShrink: 0 }} />
                                 <span style={{ fontSize: "10px", fontWeight: 700, color: "#F4A261", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
@@ -274,7 +287,7 @@ export default function HeroSection() {
 
                             {/* Título linha 2 — animado */}
                             <motion.div initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, delay: 0.5 }}
-                                style={{ marginBottom: "24px", overflow: "hidden", height: "clamp(3.3rem, 7.5vw, 6.9rem)" }}>
+                                style={{ marginBottom: "clamp(14px, 2.5vh, 24px)", overflow: "hidden", height: "clamp(3.3rem, 7.5vw, 6.9rem)" }}>
                                 <AnimatePresence mode="wait">
                                     <motion.h1
                                         key={wordIdx}
@@ -293,7 +306,7 @@ export default function HeroSection() {
                             {/* Subtítulo */}
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.7 }}
-                                style={{ fontFamily: '"Lora", Georgia, serif', fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)", fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, maxWidth: "480px", marginBottom: "36px" }}
+                                style={{ fontFamily: '"Lora", Georgia, serif', fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)", fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, maxWidth: "480px", marginBottom: "clamp(22px, 3.5vh, 36px)" }}
                             >
                                 Do Pantanal ao Pacífico — a maior integração continental da América do Sul, unindo culturas, povos e mercados em 3.500 km de história viva.
                             </motion.p>
@@ -301,7 +314,7 @@ export default function HeroSection() {
                             {/* CTAs */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.85 }}
-                                style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "52px" }}
+                                style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "clamp(28px, 5vh, 52px)" }}
                             >
                                 <Link to="/cidades" className="btn-amber" style={{ fontSize: "13px", padding: "13px 28px" }}>
                                     Explorar Cidades <ArrowRight size={15} />
@@ -314,7 +327,7 @@ export default function HeroSection() {
                             {/* Stats */}
                             <motion.div
                                 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.05 }}
-                                style={{ display: "flex", gap: 0, borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: "28px" }}
+                                style={{ display: "flex", gap: 0, borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: "clamp(16px, 2.5vh, 28px)" }}
                             >
                                 {[
                                     { value: 3500, suffix: "km", label: "extensão total",    color: "#F4A261", delay: 1200 },

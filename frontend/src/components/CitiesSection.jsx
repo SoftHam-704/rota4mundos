@@ -46,6 +46,19 @@ const cities = [
         image: "/cities/bonito.png",
         routeOrder: 3,
     },
+    {
+        name: "Jardim",
+        country: "Brasil 🇧🇷",
+        state: "Mato Grosso do Sul",
+        tagline: "Portal da Serra da Bodoquena",
+        desc: "Município-sede da Serra da Bodoquena e porta de entrada histórica para Bonito. Rica em cavernas, grutas e paisagens do Planalto da Bodoquena.",
+        href: "/cidades/jardim",
+        accent: "#86efac",
+        accentRgb: "134,239,172",
+        pop: "27.245",
+        image: "/cities/jardim.png",
+        routeOrder: 4,
+    },
     // ── Paraguai ────────────────────────────────────────────────────────────
     {
         name: "Carmelo Peralta",
@@ -53,12 +66,12 @@ const cities = [
         state: "Alto Paraguay",
         tagline: "A Travessia Histórica",
         desc: "Fronteira com Porto Murtinho — onde a ponte binacional sobre o Rio Paraguai conecta dois oceanos. Epicentro da integração.",
-        href: "/cidades",
+        href: "/cidades/carmelo-peralta",
         accent: "#818cf8",
         accentRgb: "129,140,248",
         pop: "5.000",
         image: "/cities/carmelo_peralta.png",
-        routeOrder: 4,
+        routeOrder: 5,
     },
     {
         name: "Mariscal Estigarribia",
@@ -71,7 +84,7 @@ const cities = [
         accentRgb: "167,139,250",
         pop: "8.000",
         image: "/cities/mariscal_estigarribia.png",
-        routeOrder: 5,
+        routeOrder: 6,
     },
     // ── Argentina ───────────────────────────────────────────────────────────
     {
@@ -85,7 +98,7 @@ const cities = [
         accentRgb: "96,165,250",
         pop: "320.000",
         image: "/cities/jujuy.png",
-        routeOrder: 6,
+        routeOrder: 7,
     },
     // ── Chile ───────────────────────────────────────────────────────────────
     {
@@ -99,7 +112,7 @@ const cities = [
         accentRgb: "248,113,113",
         pop: "500.000",
         image: "/cities/antofagasta.png",
-        routeOrder: 7,
+        routeOrder: 8,
     },
     {
         name: "Iquique",
@@ -112,7 +125,7 @@ const cities = [
         accentRgb: "251,146,60",
         pop: "235.000",
         image: "/cities/iquique.png",
-        routeOrder: 8,
+        routeOrder: 9,
     },
 ];
 
