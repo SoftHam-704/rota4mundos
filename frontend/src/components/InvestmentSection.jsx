@@ -142,6 +142,8 @@ const countries = [
                 essence:
                     "Onde o deserto de Atacama beija o Pacífico. Forjada pelo salitre e pela mineração, hoje combina vida universitária e gastronomia marinha de alto nível.",
                 highlight: "Dualidade única: Atacama + Oceano Pacífico",
+                featuredLink: "/cidades/antofagasta",
+                featuredTeaser: "La Portada esculpida em 20 milhões de anos, o VLT que vê bilhões de anos-luz e o porto onde a travessia bioceânica encontra o Pacífico",
             },
             {
                 name: "Iquique",
