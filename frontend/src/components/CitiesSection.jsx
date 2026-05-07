@@ -126,6 +126,19 @@ const cities = [
         image: "/cities/jujuy.png",
         routeOrder: 9,
     },
+    {
+        name: "Tartagal",
+        country: "Argentina 🇦🇷",
+        state: "Salta — NOA Profundo",
+        tagline: "Fronteira Cultural do Norte Argentino",
+        desc: "Cinco povos originários ativos, floresta subtropical das Yungas, transição para o Gran Chaco. A Argentina multicultural e autêntica que nenhum guia turístico mostrou.",
+        href: "/cidades/tartagal",
+        accent: "#10b981",
+        accentRgb: "16,185,129",
+        pop: "70.000",
+        image: "/cities/tartagal.png",
+        routeOrder: 10,
+    },
     // ── Chile ───────────────────────────────────────────────────────────────
     {
         name: "Antofagasta",
@@ -138,7 +151,7 @@ const cities = [
         accentRgb: "248,113,113",
         pop: "500.000",
         image: "/cities/antofagasta.png",
-        routeOrder: 10,
+        routeOrder: 11,
     },
     {
         name: "Iquique",
@@ -151,7 +164,7 @@ const cities = [
         accentRgb: "251,146,60",
         pop: "235.000",
         image: "/cities/iquique.png",
-        routeOrder: 11,
+        routeOrder: 12,
     },
 ];
 
@@ -339,7 +352,7 @@ export default function CitiesSection() {
                     {[
                         { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 3, color: "#2A9D8F" },
                         { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
-                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 3, color: "#f43f5e" },
+                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 4, color: "#f43f5e" },
                         { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 2, color: "#f87171" },
                     ].map(({ flag, label, count, color }) => (
                         <span key={label} style={{

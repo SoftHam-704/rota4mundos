@@ -120,6 +120,8 @@ const countries = [
                 essence:
                     "Fronteira interna argentina. Presença indígena estruturante, culinária do NOA autêntica e paisagens de transição para além dos roteiros convencionais.",
                 highlight: "Povos originários e cozinha nortenha autêntica",
+                featuredLink: "/cidades/tartagal",
+                featuredTeaser: "Os Wichí, Guarani e Chorote que ainda escrevem a história cotidiana, as Yungas e o carnaval mais multicultural do NOA",
             },
         ],
         signature: ["Folclore", "Pachamama", "Patrimônio UNESCO"],
