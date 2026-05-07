@@ -112,6 +112,8 @@ const countries = [
                 essence:
                     "Quebrada de Humahuaca, Patrimônio da Humanidade. O culto à Pachamama e a cosmovisão andina marcam profundamente o calendário, a gastronomia e o modo de vida local.",
                 highlight: "UNESCO — Quebrada de Humahuaca",
+                featuredLink: "/cidades/jujuy",
+                featuredTeaser: "O Cerro de los Siete Colores, o Êxodo Jujeño de 1812 e a Pachamama que nunca parou de ser reverenciada",
             },
             {
                 name: "Tartagal",

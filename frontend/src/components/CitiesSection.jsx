@@ -114,14 +114,14 @@ const cities = [
         routeOrder: 8,
     },
     {
-        name: "San Salvador de Jujuy",
+        name: "Jujuy",
         country: "Argentina 🇦🇷",
         state: "Província de Jujuy",
-        tagline: "O Portal dos Andes",
-        desc: "Capital andina que espera aumento de 400% no tráfego de caminhões. Sede de fóruns internacionais do corredor e polo logístico emergente.",
-        href: "/cidades",
-        accent: "#60a5fa",
-        accentRgb: "96,165,250",
+        tagline: "A Alma Ancestral dos Andes",
+        desc: "Quebrada de Humahuaca (UNESCO), Cerro de los Siete Colores, Pachamama viva e 10.000 anos de memória andina. O capítulo mais espiritual da travessia bioceânica.",
+        href: "/cidades/jujuy",
+        accent: "#f43f5e",
+        accentRgb: "244,63,94",
         pop: "320.000",
         image: "/cities/jujuy.png",
         routeOrder: 9,
@@ -339,7 +339,7 @@ export default function CitiesSection() {
                     {[
                         { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 3, color: "#2A9D8F" },
                         { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
-                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 2, color: "#60a5fa" },
+                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 3, color: "#f43f5e" },
                         { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 2, color: "#f87171" },
                     ].map(({ flag, label, count, color }) => (
                         <span key={label} style={{
