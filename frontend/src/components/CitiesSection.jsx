@@ -159,12 +159,25 @@ const cities = [
         state: "Região de Tarapacá",
         tagline: "Porto Histórico e Zona Franca",
         desc: "Porto de história centenária e zona franca de referência. Integrado ao corredor como segunda grande saída chilena para o Oceano Pacífico.",
-        href: "/cidades",
+        href: "/cidades/iquique",
         accent: "#fb923c",
         accentRgb: "251,146,60",
         pop: "235.000",
         image: "/cities/iquique.png",
         routeOrder: 12,
+    },
+    {
+        name: "Mejillones",
+        country: "Chile 🇨🇱",
+        state: "Região de Antofagasta",
+        tagline: "O Porto Autêntico do Pacífico",
+        desc: "Encerramento simbólico da Rota Bioceânica. Porto artesanal, pesca centenária, frutos do mar frescos e o pôr do sol mais emocionante da travessia continental.",
+        href: "/cidades/mejillones",
+        accent: "#0891b2",
+        accentRgb: "8,145,178",
+        pop: "12.000",
+        image: "/cities/mejillones.png",
+        routeOrder: 13,
     },
 ];
 
@@ -350,10 +363,10 @@ export default function CitiesSection() {
                     display: "flex", gap: "8px", marginBottom: "32px", flexWrap: "wrap",
                 }}>
                     {[
-                        { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 3, color: "#2A9D8F" },
+                        { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 4, color: "#2A9D8F" },
                         { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
                         { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 4, color: "#f43f5e" },
-                        { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 2, color: "#f87171" },
+                        { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 3, color: "#f87171" },
                     ].map(({ flag, label, count, color }) => (
                         <span key={label} style={{
                             display: "inline-flex", alignItems: "center", gap: "6px",

@@ -150,12 +150,16 @@ const countries = [
                 essence:
                     "Da memória salitreira à zona franca. Cidade de contrastes que se reinventou sem perder sua herança de trabalho, resistência e vida costeira.",
                 highlight: "Patrimônio salitreiro + Zona Franca + Mar",
+                featuredLink: "/cidades/iquique",
+                featuredTeaser: "Humberstone UNESCO, o Massacre de Santa María de Iquique e o Cerro Dragón que domina a cidade de areia",
             },
             {
                 name: "Mejillones",
                 essence:
-                    "Porto histórico em escala humana. Mariscos frescos, cais e embarcações encerram a narrativa da travessia com autenticidade e sabor.",
+                    "Porto histórico em escala humana. Mariscos frescos, cais e embarcações encernam a narrativa da travessia com autenticidade e sabor.",
                 highlight: "Frutos do mar + Identidade marítima autêntica",
+                featuredLink: "/cidades/mejillones",
+                featuredTeaser: "O cais ao amanhecer, a camanchaca sobre o Pacífico e o pôr do sol que encerra a travessia continental",
             },
         ],
         signature: ["Pacífico", "Salitre", "Gastronomia Marinha"],

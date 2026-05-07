@@ -21,6 +21,8 @@ import SaltaPage from "./pages/public/SaltaPage.jsx";
 import JujuyPage from "./pages/public/JujuyPage.jsx";
 import TartagalPage from "./pages/public/TartagalPage.jsx";
 import AntofagastaPage from "./pages/public/AntofagastaPage.jsx";
+import IquiquePage from "./pages/public/IquiquePage.jsx";
+import MejillonesPage from "./pages/public/MejillonesPage.jsx";
 import ArticlesPage from "./pages/public/ArticlesPage.jsx";
 import ArticleDetailPage from "./pages/public/ArticleDetailPage.jsx";
 import LoginPage from "./pages/public/LoginPage.jsx";
@@ -59,6 +61,8 @@ function App() {
                 <Route path="/cidades/jujuy" element={<JujuyPage />} />
                 <Route path="/cidades/tartagal" element={<TartagalPage />} />
                 <Route path="/cidades/antofagasta" element={<AntofagastaPage />} />
+                <Route path="/cidades/iquique" element={<IquiquePage />} />
+                <Route path="/cidades/mejillones" element={<MejillonesPage />} />
                 <Route path="/cidades/:slug" element={<CityDetailPage />} />
                 <Route path="/noticias" element={<ArticlesPage />} />
                 <Route path="/noticias/:slug" element={<ArticleDetailPage />} />
