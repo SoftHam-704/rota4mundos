@@ -86,6 +86,19 @@ const cities = [
         image: "/cities/mariscal_estigarribia.png",
         routeOrder: 6,
     },
+    {
+        name: "Filadelfia",
+        country: "Paraguai 🇵🇾",
+        state: "Boquerón",
+        tagline: "A Alma Europeia do Chaco",
+        desc: "Colônia mennonita que transformou o deserto em polo agroindustrial. Queijos, embutidos artesanais e a Cooperativa Fernheim — referência continental em cooperativismo.",
+        href: "/cidades/filadelfia",
+        accent: "#84cc16",
+        accentRgb: "132,204,22",
+        pop: "14.000",
+        image: "/cities/filadelfia.png",
+        routeOrder: 7,
+    },
     // ── Argentina ───────────────────────────────────────────────────────────
     {
         name: "San Salvador de Jujuy",
@@ -98,7 +111,7 @@ const cities = [
         accentRgb: "96,165,250",
         pop: "320.000",
         image: "/cities/jujuy.png",
-        routeOrder: 7,
+        routeOrder: 8,
     },
     // ── Chile ───────────────────────────────────────────────────────────────
     {
@@ -112,7 +125,7 @@ const cities = [
         accentRgb: "248,113,113",
         pop: "500.000",
         image: "/cities/antofagasta.png",
-        routeOrder: 8,
+        routeOrder: 9,
     },
     {
         name: "Iquique",
@@ -125,7 +138,7 @@ const cities = [
         accentRgb: "251,146,60",
         pop: "235.000",
         image: "/cities/iquique.png",
-        routeOrder: 9,
+        routeOrder: 10,
     },
 ];
 
@@ -312,7 +325,7 @@ export default function CitiesSection() {
                 }}>
                     {[
                         { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 3, color: "#2A9D8F" },
-                        { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 2, color: "#818cf8" },
+                        { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
                         { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 1, color: "#60a5fa" },
                         { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 2, color: "#f87171" },
                     ].map(({ flag, label, count, color }) => (
