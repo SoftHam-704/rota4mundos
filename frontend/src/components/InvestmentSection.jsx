@@ -74,6 +74,8 @@ const countries = [
                 essence:
                     "65% da população é indígena. O Arete Guasu — o Carnaval Guarani — é celebração de força simbólica rara, ligando cosmogonia ancestral a pertencimento coletivo.",
                 highlight: "Arete Guasu — Carnaval Guarani ancestral",
+                featuredLink: "/cidades/mariscal-estigarribia",
+                featuredTeaser: "O cruzamento PY-15 + PY-09, o Parque Enciso e os horizontes infinitos do Chaco Profundo",
             },
             {
                 name: "Filadelfia",
