@@ -104,6 +104,8 @@ const countries = [
                 essence:
                     "Capital do folclore nortenho. Nas peñas folclóricas, zamba e chacarera soam ao vivo enquanto empanadas salteñas e locro chegam à mesa — tradição viva, não produto turístico.",
                 highlight: "Peñas folclóricas — zamba e chacarera ao vivo",
+                featuredLink: "/cidades/salta",
+                featuredTeaser: "O Tren a las Nubes a 4.220m, as peñas que não fecham e o centro colonial que a Espanha deixou intacto",
             },
             {
                 name: "Jujuy",

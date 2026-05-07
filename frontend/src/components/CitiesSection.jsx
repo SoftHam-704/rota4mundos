@@ -101,6 +101,19 @@ const cities = [
     },
     // ── Argentina ───────────────────────────────────────────────────────────
     {
+        name: "Salta",
+        country: "Argentina 🇦🇷",
+        state: "Província de Salta",
+        tagline: "La Linda — Capital do Folclore Andino",
+        desc: "Centro histórico colonial, Tren a las Nubes a 4.220m de altitude e peñas folclóricas onde zamba e chacarera soam ao vivo toda noite.",
+        href: "/cidades/salta",
+        accent: "#f97316",
+        accentRgb: "249,115,22",
+        pop: "620.000",
+        image: "/cities/salta.png",
+        routeOrder: 8,
+    },
+    {
         name: "San Salvador de Jujuy",
         country: "Argentina 🇦🇷",
         state: "Província de Jujuy",
@@ -111,7 +124,7 @@ const cities = [
         accentRgb: "96,165,250",
         pop: "320.000",
         image: "/cities/jujuy.png",
-        routeOrder: 8,
+        routeOrder: 9,
     },
     // ── Chile ───────────────────────────────────────────────────────────────
     {
@@ -125,7 +138,7 @@ const cities = [
         accentRgb: "248,113,113",
         pop: "500.000",
         image: "/cities/antofagasta.png",
-        routeOrder: 9,
+        routeOrder: 10,
     },
     {
         name: "Iquique",
@@ -138,7 +151,7 @@ const cities = [
         accentRgb: "251,146,60",
         pop: "235.000",
         image: "/cities/iquique.png",
-        routeOrder: 10,
+        routeOrder: 11,
     },
 ];
 
@@ -326,7 +339,7 @@ export default function CitiesSection() {
                     {[
                         { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 3, color: "#2A9D8F" },
                         { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
-                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 1, color: "#60a5fa" },
+                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 2, color: "#60a5fa" },
                         { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 2, color: "#f87171" },
                     ].map(({ flag, label, count, color }) => (
                         <span key={label} style={{

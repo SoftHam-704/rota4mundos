@@ -17,6 +17,7 @@ import JardimPage from "./pages/public/JardimPage.jsx";
 import CarmeloPeraltaPage from "./pages/public/CarmeloPeraltaPage.jsx";
 import MariscalEstigarribiaPage from "./pages/public/MariscalEstigarribiaPage.jsx";
 import FiladelfiePage from "./pages/public/FiladelfiePage.jsx";
+import SaltaPage from "./pages/public/SaltaPage.jsx";
 import ArticlesPage from "./pages/public/ArticlesPage.jsx";
 import ArticleDetailPage from "./pages/public/ArticleDetailPage.jsx";
 import LoginPage from "./pages/public/LoginPage.jsx";
@@ -51,6 +52,7 @@ function App() {
                 <Route path="/cidades/carmelo-peralta" element={<CarmeloPeraltaPage />} />
                 <Route path="/cidades/mariscal-estigarribia" element={<MariscalEstigarribiaPage />} />
                 <Route path="/cidades/filadelfia" element={<FiladelfiePage />} />
+                <Route path="/cidades/salta" element={<SaltaPage />} />
                 <Route path="/cidades/:slug" element={<CityDetailPage />} />
                 <Route path="/noticias" element={<ArticlesPage />} />
                 <Route path="/noticias/:slug" element={<ArticleDetailPage />} />
