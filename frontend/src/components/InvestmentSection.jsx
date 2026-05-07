@@ -82,6 +82,8 @@ const countries = [
                 essence:
                     "Colônia mennonita que transformou o Chaco árido por meio de cooperativismo e memória centro-europeia. A culinária une receitas alemãs a ingredientes paraguaios.",
                 highlight: "Cooperativismo + Culinária alemã-paraguaia",
+                featuredLink: "/cidades/filadelfia",
+                featuredTeaser: "O Museo Jakob Unger, a Cooperativa Fernheim e o Chaco que a Europa transformou em jardim",
             },
         ],
         signature: ["Indígenas", "Mennonitas", "Chaco Selvagem"],
