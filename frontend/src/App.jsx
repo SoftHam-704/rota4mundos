@@ -15,6 +15,7 @@ import CampoGrandePage from "./pages/public/CampoGrandePage.jsx";
 import BonitoPage from "./pages/public/BonitoPage.jsx";
 import JardimPage from "./pages/public/JardimPage.jsx";
 import CarmeloPeraltaPage from "./pages/public/CarmeloPeraltaPage.jsx";
+import MariscalEstigarribiaPage from "./pages/public/MariscalEstigarribiaPage.jsx";
 import ArticlesPage from "./pages/public/ArticlesPage.jsx";
 import ArticleDetailPage from "./pages/public/ArticleDetailPage.jsx";
 import LoginPage from "./pages/public/LoginPage.jsx";
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/cidades/bonito" element={<BonitoPage />} />
                 <Route path="/cidades/jardim" element={<JardimPage />} />
                 <Route path="/cidades/carmelo-peralta" element={<CarmeloPeraltaPage />} />
+                <Route path="/cidades/mariscal-estigarribia" element={<MariscalEstigarribiaPage />} />
                 <Route path="/cidades/:slug" element={<CityDetailPage />} />
                 <Route path="/noticias" element={<ArticlesPage />} />
                 <Route path="/noticias/:slug" element={<ArticleDetailPage />} />

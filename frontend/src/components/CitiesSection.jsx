@@ -79,7 +79,7 @@ const cities = [
         state: "Boquerón",
         tagline: "O Novo Polo Logístico do Chaco",
         desc: "Cidade em ascensão no coração do Chaco paraguaio. 65% de população indígena, 270 km de rota já pavimentada e vocação logística crescente.",
-        href: "/cidades",
+        href: "/cidades/mariscal-estigarribia",
         accent: "#a78bfa",
         accentRgb: "167,139,250",
         pop: "8.000",
