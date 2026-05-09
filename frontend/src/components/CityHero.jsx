@@ -207,9 +207,9 @@ export default function CityHero({ country, countryFlag, region, name, tagline, 
                 <Particles kind={cfg.particle} accent={accent} />
             </motion.div>
 
-            {/* ── back button ────────────────────────── */}
-            <div style={{ position: "relative", zIndex: 20, maxWidth: "80rem", margin: "0 auto", padding: "32px 24px 0" }}>
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+            {/* ── back button (direita, para não sobrepor o logo) ── */}
+            <div style={{ position: "relative", zIndex: 20, maxWidth: "80rem", margin: "0 auto", padding: "32px 24px 0", display: "flex", justifyContent: "flex-end" }}>
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
                     <Link to="/cidades" style={{
                         display: "inline-flex", alignItems: "center", gap: "8px",
                         fontSize: "13px", fontWeight: 500, color: "rgba(255,255,255,0.85)",
