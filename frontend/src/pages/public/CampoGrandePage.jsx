@@ -598,13 +598,18 @@ export default function CampoGrandePage() {
             </section>
 
             {/* ── BIOPARQUE DESTAQUE ───────────────────────────── */}
-            <section className="section-padding bg-teal-950 relative overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-[80px]" />
+            <section className="relative overflow-hidden" style={{ background: "#031c1a" }}>
+                {/* foto como fundo suave */}
+                <div className="absolute inset-0">
+                    <img src="/bioparque.jpg" alt="" aria-hidden className="w-full h-full object-cover opacity-20" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, #031c1a 40%, #031c1a99 70%, transparent 100%)" }} />
                 </div>
-                <div className="container-custom relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+                <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(20,184,166,0.12) 0%, transparent 65%)" }} />
+
+                <div className="container-custom relative z-10 py-24 lg:py-32">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16 items-start">
+
+                        {/* ── esquerda: texto + stats ── */}
                         <div>
                             <SLabel>Inaugurado em março de 2022 · Entrada Gratuita</SLabel>
                             <STitle light>
@@ -613,47 +618,73 @@ export default function CampoGrandePage() {
                                     água doce do mundo
                                 </span>
                             </STitle>
-                            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-                                className="text-white/55 leading-relaxed mb-8">
-                                Fica em Campo Grande — e a entrada é gratuita. O BIOPARQUE Pantanal superou 1 milhão de visitantes desde a inauguração e registrou recorde de visitantes internacionais em julho de 2025. Mais do que aquário, é o maior banco genético vivo de água doce do mundo.
-                            </motion.p>
-                            <div className="grid grid-cols-2 gap-4">
+
+                            <div className="space-y-5 mb-10">
+                                <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+                                    className="text-white/60 leading-relaxed text-[15px]">
+                                    O BIOPARQUE Pantanal não é um aquário comum. É um organismo vivo — o maior banco genético de água doce do planeta — que abriga <strong className="text-teal-300">220 espécies neotropicais</strong> em quase 5 milhões de litros de água. Inaugurado em março de 2022, com entrada gratuita, tornou-se em menos de três anos o ponto turístico mais visitado do Centro-Oeste brasileiro, superando 1 milhão de visitantes e registrando recorde de turistas internacionais.
+                                </motion.p>
+                                <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+                                    className="text-white/60 leading-relaxed text-[15px]">
+                                    Seus <strong className="text-teal-300">29 projetos de reprodução inédita no mundo</strong> não são estatística — são jacarés-de-papo-amarelo que nunca existiram em cativeiro, pintados de 28 kg se reproduzindo sob supervisão científica, espécies da Amazônia partilhando a mesma coluna d'água de 6 metros com peixes do Pantanal. Das 100 espécies reproduzidas em cativeiro, 29 nunca tinham sido reproduzidas em nenhum aquário do mundo.
+                                </motion.p>
+                                <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
+                                    className="text-white/60 leading-relaxed text-[15px]">
+                                    O <strong className="text-teal-300">corredor submerso</strong> — percurso de vidro rodeado de 40 toneladas de fauna aquática viva — é uma das experiências mais impactantes do turismo brasileiro. O guia especializado gratuito (tours de 1h30, incluídos na entrada) revela o que a visita livre não alcança: os laboratórios de genética onde o futuro do Pantanal está sendo escrito espécie por espécie.
+                                </motion.p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
                                 {[
                                     { num: "~5 milhões", sub: "litros de água" },
                                     { num: "220", sub: "espécies neotropicais" },
                                     { num: "100", sub: "espécies reproduzidas" },
                                     { num: "29", sub: "reproduções inéditas no mundo" },
                                 ].map((s, i) => (
-                                    <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.08 * i }}
-                                        className="rounded-2xl bg-teal-900/40 border border-teal-500/20 p-5 text-center">
-                                        <div className="font-display font-bold text-teal-300 text-xl">{s.num}</div>
-                                        <div className="text-white/40 text-xs mt-1">{s.sub}</div>
+                                    <motion.div key={i} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.07 * i }}
+                                        className="rounded-2xl border border-teal-500/20 p-5 text-center" style={{ background: "rgba(20,184,166,0.07)" }}>
+                                        <div className="font-display font-bold text-teal-300 text-2xl mb-1">{s.num}</div>
+                                        <div className="text-white/40 text-[11px] uppercase tracking-wider">{s.sub}</div>
                                     </motion.div>
                                 ))}
                             </div>
                         </div>
-                        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-                            className="rounded-3xl bg-white/[0.05] border border-teal-500/20 p-8">
-                            <Fish className="w-8 h-8 text-teal-400 mb-5" />
-                            <h3 className="font-display text-xl font-bold text-white mb-4">O que ver no BIOPARQUE</h3>
-                            <div className="space-y-3">
-                                {[
-                                    { t: "Corredor submerso", d: "Observe peixes do Pantanal em escala real — uma das experiências mais impactantes do Brasil" },
-                                    { t: "151 espécies do Pantanal", d: "Além de 55 da Amazônia e espécies da África, Oceania, Ásia e América Central" },
-                                    { t: "Fauna aquática", d: "Jacarés-de-papo-amarelo, tartarugas, lontras e mamíferos semi-aquáticos" },
-                                    { t: "Guia especializado gratuito", d: "Tours de 1h30 incluídos na entrada — revelam os projetos de reprodução de espécies ameaçadas" },
-                                    { t: "Agendamento obrigatório", d: "agendamentobioparquepantanal.ms.gov.br — terça a sábado, 8h30–17h30" },
-                                ].map((r, i) => (
-                                    <div key={i} className="flex gap-3 py-2.5 border-b border-teal-500/10 last:border-0">
-                                        <ChevronRight className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <div className="text-teal-300 font-semibold text-sm">{r.t}</div>
-                                            <div className="text-white/40 text-xs mt-0.5">{r.d}</div>
+
+                        {/* ── direita: foto + card ── */}
+                        <div className="flex flex-col gap-5">
+                            <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
+                                className="rounded-3xl overflow-hidden relative" style={{ aspectRatio: "4/3" }}>
+                                <img src="/bioparque.jpg" alt="BIOPARQUE Pantanal — Campo Grande, MS"
+                                    className="w-full h-full object-cover" />
+                                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(3,28,26,0.7) 0%, transparent 60%)" }} />
+                                <div className="absolute bottom-4 left-4 right-4">
+                                    <span className="text-[10px] font-semibold text-teal-300 uppercase tracking-widest">BIOPARQUE Pantanal · Campo Grande, MS</span>
+                                </div>
+                            </motion.div>
+
+                            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.25 }}
+                                className="rounded-3xl border border-teal-500/20 p-7" style={{ background: "rgba(255,255,255,0.04)" }}>
+                                <Fish className="w-7 h-7 text-teal-400 mb-4" />
+                                <h3 className="font-display text-lg font-bold text-white mb-4">Como visitar</h3>
+                                <div className="space-y-3">
+                                    {[
+                                        { t: "Corredor submerso", d: "Percurso de vidro rodeado de 40 toneladas de fauna aquática viva" },
+                                        { t: "151 espécies do Pantanal", d: "Mais 55 da Amazônia e espécies de África, Oceania e Ásia" },
+                                        { t: "Tour guiado gratuito (1h30)", d: "Incluso na entrada — acesso aos laboratórios de reprodução" },
+                                        { t: "Agendamento obrigatório", d: "agendamentobioparquepantanal.ms.gov.br · Ter–Sáb 8h30–17h30" },
+                                    ].map((r, i) => (
+                                        <div key={i} className="flex gap-3 py-2.5 border-b border-teal-500/10 last:border-0">
+                                            <ChevronRight className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <div className="text-teal-300 font-semibold text-sm">{r.t}</div>
+                                                <div className="text-white/40 text-xs mt-0.5">{r.d}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        </div>
+
                     </div>
                 </div>
             </section>
