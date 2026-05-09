@@ -17,6 +17,7 @@ import settingsRoutes from "./modules/settings/settings.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
 import sponsorRoutes from "./modules/sponsors/sponsor.routes.js";
 import chatRoutes from "./modules/chat/chat.routes.js";
+import pageviewRoutes from "./modules/pageviews/pageview.routes.js";
 
 const app = express();
 
@@ -74,6 +75,7 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/pageviews", pageviewRoutes);
 
 // Serve arquivos estáticos de uploads em desenvolvimento
 if (env.NODE_ENV === "development") {

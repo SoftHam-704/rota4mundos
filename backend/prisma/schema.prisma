@@ -227,3 +227,48 @@ model Media {
 
     @@map("media")
 }
+
+// ─── Analytics de Visitas ─────────────────────────────────────────────────
+
+model PageView {
+    id        String   @id @default(uuid())
+    path      String
+    referrer  String?
+    country   String?
+    ip        String?
+    createdAt DateTime @default(now())
+
+    @@index([path])
+    @@index([createdAt])
+    @@map("page_views")
+}
+
+// ─── Captação de Apoiadores / Patrocinadores ───────────────────────────────
+
+enum SponsorType {
+    INDIVIDUAL      // Apoiador pessoa física
+    EMPRESARIAL     // Patrocinador empresa / hotel / operador
+    INSTITUCIONAL   // Prefeitura / secretaria / entidade / câmara
+}
+
+enum SponsorStatus {
+    PENDENTE
+    CONTATADO
+    ATIVO
+    ENCERRADO
+}
+
+model SponsorInterest {
+    id           String        @id @default(uuid())
+    name         String
+    email        String
+    organization String?       // empresa, entidade ou cargo
+    type         SponsorType
+    message      String?       @db.Text
+    status       SponsorStatus @default(PENDENTE)
+    ipAddress    String?
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+
+    @@map("sponsor_interests")
+}

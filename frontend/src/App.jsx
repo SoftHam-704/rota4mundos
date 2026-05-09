@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import ChatWidget from "./components/ChatWidget.jsx";
 import { useAuthStore } from "./stores/authStore.js";
+import { usePageView } from "./hooks/usePageView.js";
 
 import PublicLayout from "./layouts/PublicLayout.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
@@ -36,6 +37,7 @@ import AdminNewsletterPage from "./pages/admin/AdminNewsletterPage.jsx";
 
 function App() {
     const { checkAuth } = useAuthStore();
+    usePageView();
 
     useEffect(() => {
         checkAuth();
