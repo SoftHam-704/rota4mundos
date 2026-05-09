@@ -281,6 +281,81 @@ export default function BonitoPage() {
             {/* ── INFOGRÁFICO ──────────────────────────────────────────────── */}
             <InfograficoSection />
 
+            {/* ── ABISMO ANHUMAS ───────────────────────────────────────────── */}
+            <section style={{ background: "linear-gradient(135deg, #020d14 0%, #031824 50%, #020d14 100%)", position: "relative", overflow: "hidden", padding: "80px 0" }}>
+                <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/cities/abismo_anhumas.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.1 }} />
+                <div style={{ position: "absolute", top: "-100px", left: "50%", transform: "translateX(-50%)", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(34,211,238,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-60px", right: "-60px", width: "350px", height: "350px", borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                    {/* ── LEFT ── */}
+                    <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(34,211,238,0.12)", border: "1px solid rgba(34,211,238,0.35)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>
+                            <span style={{ fontSize: "18px" }}>🕳️</span>
+                            <span style={{ color: "#67e8f9", fontWeight: 600, fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase" }}>Destaque Natural</span>
+                        </div>
+                        <h2 style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.15, marginBottom: "16px" }}>
+                            Abismo Anhumas
+                        </h2>
+                        <p style={{ color: "#67e8f9", fontSize: "1.1rem", fontWeight: 500, marginBottom: "28px" }}>
+                            72 metros de rapel no escuro — e um lago subterrâneo que não existe em mais nenhum lugar do mundo
+                        </p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "36px" }}>
+                            <p style={{ color: "#a5f3fc", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                O Abismo Anhumas é uma dolina cárstica de 72 metros de profundidade, formada pelo colapso de uma caverna subterrânea há milhares de anos. A descida é feita em rapel, na escuridão quase total, até que os pés tocam uma <strong style={{ color: "#67e8f9" }}>balsa flutuante</strong> no meio de um lago dentro da terra — cenário que mais parece um planeta alienígena do que o interior do Mato Grosso do Sul.
+                            </p>
+                            <p style={{ color: "#a5f3fc", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                O lago subterrâneo tem temperatura constante de <strong style={{ color: "#67e8f9" }}>17°C</strong> e visibilidade de até 40 metros — a mesma transparência das águas superficiais de Bonito, mas aqui no subsolo, iluminada apenas por lanternas e pelo feixe de luz natural que penetra pelo buraco lá em cima. Estalactites com até 10 metros emergem da água. Piraputangas e dourados nadam mansamente ao redor da balsa, indiferentes à presença humana.
+                            </p>
+                            <p style={{ color: "#a5f3fc", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                A experiência é considerada uma das mais exclusivas do ecoturismo brasileiro: <strong style={{ color: "#67e8f9" }}>apenas 8 a 10 pessoas por dia</strong> têm acesso, com reserva antecipada obrigatória — às vezes com meses de espera. O limite existe para proteger o ecossistema frágil da caverna e garantir que o visitante viva, de fato, um momento único no planeta.
+                            </p>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                            {[
+                                { icon: "⬇️", label: "Profundidade do rapel", value: "72 m" },
+                                { icon: "🌡️", label: "Temperatura do lago", value: "17°C" },
+                                { icon: "👁️", label: "Visibilidade subaquática", value: "40 m" },
+                                { icon: "🎟️", label: "Vagas por dia", value: "8–10 pessoas" },
+                            ].map((s) => (
+                                <div key={s.label} style={{ background: "rgba(34,211,238,0.08)", border: "1px solid rgba(34,211,238,0.2)", borderRadius: "12px", padding: "14px 16px" }}>
+                                    <div style={{ fontSize: "20px", marginBottom: "4px" }}>{s.icon}</div>
+                                    <div style={{ color: "#67e8f9", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "2px" }}>{s.label}</div>
+                                    <div style={{ color: "#ffffff", fontWeight: 700, fontSize: "1.05rem" }}>{s.value}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* ── RIGHT ── */}
+                    <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15 }} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                        <div style={{ borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(34,211,238,0.25)", boxShadow: "0 24px 60px rgba(0,0,0,0.7)", position: "relative" }}>
+                            <img src="/cities/abismo_anhumas.jpg" alt="Interior do Abismo Anhumas — lago subterrâneo com estalactites" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,13,20,0.75) 0%, transparent 55%)" }} />
+                            <div style={{ position: "absolute", bottom: "16px", left: "20px" }}>
+                                <p style={{ color: "#cffafe", fontSize: "0.8rem", opacity: 0.8 }}>Bonito · Mato Grosso do Sul · Brasil</p>
+                            </div>
+                        </div>
+                        <div style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.2)", borderRadius: "16px", padding: "24px" }}>
+                            <h3 style={{ color: "#67e8f9", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "14px" }}>Como visitar</h3>
+                            <ul style={{ display: "flex", flexDirection: "column", gap: "10px", listStyle: "none", padding: 0, margin: 0 }}>
+                                {[
+                                    { icon: "📅", text: "Reserva obrigatória com antecedência — vagas esgotam rápido" },
+                                    { icon: "💪", text: "Exige boa condição física — rapel técnico com guias especializados" },
+                                    { icon: "🤿", text: "Flutuação no lago subterrâneo incluída após o rapel" },
+                                    { icon: "📷", text: "Câmera à prova d'água recomendada; flash prejudica o ecossistema" },
+                                ].map((item) => (
+                                    <li key={item.text} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                                        <span style={{ fontSize: "15px", flexShrink: 0, marginTop: "2px" }}>{item.icon}</span>
+                                        <span style={{ color: "#a5f3fc", fontSize: "0.88rem", lineHeight: 1.5 }}>{item.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* ── IDENTIDADE ───────────────────────────────────────────────── */}
             <section className="section-padding bg-primary-950">
                 <div className="container-custom">

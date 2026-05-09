@@ -285,6 +285,81 @@ export default function PortoMurtinhoPage() {
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />
 
+            {/* ── A TRAVESSIA ──────────────────────────────────── */}
+            <section style={{ background: "linear-gradient(135deg, #140a00 0%, #1f1000 50%, #140a00 100%)", position: "relative", overflow: "hidden", padding: "80px 0" }}>
+                <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/cities/rio_paraguai.jpg')", backgroundSize: "cover", backgroundPosition: "center 60%", opacity: 0.13 }} />
+                <div style={{ position: "absolute", top: "-80px", right: "-80px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,0.14) 0%, transparent 70%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-60px", left: "-60px", width: "380px", height: "380px", borderRadius: "50%", background: "radial-gradient(circle, rgba(234,140,60,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                    {/* ── LEFT ── */}
+                    <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(244,162,97,0.13)", border: "1px solid rgba(244,162,97,0.35)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>
+                            <span style={{ fontSize: "18px" }}>⛵</span>
+                            <span style={{ color: "#fdba74", fontWeight: 600, fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase" }}>Marco da Rota</span>
+                        </div>
+                        <h2 style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.15, marginBottom: "16px" }}>
+                            A Travessia
+                        </h2>
+                        <p style={{ color: "#fdba74", fontSize: "1.1rem", fontWeight: 500, marginBottom: "28px" }}>
+                            O Rio Paraguai separa dois mundos — e a balsa é o portal entre eles
+                        </p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "36px" }}>
+                            <p style={{ color: "#fed7aa", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                Porto Murtinho é onde o Brasil acaba. Literalmente. Na margem do <strong style={{ color: "#fdba74" }}>Rio Paraguai</strong>, o viajante embarca numa balsa e atravessa aproximadamente 800 metros de água escura e silenciosa em direção a Carmelo Peralta, no Paraguai. São menos de 15 minutos de travessia — mas é a fronteira entre o Pantanal brasileiro e o imenso Chaco paraguaio, entre dois países, dois ecossistemas, dois idiomas e dois tempos.
+                            </p>
+                            <p style={{ color: "#fed7aa", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                A balsa não tem nome glamouroso. Não é uma ponte suspensa nem um ferry moderno. É uma embarcação simples, carregando carros, motos e pedestres sob o sol do Pantanal — e é exatamente essa <strong style={{ color: "#fdba74" }}>ausência de infraestrutura monumental</strong> que torna o momento tão poderoso. O viajante sente, com o corpo, que está cruzando uma fronteira real. O Morro Pão de Açúcar — formação rochosa que se ergue solitária à beira do rio — marca a passagem como uma sentinela milenar.
+                            </p>
+                            <p style={{ color: "#fed7aa", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                Para os entusiastas da Rota Bioceânica, a travessia em Porto Murtinho é o <strong style={{ color: "#fdba74" }}>momento mais simbólico de toda a jornada</strong>: é aqui que o Brasil fica para trás e a Rota dos Quatro Mundos começa de verdade — rumo ao Chaco, aos Andes e, enfim, ao Pacífico. Uma ponte está sendo construída, mas enquanto ela não vem, a balsa carrega toda a poesia da fronteira viva.
+                            </p>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                            {[
+                                { icon: "🌊", label: "Largura do Rio Paraguai", value: "~800 m" },
+                                { icon: "⏱️", label: "Duração da travessia", value: "10–15 min" },
+                                { icon: "🏳️", label: "Destino", value: "Carmelo Peralta, PY" },
+                                { icon: "🌉", label: "Ponte bioceânica", value: "em construção" },
+                            ].map((s) => (
+                                <div key={s.label} style={{ background: "rgba(244,162,97,0.08)", border: "1px solid rgba(244,162,97,0.2)", borderRadius: "12px", padding: "14px 16px" }}>
+                                    <div style={{ fontSize: "20px", marginBottom: "4px" }}>{s.icon}</div>
+                                    <div style={{ color: "#fdba74", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "2px" }}>{s.label}</div>
+                                    <div style={{ color: "#ffffff", fontWeight: 700, fontSize: "1.05rem" }}>{s.value}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* ── RIGHT ── */}
+                    <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15 }} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                        <div style={{ borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(244,162,97,0.25)", boxShadow: "0 24px 60px rgba(0,0,0,0.7)", position: "relative" }}>
+                            <img src="/cities/rio_paraguai.jpg" alt="Morro Pão de Açúcar — Rio Paraguai na fronteira Brasil-Paraguai" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center 50%", display: "block" }} />
+                            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(20,10,0,0.75) 0%, transparent 55%)" }} />
+                            <div style={{ position: "absolute", bottom: "16px", left: "20px" }}>
+                                <p style={{ color: "#fed7aa", fontSize: "0.8rem", opacity: 0.8 }}>Morro Pão de Açúcar · Rio Paraguai · Fronteira Brasil–Paraguai</p>
+                            </div>
+                        </div>
+                        <div style={{ background: "rgba(244,162,97,0.07)", border: "1px solid rgba(244,162,97,0.2)", borderRadius: "16px", padding: "24px" }}>
+                            <h3 style={{ color: "#fdba74", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "14px" }}>Como fazer a travessia</h3>
+                            <ul style={{ display: "flex", flexDirection: "column", gap: "10px", listStyle: "none", padding: 0, margin: 0 }}>
+                                {[
+                                    { icon: "🛂", text: "Passaporte válido obrigatório — fronteira internacional" },
+                                    { icon: "🚗", text: "Veículos e pedestres embarcam na beira do rio, centro de Porto Murtinho" },
+                                    { icon: "🕐", text: "Travessia disponível durante o dia; confirmar horários na cidade" },
+                                    { icon: "💵", text: "Taxa de travessia cobrada por pessoa e por veículo, em reais ou guaranis" },
+                                ].map((item) => (
+                                    <li key={item.text} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                                        <span style={{ fontSize: "15px", flexShrink: 0, marginTop: "2px" }}>{item.icon}</span>
+                                        <span style={{ color: "#fed7aa", fontSize: "0.88rem", lineHeight: 1.5 }}>{item.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* ── RESUMO EXECUTIVO ─────────────────────────────── */}
             <section className="section-padding bg-white">
                 <div className="container-custom">

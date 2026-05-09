@@ -219,9 +219,9 @@ export default function Footer() {
                         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px", marginBottom: "28px" }}>
                             <li style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
                                 <Mail size={13} style={{ color: "#2A9D8F", marginTop: "1px", flexShrink: 0 }} />
-                                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif" }}>
-                                    contato@rota4mundos.com.br
-                                </span>
+                                <a href="mailto:apoio@rota4mundos.com.br" style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", textDecoration: "none" }}>
+                                    apoio@rota4mundos.com.br
+                                </a>
                             </li>
                             <li style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
                                 <MapPin size={13} style={{ color: "#2A9D8F", marginTop: "1px", flexShrink: 0 }} />

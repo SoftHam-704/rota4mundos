@@ -235,6 +235,101 @@ export default function JardimPage() {
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />
 
+            {/* ── BURACO DAS ARARAS ────────────────────────────── */}
+            <section style={{ background: "linear-gradient(135deg, #0a1f0f 0%, #0d2b1a 50%, #0a1f0f 100%)", position: "relative", overflow: "hidden", padding: "80px 0" }}>
+                {/* bg photo at low opacity */}
+                <div style={{
+                    position: "absolute", inset: 0,
+                    backgroundImage: "url('/cities/buraco_araras.jpg')",
+                    backgroundSize: "cover", backgroundPosition: "center",
+                    opacity: 0.12,
+                }} />
+                {/* emerald glow */}
+                <div style={{ position: "absolute", top: "-120px", right: "-120px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(5,150,105,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                    {/* ── LEFT: text ── */}
+                    <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+                        {/* badge */}
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.4)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>
+                            <span style={{ fontSize: "18px" }}>🦜</span>
+                            <span style={{ color: "#6ee7b7", fontWeight: 600, fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase" }}>Destaque Natural</span>
+                        </div>
+
+                        <h2 style={{ color: "#ffffff", fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.15, marginBottom: "16px" }}>
+                            Buraco das Araras
+                        </h2>
+                        <p style={{ color: "#6ee7b7", fontSize: "1.1rem", fontWeight: 500, marginBottom: "28px" }}>
+                            O maior sumidouro natural do Brasil — um abismo vivo a 14 km de Jardim
+                        </p>
+
+                        {/* paragraphs */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "36px" }}>
+                            <p style={{ color: "#a7f3d0", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                Encravado no calcário cretáceo da Serra da Bodoquena, o Buraco das Araras é uma <strong style={{ color: "#6ee7b7" }}>dolina de colapso</strong> — fenômeno cárstico formado ao longo de milênios pela dissolução da rocha calcária por águas ácidas subterrâneas. Com aproximadamente 500 metros de diâmetro e 100 metros de profundidade, é considerado o maior sumidouro natural do Brasil e um dos mais expressivos da América do Sul.
+                            </p>
+                            <p style={{ color: "#a7f3d0", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                As paredes verticais do abismo tornaram-se o lar permanente de dezenas de <strong style={{ color: "#6ee7b7" }}>araras-vermelhas (Ara chloropterus)</strong> — as majestosas araras-vermelhas-e-verdes que deram nome ao lugar. Cada amanhecer transforma a dolina num espetáculo de cores e sons: bandos inteiros alçam voo do interior do buraco, cruzando os raios dourados do sol enquanto o eco de seus gritos ressoa pelas paredes de pedra. Além das araras, abutres-de-cabeça-amarela, periquitos e diversas espécies de rapina habitam a reserva.
+                            </p>
+                            <p style={{ color: "#a7f3d0", lineHeight: 1.75, fontSize: "0.97rem" }}>
+                                O Buraco das Araras é uma <strong style={{ color: "#6ee7b7" }}>reserva ecológica privada</strong> com estrutura de visitação responsável: trilha de bordão, mirante com plataforma de observação e guias locais treinados. A experiência de olhar para dentro desse abismo verde — onde araras circulam como chamas vermelhas contra o fundo escuro — é considerada por muitos visitantes o momento mais impactante de toda a Rota Bioceânica.
+                            </p>
+                        </div>
+
+                        {/* stats grid */}
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                            {[
+                                { icon: "⭕", label: "Diâmetro", value: "~500 m" },
+                                { icon: "⬇️", label: "Profundidade", value: "~100 m" },
+                                { icon: "🦜", label: "Araras residentes", value: "dezenas" },
+                                { icon: "📍", label: "Distância de Jardim", value: "14 km" },
+                            ].map((s) => (
+                                <div key={s.label} style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "12px", padding: "14px 16px" }}>
+                                    <div style={{ fontSize: "20px", marginBottom: "4px" }}>{s.icon}</div>
+                                    <div style={{ color: "#6ee7b7", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "2px" }}>{s.label}</div>
+                                    <div style={{ color: "#ffffff", fontWeight: 700, fontSize: "1.1rem" }}>{s.value}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* ── RIGHT: photo + info card ── */}
+                    <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15 }} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                        {/* photo card */}
+                        <div style={{ borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(16,185,129,0.3)", boxShadow: "0 24px 60px rgba(0,0,0,0.6)", position: "relative" }}>
+                            <img
+                                src="/cities/buraco_araras.jpg"
+                                alt="Buraco das Araras — dolina de calcário com araras-vermelhas"
+                                style={{ width: "100%", height: "340px", objectFit: "cover", display: "block" }}
+                            />
+                            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,31,15,0.7) 0%, transparent 50%)" }} />
+                            <div style={{ position: "absolute", bottom: "16px", left: "20px", right: "20px" }}>
+                                <p style={{ color: "#d1fae5", fontSize: "0.8rem", opacity: 0.8 }}>Serra da Bodoquena · Jardim, MS · Brasil</p>
+                            </div>
+                        </div>
+
+                        {/* como visitar card */}
+                        <div style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "16px", padding: "24px" }}>
+                            <h3 style={{ color: "#6ee7b7", fontWeight: 700, fontSize: "0.9rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "14px" }}>Como visitar</h3>
+                            <ul style={{ display: "flex", flexDirection: "column", gap: "10px", listStyle: "none", padding: 0, margin: 0 }}>
+                                {[
+                                    { icon: "🕐", text: "Amanhecer e fim de tarde — melhor horário para ver as araras em voo" },
+                                    { icon: "🚗", text: "14 km do centro de Jardim pela MS-178; acesso de carro" },
+                                    { icon: "🎟️", text: "Reserva privada com ingresso e guia local incluso" },
+                                    { icon: "📷", text: "Mirante com plataforma de observação e câmeras permitidas" },
+                                ].map((item) => (
+                                    <li key={item.text} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                                        <span style={{ fontSize: "16px", flexShrink: 0, marginTop: "2px" }}>{item.icon}</span>
+                                        <span style={{ color: "#a7f3d0", fontSize: "0.88rem", lineHeight: 1.5 }}>{item.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* ── RESUMO EXECUTIVO ─────────────────────────────── */}
             <section className="section-padding bg-white">
                 <div className="container-custom">

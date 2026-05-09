@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 /* ── acento + partícula por cena ───────────────────────────── */
@@ -206,24 +206,6 @@ export default function CityHero({ country, countryFlag, region, name, tagline, 
             <motion.div style={{ position: "absolute", inset: 0, pointerEvents: "none", y: particleY }}>
                 <Particles kind={cfg.particle} accent={accent} />
             </motion.div>
-
-            {/* ── back button (direita, para não sobrepor o logo) ── */}
-            <div style={{ position: "relative", zIndex: 20, maxWidth: "80rem", margin: "0 auto", padding: "32px 24px 0", display: "flex", justifyContent: "flex-end" }}>
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-                    <Link to="/cidades" style={{
-                        display: "inline-flex", alignItems: "center", gap: "8px",
-                        fontSize: "13px", fontWeight: 500, color: "rgba(255,255,255,0.85)",
-                        backdropFilter: "blur(8px)", background: "rgba(0,0,0,0.2)",
-                        padding: "8px 16px", borderRadius: "100px",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        textDecoration: "none", transition: "all 0.2s",
-                        fontFamily: "Inter, sans-serif",
-                    }}>
-                        <ArrowLeft size={14} />
-                        Cidades da Rota
-                    </Link>
-                </motion.div>
-            </div>
 
             {/* ── conteúdo principal ─────────────────── */}
             <motion.div

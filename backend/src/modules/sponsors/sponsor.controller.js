@@ -2,6 +2,7 @@ import { prisma } from "../../config/database.js";
 import { ApiResponse } from "../../utils/apiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import logger from "../../config/logger.js";
+import { sendInterestNotification, sendInterestConfirmation } from "../../config/mailer.js";
 
 // POST /api/sponsors/interesse  — público
 export const createInterest = asyncHandler(async (req, res) => {
@@ -17,6 +18,12 @@ export const createInterest = asyncHandler(async (req, res) => {
         type: interest.type,
         email: interest.email,
     });
+
+    // dispara os dois e-mails em paralelo sem bloquear a resposta
+    Promise.all([
+        sendInterestNotification({ name, email, organization, type, message }),
+        sendInterestConfirmation({ name, email, type }),
+    ]).catch(err => logger.error("Falha ao enviar e-mails de interesse", { err: err.message }));
 
     return ApiResponse.success(
         res,
