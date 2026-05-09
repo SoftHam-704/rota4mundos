@@ -2,11 +2,12 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-    ArrowLeft, ArrowRight, MapPin, Users, Ruler, Calendar,
+    ArrowRight, MapPin, Users, Ruler, Calendar,
     Train, Fish, Trees, Leaf, Utensils, Music, Camera,
     Clock, Phone, Flame, Star, ChevronRight, Globe,
     Building2, GraduationCap, Plane, ZoomIn, X,
 } from "lucide-react";
+import CityHero from "../../components/CityHero.jsx";
 
 /* ─── data ──────────────────────────────────────────────────── */
 
@@ -350,94 +351,22 @@ export default function CampoGrandePage() {
         <div className="min-h-screen">
 
             {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-amber-900/40" />
-                </div>
-
-                {/* Solo vermelho glow */}
-                <div className="absolute top-[20%] left-[20%] w-80 h-80 bg-red-700/20 rounded-full blur-[100px] pointer-events-none" />
-                <div className="absolute top-[15%] right-[15%] w-72 h-72 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-secondary-400/40 via-secondary-500/15 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-10 rounded-full bg-gradient-radial from-secondary-300/50 via-secondary-400/25 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-secondary-200 via-secondary-400 to-orange-500 shadow-[0_0_80px_rgba(244,162,97,0.5)] animate-pulse-slow" />
-                </div>
-
-                {/* Cerrado SVG silhouette */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 280" className="w-full" preserveAspectRatio="none">
-                        {/* Red soil glow */}
-                        <ellipse cx="720" cy="280" rx="800" ry="60" fill="rgba(185,28,28,0.12)" />
-                        {/* Background cerrado hills */}
-                        <path d="M0,280 L0,200 Q120,150 240,180 Q360,110 480,160 Q600,120 720,150 Q840,110 960,155 Q1080,125 1200,165 Q1320,140 1440,175 L1440,280 Z"
-                            fill="rgba(6,27,51,0.8)" />
-                        {/* Cerrado trees silhouette */}
-                        {[80,200,350,500,640,760,900,1040,1180,1320].map((x, i) => (
-                            <g key={i} transform={`translate(${x}, ${160 + (i % 3) * 12})`}>
-                                <rect x="-2" y="0" width="4" height="35" fill="rgba(11,46,79,0.95)" />
-                                <ellipse cx="0" cy="-5" rx={12 + (i%3)*3} ry={18 + (i%2)*4} fill="rgba(11,46,79,0.97)" />
-                            </g>
-                        ))}
-                        {/* Foreground ground */}
-                        <path d="M0,280 L0,248 Q240,232 480,244 Q720,256 960,240 Q1200,228 1440,242 L1440,280 Z"
-                            fill="rgba(11,46,79,1)" />
-                        {/* Red soil strip */}
-                        <path d="M0,280 L0,268 Q360,260 720,265 Q1080,270 1440,264 L1440,280 Z"
-                            fill="rgba(153,27,27,0.25)" />
-                    </svg>
-                </div>
-
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link to="/cidades" className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8">
-                            <ArrowLeft className="w-4 h-4" />
-                            Cidades da Rota
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4">
-                            <span className="text-2xl">🇧🇷</span>
-                            <span className="text-sm font-semibold text-secondary-400 uppercase tracking-widest">
-                                Mato Grosso do Sul · Capital do Estado
-                            </span>
-                        </motion.div>
-
-                        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4">
-                            Campo
-                            <br />
-                            <span className="bg-gradient-to-r from-secondary-300 via-secondary-400 to-red-400 bg-clip-text text-transparent">
-                                Grande
-                            </span>
-                        </motion.h1>
-
-                        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10">
-                            A Capital Morena — Porta do Pantanal e Hub da Rota Bioceânica
-                        </motion.p>
-
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4">
-                            {[
-                                { icon: Users, val: "898 mil hab.", sub: "Censo 2022" },
-                                { icon: Calendar, val: "1872", sub: "Fundação" },
-                                { icon: Ruler, val: "8.082 km²", sub: "Território" },
-                                { icon: MapPin, val: "439 km", sub: "de Porto Murtinho" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-secondary-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+            <CityHero
+                country="Brasil"
+                countryFlag="🇧🇷"
+                region="Mato Grosso do Sul · Capital do Estado"
+                name={{ first: "Campo", second: "Grande" }}
+                tagline="A Capital Morena — porta do Pantanal e hub da Rota Bioceânica."
+                scene="pantanal"
+                image="/cities/campo_grande.png"
+                accentColor="#F4A261"
+                stats={[
+                    { label: "Habitantes (Censo 2022)", value: 898, suffix: " mil" },
+                    { label: "Ano de fundação", value: 1872 },
+                    { label: "Território (km²)", value: 8082 },
+                    { label: "Km até Porto Murtinho", value: 439 },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

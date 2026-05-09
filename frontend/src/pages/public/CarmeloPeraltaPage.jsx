@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Fish, Trees, Camera, Clock, Phone, Mail,
@@ -214,120 +215,23 @@ export default function CarmeloPeraltaPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-violet-950/50" />
-                </div>
-
-                {/* River glow — dourado do Chaco */}
-                <div className="absolute top-[18%] right-[15%] w-72 h-72 md:w-96 md:h-96 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-violet-400/35 via-indigo-500/12 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-violet-300/45 via-purple-400/18 to-transparent blur-2xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-to-br from-violet-200 via-indigo-400 to-purple-500 shadow-[0_0_80px_rgba(139,92,246,0.5)] animate-pulse-slow" />
-                </div>
-
-                {/* River SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 300" className="w-full" preserveAspectRatio="none">
-                        <path
-                            d="M0,300 L0,200 Q180,155 360,185 Q540,215 720,170 Q900,125 1080,160 Q1260,195 1440,145 L1440,300 Z"
-                            fill="rgba(139,92,246,0.08)"
-                        />
-                        <path
-                            d="M0,300 L0,230 Q200,190 400,215 Q600,240 800,195 Q1000,148 1200,183 Q1350,208 1440,168 L1440,300 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        <path
-                            d="M0,300 L0,260 Q300,240 600,255 Q900,270 1200,248 Q1350,240 1440,255 L1440,300 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Bridge silhouette */}
-                        <rect x="580" y="190" width="280" height="4" fill="rgba(139,92,246,0.5)" />
-                        <rect x="600" y="180" width="8" height="40" fill="rgba(139,92,246,0.4)" />
-                        <rect x="840" y="180" width="8" height="40" fill="rgba(139,92,246,0.4)" />
-                        <path d="M604,183 Q720,162 844,183" fill="none" stroke="rgba(139,92,246,0.35)" strokeWidth="2" />
-                        <ellipse cx="720" cy="210" rx="60" ry="8" fill="rgba(139,92,246,0.10)" />
-                        {/* Birds */}
-                        <path d="M440,95 Q444,91 448,95" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-                        <path d="M460,82 Q465,78 470,82" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
-                        <path d="M490,108 Q494,104 498,108" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇵🇾</span>
-                            <span className="text-sm font-semibold text-violet-400 uppercase tracking-widest">
-                                Alto Paraguay · Chaco Paraguaio
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-5xl sm:text-6xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Carmelo
-                            <br />
-                            <span className="bg-gradient-to-r from-violet-300 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                                Peralta
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            A Porta do Pantanal Paraguaio
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "18.926 hab.", sub: "Censo 2022" },
-                                { icon: Calendar, val: "1955",        sub: "Fundação" },
-                                { icon: MapPin,   val: "Alto Paraguay", sub: "Departamento" },
-                                { icon: Anchor,   val: "Ponte Bioceânica", sub: "Marco da Rota" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Paraguai"
+                countryFlag="🇵🇾"
+                region="Departamento Alto Paraguay"
+                name={{ first: "Carmelo", second: "Peralta" }}
+                tagline="Primeira cidade paraguaia — do outro lado da ponte bioceânica, o Chaco começa aqui."
+                scene="chaco"
+                image="/cities/carmelo_peralta.png"
+                accentColor="#818cf8"
+                stats={[
+                    { label: "Habitantes (Censo 2022)", value: 18926 },
+                    { label: "Fundacao", value: 1955 },
+                    { label: "Km de Asuncion", value: 670, suffix: " km" },
+                    { label: "Km a Mariscal Estigarribia", value: 270, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

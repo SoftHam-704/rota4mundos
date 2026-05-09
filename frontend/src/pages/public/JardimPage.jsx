@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Fish, Trees, Camera, Clock, Phone, Mail,
@@ -213,121 +214,23 @@ export default function JardimPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-teal-950/60" />
-                </div>
-
-                {/* Crystal water glow */}
-                <div className="absolute top-[18%] right-[15%] w-72 h-72 md:w-96 md:h-96 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-teal-400/40 via-cyan-500/15 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-teal-300/50 via-cyan-400/20 to-transparent blur-2xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-to-br from-cyan-200 via-teal-400 to-emerald-500 shadow-[0_0_80px_rgba(45,212,191,0.5)] animate-pulse-slow" />
-                </div>
-
-                {/* River SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 300" className="w-full" preserveAspectRatio="none">
-                        <path
-                            d="M0,300 L0,200 Q180,155 360,185 Q540,215 720,170 Q900,125 1080,160 Q1260,195 1440,145 L1440,300 Z"
-                            fill="rgba(45,212,191,0.10)"
-                        />
-                        <path
-                            d="M0,300 L0,230 Q200,190 400,215 Q600,240 800,195 Q1000,148 1200,183 Q1350,208 1440,168 L1440,300 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        <path
-                            d="M0,300 L0,260 Q300,240 600,255 Q900,270 1200,248 Q1350,240 1440,255 L1440,300 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Dock */}
-                        <rect x="320" y="222" width="5" height="48" fill="rgba(45,212,191,0.5)" />
-                        <rect x="300" y="242" width="48" height="4" fill="rgba(45,212,191,0.4)" />
-                        <rect x="680" y="207" width="4" height="44" fill="rgba(45,212,191,0.4)" />
-                        <rect x="660" y="226" width="38" height="3" fill="rgba(45,212,191,0.3)" />
-                        <ellipse cx="330" cy="248" rx="28" ry="5" fill="rgba(45,212,191,0.14)" />
-                        <ellipse cx="680" cy="237" rx="22" ry="4" fill="rgba(45,212,191,0.11)" />
-                        {/* Birds */}
-                        <path d="M480,95 Q484,91 488,95" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-                        <path d="M495,82 Q500,78 505,82" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
-                        <path d="M440,110 Q444,106 448,110" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇧🇷</span>
-                            <span className="text-sm font-semibold text-teal-400 uppercase tracking-widest">
-                                Mato Grosso do Sul · Serra da Bodoquena
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Jardim
-                            <br />
-                            <span className="bg-gradient-to-r from-teal-300 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                                MS
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            Entre História, Natureza e Aventura
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "27.245 hab.", sub: "Censo 2022" },
-                                { icon: Calendar, val: "1948",        sub: "Fundação" },
-                                { icon: MapPin,   val: "Serra da Bodoquena", sub: "Localização" },
-                                { icon: Waves,    val: "Lagoa Misteriosa",   sub: "Ícone Natural" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Brasil"
+                countryFlag="🇧🇷"
+                region="Mato Grosso do Sul"
+                name={{ first: "Jardim", second: "" }}
+                tagline="Serra da Bodoquena, lagoas azul-esmeralda e a porta natural entre o Cerrado e o Pantanal."
+                scene="pantanal"
+                image="/cities/jardim.png"
+                accentColor="#86efac"
+                stats={[
+                    { label: "Habitantes (Censo 2022)", value: 27245 },
+                    { label: "Fundacao", value: 1948 },
+                    { label: "Km de Bonito", value: 80, suffix: " km" },
+                    { label: "Km de Campo Grande", value: 220, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

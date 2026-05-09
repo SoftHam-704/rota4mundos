@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -214,183 +215,23 @@ export default function TartagalPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — Yungas deep green night */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-[#001a08] to-[#001205]/80" />
-                </div>
-
-                {/* Tropical emerald glow */}
-                <div className="absolute top-[15%] right-[12%] w-80 h-80 md:w-[420px] md:h-[420px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-emerald-500/28 via-green-600/10 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-emerald-400/36 via-teal-500/14 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 shadow-[0_0_100px_rgba(16,185,129,0.50)] animate-pulse-slow" />
-                </div>
-
-                {/* Yungas forest silhouette SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 420" className="w-full" preserveAspectRatio="none">
-                        <defs>
-                            {/* Mist gradient for Yungas atmosphere */}
-                            <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="rgba(5,150,105,0.12)" />
-                                <stop offset="100%" stopColor="rgba(5,150,105,0)" />
-                            </linearGradient>
-                        </defs>
-
-                        {/* Stars */}
-                        <circle cx="100" cy="45" r="0.9" fill="rgba(255,255,255,0.65)" />
-                        <circle cx="290" cy="28" r="1.1" fill="rgba(255,255,255,0.55)" />
-                        <circle cx="520" cy="18" r="0.8" fill="rgba(255,255,255,0.60)" />
-                        <circle cx="780" cy="25" r="1.0" fill="rgba(255,255,255,0.50)" />
-                        <circle cx="1020" cy="35" r="1.2" fill="rgba(255,255,255,0.58)" />
-                        <circle cx="1260" cy="22" r="0.9" fill="rgba(255,255,255,0.52)" />
-                        <circle cx="420" cy="65" r="0.7" fill="rgba(255,255,255,0.38)" />
-                        <circle cx="900" cy="70" r="0.8" fill="rgba(255,255,255,0.42)" />
-                        <circle cx="1380" cy="55" r="0.9" fill="rgba(255,255,255,0.48)" />
-
-                        {/* Far mountain ridge — misty blue-green */}
-                        <path
-                            d="M0,420 L0,290 Q100,255 200,268 Q340,285 440,230 Q540,175 640,210 Q740,245 840,195 Q960,140 1060,170 Q1180,205 1280,165 Q1380,130 1440,148 L1440,420 Z"
-                            fill="rgba(5,150,105,0.12)"
-                        />
-
-                        {/* Mist layer — Yungas atmospheric */}
-                        <rect x="0" y="300" width="1440" height="80" fill="url(#mist)" opacity="0.5" />
-
-                        {/* Mid-ground forest — deep green canopy */}
-                        <path
-                            d="M0,420 L0,355 Q40,338 80,345 Q120,352 140,330 Q160,308 185,320 Q210,332 240,310 Q270,288 300,302 Q330,316 360,295 Q390,274 420,288 Q450,302 480,280 Q510,258 540,272 Q570,286 600,265 Q630,244 660,260 Q690,276 720,255 Q750,234 780,248 Q810,262 840,242 Q870,222 900,238 Q930,254 960,235 Q990,216 1020,230 Q1050,244 1080,225 Q1110,206 1140,220 Q1170,234 1200,215 Q1230,196 1260,210 Q1290,224 1320,208 Q1360,190 1440,202 L1440,420 Z"
-                            fill="rgba(4,120,87,0.38)"
-                        />
-
-                        {/* Tree canopy silhouettes — Ceibo and subtropical trees */}
-                        {/* Large tree L1 */}
-                        <path d="M60,420 L60,310 Q75,270 90,255 Q105,270 120,310 L120,420 Z" fill="rgba(5,90,60,0.75)" />
-                        <ellipse cx="90" cy="248" rx="38" ry="28" fill="rgba(5,90,60,0.70)" />
-                        <ellipse cx="75" cy="260" rx="25" ry="20" fill="rgba(5,90,60,0.65)" />
-                        <ellipse cx="108" cy="258" rx="28" ry="22" fill="rgba(5,90,60,0.65)" />
-
-                        {/* Large tree L2 */}
-                        <path d="M200,420 L200,295 Q215,252 228,238 Q241,252 255,295 L255,420 Z" fill="rgba(4,80,50,0.80)" />
-                        <ellipse cx="228" cy="230" rx="42" ry="32" fill="rgba(4,80,50,0.75)" />
-                        <ellipse cx="210" cy="244" rx="28" ry="22" fill="rgba(4,80,50,0.68)" />
-                        <ellipse cx="248" cy="242" rx="30" ry="24" fill="rgba(4,80,50,0.68)" />
-
-                        {/* Palm-like tree center */}
-                        <path d="M420,420 L420,305 Q425,290 430,285 Q435,290 440,305 L440,420 Z" fill="rgba(3,105,70,0.72)" />
-                        <path d="M430,285 Q400,268 385,255 Q395,258 408,270" fill="none" stroke="rgba(3,105,70,0.65)" strokeWidth="3" />
-                        <path d="M430,285 Q460,265 478,252 Q468,256 455,268" fill="none" stroke="rgba(3,105,70,0.65)" strokeWidth="3" />
-                        <path d="M430,285 Q420,260 418,245 Q425,255 428,268" fill="none" stroke="rgba(3,105,70,0.65)" strokeWidth="3" />
-                        <path d="M430,285 Q442,262 445,248 Q438,258 432,270" fill="none" stroke="rgba(3,105,70,0.65)" strokeWidth="3" />
-
-                        {/* Large tree R1 */}
-                        <path d="M620,420 L620,308 Q635,265 648,248 Q661,265 674,308 L674,420 Z" fill="rgba(4,90,58,0.78)" />
-                        <ellipse cx="648" cy="240" rx="44" ry="33" fill="rgba(4,90,58,0.72)" />
-                        <ellipse cx="628" cy="256" rx="30" ry="23" fill="rgba(4,90,58,0.65)" />
-                        <ellipse cx="668" cy="254" rx="32" ry="25" fill="rgba(4,90,58,0.65)" />
-
-                        {/* Medium trees center-right */}
-                        <path d="M820,420 L820,320 Q832,285 842,270 Q852,285 862,320 L862,420 Z" fill="rgba(5,85,55,0.72)" />
-                        <ellipse cx="842" cy="262" rx="35" ry="26" fill="rgba(5,85,55,0.68)" />
-
-                        {/* Large tree R2 */}
-                        <path d="M1020,420 L1020,298 Q1038,255 1052,238 Q1066,255 1080,298 L1080,420 Z" fill="rgba(4,95,62,0.80)" />
-                        <ellipse cx="1052" cy="230" rx="46" ry="34" fill="rgba(4,95,62,0.75)" />
-                        <ellipse cx="1030" cy="248" rx="30" ry="23" fill="rgba(4,95,62,0.68)" />
-                        <ellipse cx="1074" cy="246" rx="34" ry="26" fill="rgba(4,95,62,0.68)" />
-
-                        {/* Far right trees */}
-                        <path d="M1260,420 L1260,318 Q1272,278 1282,262 Q1292,278 1302,318 L1302,420 Z" fill="rgba(3,80,52,0.70)" />
-                        <ellipse cx="1282" cy="254" rx="38" ry="28" fill="rgba(3,80,52,0.65)" />
-
-                        {/* Foreground bush layer */}
-                        <path
-                            d="M0,420 L0,395 Q100,378 200,385 Q300,392 400,375 Q500,358 600,370 Q700,382 800,365 Q900,348 1000,362 Q1100,376 1200,365 Q1320,354 1440,370 L1440,420 Z"
-                            fill="rgba(5,100,65,0.85)"
-                        />
-
-                        {/* Ground */}
-                        <path
-                            d="M0,420 L0,410 Q360,404 720,414 Q1080,424 1440,410 L1440,420 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇦🇷</span>
-                            <span className="text-sm font-semibold text-emerald-400 uppercase tracking-widest">
-                                Província de Salta · NOA Profundo
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Tartagal
-                            <br />
-                            <span className="bg-gradient-to-r from-emerald-300 via-green-400 to-teal-400 bg-clip-text text-transparent text-4xl sm:text-5xl md:text-6xl italic font-display">
-                                Fronteira Cultural do Norte
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            Onde os povos originários ainda escrevem a história cotidiana
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "70.000 hab.",      sub: "Cidade Fronteiriça" },
-                                { icon: Feather,  val: "5 Povos",          sub: "Originários ativos" },
-                                { icon: MapPin,   val: "Salta — NOA",      sub: "Norte Argentino" },
-                                { icon: TreePine, val: "Yungas + Chaco",   sub: "Transição de biomas" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Argentina"
+                countryFlag="🇦🇷"
+                region="Salta - NOA"
+                name={{ first: "Tartagal", second: "" }}
+                tagline="Cinco povos originarios, floresta das Yungas e o carnaval multicultural mais vivo do norte argentino."
+                scene="andes"
+                image="/cities/tartagal.png"
+                accentColor="#10b981"
+                stats={[
+                    { label: "Habitantes", value: 70000 },
+                    { label: "Povos Originarios Ativos", value: 5 },
+                    { label: "Km de Salta", value: 340, suffix: " km" },
+                    { label: "Km de Jujuy", value: 290, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

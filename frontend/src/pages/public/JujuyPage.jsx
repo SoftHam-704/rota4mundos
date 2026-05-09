@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -214,184 +215,23 @@ export default function JujuyPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — Andean twilight */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-[#1a0020] to-[#200015]/80" />
-                </div>
-
-                {/* Andean violet glow — Cerro colors */}
-                <div className="absolute top-[15%] right-[12%] w-80 h-80 md:w-[420px] md:h-[420px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-rose-500/30 via-violet-600/12 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-rose-400/40 via-pink-500/15 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-rose-400 via-pink-500 to-violet-600 shadow-[0_0_100px_rgba(244,63,94,0.55)] animate-pulse-slow" />
-                </div>
-
-                {/* Cerro de los Siete Colores SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 420" className="w-full" preserveAspectRatio="none">
-                        <defs>
-                            {/* Clip path for the iconic Cerro mountain shape */}
-                            <clipPath id="cerro-siete">
-                                <polygon points="720,60 520,400 920,400" />
-                            </clipPath>
-                            <clipPath id="cerro-left">
-                                <polygon points="520,400 380,400 480,180 620,400" />
-                            </clipPath>
-                            <clipPath id="cerro-right">
-                                <polygon points="920,400 1060,400 960,180 820,400" />
-                            </clipPath>
-                        </defs>
-
-                        {/* Stars */}
-                        <circle cx="150" cy="55" r="1" fill="rgba(255,255,255,0.7)" />
-                        <circle cx="320" cy="35" r="1.3" fill="rgba(255,255,255,0.5)" />
-                        <circle cx="560" cy="25" r="0.9" fill="rgba(255,255,255,0.6)" />
-                        <circle cx="880" cy="30" r="1.1" fill="rgba(255,255,255,0.55)" />
-                        <circle cx="1100" cy="45" r="1.2" fill="rgba(255,255,255,0.6)" />
-                        <circle cx="1320" cy="28" r="0.8" fill="rgba(255,255,255,0.5)" />
-                        <circle cx="250" cy="90" r="0.7" fill="rgba(255,255,255,0.4)" />
-                        <circle cx="1200" cy="75" r="0.9" fill="rgba(255,255,255,0.45)" />
-                        <circle cx="420" cy="68" r="0.8" fill="rgba(255,255,255,0.35)" />
-                        <circle cx="1380" cy="60" r="1" fill="rgba(255,255,255,0.5)" />
-
-                        {/* Far background ridge — violet/indigo */}
-                        <path
-                            d="M0,420 L0,320 Q80,280 160,295 Q280,310 360,250 Q440,190 520,220 Q600,250 680,190 Q760,130 840,160 Q920,190 1000,145 Q1100,95 1180,130 Q1280,170 1360,140 Q1400,125 1440,135 L1440,420 Z"
-                            fill="rgba(109,40,217,0.18)"
-                        />
-
-                        {/* Side mountain left — terracota */}
-                        <path
-                            d="M0,420 L0,360 Q80,330 160,340 Q240,350 320,300 Q380,265 440,280 Q500,295 560,270 Q580,262 600,265 L600,420 Z"
-                            fill="rgba(180,83,9,0.28)"
-                        />
-
-                        {/* Side mountain right — deep red */}
-                        <path
-                            d="M840,265 Q860,260 900,270 Q960,285 1020,265 Q1100,240 1160,255 Q1260,275 1360,255 Q1400,248 1440,258 L1440,420 L840,420 Z"
-                            fill="rgba(153,27,27,0.28)"
-                        />
-
-                        {/* ─── Cerro de los Siete Colores (center) ─── */}
-                        {/* White/grey top */}
-                        <rect x="520" y="60" width="400" height="48" fill="rgba(226,232,240,0.7)" clipPath="url(#cerro-siete)" />
-                        {/* Violet band */}
-                        <rect x="520" y="108" width="400" height="44" fill="rgba(124,58,237,0.75)" clipPath="url(#cerro-siete)" />
-                        {/* Yellow/ochre band */}
-                        <rect x="520" y="152" width="400" height="42" fill="rgba(217,119,6,0.80)" clipPath="url(#cerro-siete)" />
-                        {/* Green band */}
-                        <rect x="520" y="194" width="400" height="40" fill="rgba(21,128,61,0.65)" clipPath="url(#cerro-siete)" />
-                        {/* Bright yellow band */}
-                        <rect x="520" y="234" width="400" height="38" fill="rgba(234,179,8,0.75)" clipPath="url(#cerro-siete)" />
-                        {/* Red/terracota band */}
-                        <rect x="520" y="272" width="400" height="44" fill="rgba(185,28,28,0.85)" clipPath="url(#cerro-siete)" />
-                        {/* Dark red base */}
-                        <rect x="520" y="316" width="400" height="90" fill="rgba(120,20,20,0.95)" clipPath="url(#cerro-siete)" />
-
-                        {/* Left side cerro — warmer red */}
-                        <rect x="380" y="180" width="240" height="220" fill="rgba(154,52,18,0.7)" clipPath="url(#cerro-left)" />
-
-                        {/* Right side cerro — amber/brown */}
-                        <rect x="820" y="180" width="240" height="220" fill="rgba(146,64,14,0.65)" clipPath="url(#cerro-right)" />
-
-                        {/* Mid foreground valley + hills */}
-                        <path
-                            d="M0,420 L0,385 Q180,372 360,378 Q540,384 620,368 Q700,352 720,358 Q740,352 820,368 Q900,384 1080,378 Q1260,372 1440,385 L1440,420 Z"
-                            fill="rgba(6,27,51,0.96)"
-                        />
-
-                        {/* Foreground ground */}
-                        <path
-                            d="M0,420 L0,408 Q360,402 720,412 Q1080,422 1440,408 L1440,420 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-
-                        {/* Village silhouette — Purmamarca church tower */}
-                        <rect x="694" y="355" width="3" height="28" fill="rgba(244,63,94,0.5)" />
-                        <polygon points="695.5,355 689,367 702,367" fill="rgba(244,63,94,0.45)" />
-                        <rect x="687" y="365" width="18" height="16" fill="rgba(244,63,94,0.28)" />
-                        {/* Small houses */}
-                        <rect x="660" y="373" width="22" height="13" fill="rgba(244,63,94,0.18)" />
-                        <polygon points="660,373 671,365 682,373" fill="rgba(244,63,94,0.22)" />
-                        <rect x="712" y="372" width="20" height="14" fill="rgba(244,63,94,0.18)" />
-                        <polygon points="712,372 722,364 732,372" fill="rgba(244,63,94,0.22)" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇦🇷</span>
-                            <span className="text-sm font-semibold text-rose-400 uppercase tracking-widest">
-                                Noroeste Argentino · Patrimônio UNESCO
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Jujuy
-                            <br />
-                            <span className="bg-gradient-to-r from-rose-300 via-pink-400 to-violet-400 bg-clip-text text-transparent text-5xl sm:text-6xl md:text-7xl italic font-display">
-                                A Alma dos Andes
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            Onde a Pachamama ainda vive e as montanhas têm sete cores
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "320.000 hab.",      sub: "Capital Provincial" },
-                                { icon: Calendar, val: "1593",               sub: "Fundação Colonial" },
-                                { icon: MapPin,   val: "NOA — Argentina",    sub: "Norte Andino" },
-                                { icon: Star,     val: "UNESCO 2003",        sub: "Quebrada de Humahuaca" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-rose-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Argentina"
+                countryFlag="🇦🇷"
+                region="Provincia de Jujuy"
+                name={{ first: "Jujuy", second: "" }}
+                tagline="Quebrada de Humahuaca UNESCO — 10.000 anos de historia continua nos canions andinos mais coloridos do mundo."
+                scene="andes"
+                image="/cities/jujuy.png"
+                accentColor="#f43f5e"
+                stats={[
+                    { label: "Habitantes", value: 320000 },
+                    { label: "Fundacao Colonial", value: 1593 },
+                    { label: "Km Quebrada UNESCO", value: 155, suffix: " km" },
+                    { label: "Anos de historia", value: 10000 },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

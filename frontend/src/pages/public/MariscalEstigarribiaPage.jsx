@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Fish, Trees, Camera, Compass,
@@ -214,124 +215,23 @@ export default function MariscalEstigarribiaPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — golden Chaco */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-amber-950/40" />
-                </div>
-
-                {/* Chaco sunset glow */}
-                <div className="absolute top-[18%] right-[15%] w-72 h-72 md:w-96 md:h-96 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-amber-400/35 via-orange-500/12 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-amber-300/45 via-yellow-400/18 to-transparent blur-2xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-to-br from-amber-200 via-orange-400 to-red-500 shadow-[0_0_80px_rgba(251,191,36,0.5)] animate-pulse-slow" />
-                </div>
-
-                {/* Chaco horizon SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 300" className="w-full" preserveAspectRatio="none">
-                        {/* Flat Chaco land */}
-                        <path
-                            d="M0,300 L0,220 Q360,215 720,222 Q1080,229 1440,218 L1440,300 Z"
-                            fill="rgba(251,191,36,0.06)"
-                        />
-                        <path
-                            d="M0,300 L0,240 Q360,235 720,242 Q1080,249 1440,238 L1440,300 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        <path
-                            d="M0,300 L0,265 Q360,260 720,267 Q1080,274 1440,263 L1440,300 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Quebracho trees silhouettes */}
-                        <rect x="180" y="195" width="3" height="45" fill="rgba(251,191,36,0.3)" />
-                        <path d="M175,195 Q181.5,180 188,195" fill="rgba(251,191,36,0.25)" />
-                        <rect x="420" y="200" width="3" height="40" fill="rgba(251,191,36,0.25)" />
-                        <path d="M415,200 Q421.5,186 428,200" fill="rgba(251,191,36,0.2)" />
-                        <rect x="780" y="198" width="3" height="44" fill="rgba(251,191,36,0.28)" />
-                        <path d="M775,198 Q781.5,183 788,198" fill="rgba(251,191,36,0.22)" />
-                        <rect x="1100" y="202" width="3" height="38" fill="rgba(251,191,36,0.22)" />
-                        <path d="M1095,202 Q1101.5,189 1108,202" fill="rgba(251,191,36,0.18)" />
-                        {/* Dust particles */}
-                        <circle cx="300" cy="230" r="1.5" fill="rgba(251,191,36,0.2)" />
-                        <circle cx="650" cy="226" r="1" fill="rgba(251,191,36,0.15)" />
-                        <circle cx="950" cy="232" r="1.5" fill="rgba(251,191,36,0.18)" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇵🇾</span>
-                            <span className="text-sm font-semibold text-amber-400 uppercase tracking-widest">
-                                Boquerón · Chaco Paraguaio
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Mariscal
-                            <br />
-                            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 bg-clip-text text-transparent">
-                                Estigarribia
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            O Coração do Chaco Paraguaio
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "8.000 hab.",    sub: "Estimativa" },
-                                { icon: Calendar, val: "Séc. XX",        sub: "Origem Militar" },
-                                { icon: MapPin,   val: "Boquerón",       sub: "Departamento" },
-                                { icon: Compass,  val: "PY-15 + PY-09", sub: "Cruzamento Estratégico" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Paraguai"
+                countryFlag="🇵🇾"
+                region="Departamento Boqueron"
+                name={{ first: "Mariscal", second: "Estigarribia" }}
+                tagline="Novo polo logistico do Chaco — cruzamento estrategico entre a rota bioceanica e a Transchaco."
+                scene="chaco"
+                image="/cities/mariscal_estigarribia.png"
+                accentColor="#a78bfa"
+                stats={[
+                    { label: "Habitantes (estimativa)", value: 8000 },
+                    { label: "Km de Asuncion", value: 500, suffix: " km" },
+                    { label: "% Indigena", value: 65, suffix: "%" },
+                    { label: "Km de Carmelo Peralta", value: 270, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

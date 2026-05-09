@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Fish, Trees, Camera, Compass,
@@ -214,122 +215,23 @@ export default function FiladelfiePage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — wheat gold */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-lime-950/30" />
-                </div>
-
-                {/* European glow */}
-                <div className="absolute top-[18%] right-[15%] w-72 h-72 md:w-96 md:h-96 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-lime-400/30 via-green-500/10 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-lime-300/40 via-yellow-400/15 to-transparent blur-2xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-to-br from-lime-200 via-green-400 to-emerald-500 shadow-[0_0_80px_rgba(132,204,22,0.45)] animate-pulse-slow" />
-                </div>
-
-                {/* Wheat fields horizon SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 300" className="w-full" preserveAspectRatio="none">
-                        <path
-                            d="M0,300 L0,210 Q360,200 720,208 Q1080,216 1440,205 L1440,300 Z"
-                            fill="rgba(132,204,22,0.06)"
-                        />
-                        <path
-                            d="M0,300 L0,235 Q360,225 720,233 Q1080,241 1440,230 L1440,300 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        <path
-                            d="M0,300 L0,263 Q360,258 720,265 Q1080,272 1440,261 L1440,300 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Windmill silhouettes */}
-                        <rect x="220" y="172" width="3" height="60" fill="rgba(132,204,22,0.35)" />
-                        <line x1="221" y1="185" x2="221" y2="185" stroke="none" />
-                        <path d="M221,178 L210,165 M221,178 L232,165 M221,178 L208,188 M221,178 L234,188" fill="none" stroke="rgba(132,204,22,0.3)" strokeWidth="1.5" />
-                        <rect x="580" y="178" width="3" height="55" fill="rgba(132,204,22,0.28)" />
-                        <path d="M581,184 L570,171 M581,184 L592,171 M581,184 L568,194 M581,184 L594,194" fill="none" stroke="rgba(132,204,22,0.25)" strokeWidth="1.5" />
-                        <rect x="980" y="175" width="3" height="58" fill="rgba(132,204,22,0.30)" />
-                        <path d="M981,181 L970,168 M981,181 L992,168 M981,181 L968,191 M981,181 L994,191" fill="none" stroke="rgba(132,204,22,0.26)" strokeWidth="1.5" />
-                        {/* Wheat stalks */}
-                        <path d="M100,232 Q100,220 103,215" fill="none" stroke="rgba(132,204,22,0.2)" strokeWidth="1" />
-                        <path d="M350,228 Q350,216 353,211" fill="none" stroke="rgba(132,204,22,0.18)" strokeWidth="1" />
-                        <path d="M750,230 Q750,218 753,213" fill="none" stroke="rgba(132,204,22,0.2)" strokeWidth="1" />
-                        <path d="M1200,226 Q1200,214 1203,209" fill="none" stroke="rgba(132,204,22,0.17)" strokeWidth="1" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇵🇾</span>
-                            <span className="text-sm font-semibold text-lime-400 uppercase tracking-widest">
-                                Boquerón · Chaco Paraguaio
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Fila
-                            <span className="bg-gradient-to-r from-lime-300 via-green-400 to-emerald-400 bg-clip-text text-transparent">
-                                delfia
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            A Alma Europeia do Chaco Paraguaio
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "~14.000 hab.",       sub: "Estimativa" },
-                                { icon: Calendar, val: "Anos 1930",           sub: "Fundação Mennonita" },
-                                { icon: MapPin,   val: "Boquerón",            sub: "Departamento" },
-                                { icon: Heart,    val: "Coop. Fernheim",      sub: "Motor Econômico" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-lime-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Paraguai"
+                countryFlag="🇵🇾"
+                region="Departamento Boqueron"
+                name={{ first: "Filadelfia", second: "" }}
+                tagline="Colonia mennonita que transformou o deserto do Chaco em polo agroindustrial."
+                scene="chaco"
+                image="/cities/filadelfia.png"
+                accentColor="#84cc16"
+                stats={[
+                    { label: "Habitantes (estimativa)", value: 14000 },
+                    { label: "Fundacao Mennonita", value: 1930 },
+                    { label: "Idiomas falados", value: 4 },
+                    { label: "Km de Asuncion", value: 480, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -214,184 +215,23 @@ export default function AntofagastaPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — deep Pacific night */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-[#001825] to-[#000e18]/80" />
-                </div>
-
-                {/* Pacific ocean glow — moonlight on water */}
-                <div className="absolute top-[15%] right-[12%] w-80 h-80 md:w-[420px] md:h-[420px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-sky-500/28 via-blue-600/10 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-sky-400/38 via-cyan-500/14 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-sky-300 via-blue-400 to-cyan-500 shadow-[0_0_100px_rgba(56,189,248,0.55)] animate-pulse-slow" />
-                </div>
-
-                {/* La Portada + Coastal cliff SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 440" className="w-full" preserveAspectRatio="none">
-                        <defs>
-                            {/* Ocean water shimmer */}
-                            <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="rgba(14,165,233,0.22)" />
-                                <stop offset="100%" stopColor="rgba(3,105,161,0.08)" />
-                            </linearGradient>
-                            {/* Atacama desert glow — amber on left */}
-                            <linearGradient id="desert-glow" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stopColor="rgba(251,191,36,0.08)" />
-                                <stop offset="50%" stopColor="transparent" />
-                            </linearGradient>
-                        </defs>
-
-                        {/* Stars — many for Atacama sky */}
-                        <circle cx="80"  cy="32" r="1.0" fill="rgba(255,255,255,0.75)" />
-                        <circle cx="200" cy="18" r="1.3" fill="rgba(255,255,255,0.65)" />
-                        <circle cx="340" cy="28" r="0.8" fill="rgba(255,255,255,0.70)" />
-                        <circle cx="480" cy="12" r="1.1" fill="rgba(255,255,255,0.60)" />
-                        <circle cx="600" cy="22" r="0.9" fill="rgba(255,255,255,0.68)" />
-                        <circle cx="720" cy="8"  r="1.2" fill="rgba(255,255,255,0.72)" />
-                        <circle cx="860" cy="20" r="0.8" fill="rgba(255,255,255,0.58)" />
-                        <circle cx="980" cy="35" r="1.0" fill="rgba(255,255,255,0.64)" />
-                        <circle cx="1100" cy="15" r="1.1" fill="rgba(255,255,255,0.70)" />
-                        <circle cx="1250" cy="28" r="0.9" fill="rgba(255,255,255,0.62)" />
-                        <circle cx="1380" cy="18" r="1.0" fill="rgba(255,255,255,0.68)" />
-                        {/* More faint stars */}
-                        <circle cx="150" cy="60" r="0.7" fill="rgba(255,255,255,0.38)" />
-                        <circle cx="420" cy="52" r="0.6" fill="rgba(255,255,255,0.32)" />
-                        <circle cx="760" cy="48" r="0.7" fill="rgba(255,255,255,0.40)" />
-                        <circle cx="1050" cy="55" r="0.6" fill="rgba(255,255,255,0.35)" />
-                        <circle cx="1320" cy="50" r="0.8" fill="rgba(255,255,255,0.42)" />
-
-                        {/* Desert glow from left (Atacama warmth) */}
-                        <rect x="0" y="0" width="1440" height="440" fill="url(#desert-glow)" />
-
-                        {/* Far coastal mountains — dry Atacama range */}
-                        <path
-                            d="M0,440 L0,310 Q80,275 160,285 Q260,298 340,250 Q420,202 500,228 Q580,254 660,215 Q740,176 820,198 Q900,220 980,185 Q1080,145 1160,170 Q1260,198 1360,165 Q1400,152 1440,160 L1440,440 Z"
-                            fill="rgba(180,83,9,0.14)"
-                        />
-
-                        {/* Mid coastal cliffs — reddish brown Atacama */}
-                        <path
-                            d="M0,440 L0,360 Q80,335 160,348 Q260,362 340,318 Q400,285 460,302 Q520,319 580,295 Q640,271 700,290 Q760,309 840,278 Q920,247 1000,268 Q1080,289 1160,262 Q1240,235 1320,252 Q1380,264 1440,248 L1440,440 Z"
-                            fill="rgba(154,52,18,0.22)"
-                        />
-
-                        {/* ─── La Portada — the iconic arch ─── */}
-                        {/* Main rock mass left of arch */}
-                        <path d="M420,440 L420,340 Q435,318 455,308 Q465,320 472,340 L472,440 Z" fill="rgba(120,53,15,0.82)" />
-                        <path d="M420,320 Q430,305 455,308 Q462,310 468,318 L472,340 L420,340 Z" fill="rgba(146,64,14,0.78)" />
-
-                        {/* The arch itself */}
-                        {/* Left pillar */}
-                        <path d="M455,440 L455,340 Q458,328 462,322 Q466,328 468,340 L468,440 Z" fill="rgba(101,44,10,0.90)" />
-                        {/* Right pillar */}
-                        <path d="M520,440 L520,340 Q522,328 526,322 Q530,328 532,340 L532,440 Z" fill="rgba(101,44,10,0.90)" />
-                        {/* Arch top */}
-                        <path d="M462,322 Q491,295 526,322 Q514,308 491,302 Q468,308 462,322 Z" fill="rgba(120,53,15,0.88)" />
-                        {/* Arch opening — sky blue */}
-                        <path d="M465,324 Q491,300 523,324 Q516,312 491,306 Q466,312 465,324 Z" fill="rgba(2,132,199,0.25)" />
-
-                        {/* Main rock mass right of arch */}
-                        <path d="M526,440 L526,320 Q545,305 568,310 Q580,322 585,340 L585,440 Z" fill="rgba(120,53,15,0.80)" />
-
-                        {/* Ocean water layer */}
-                        <path
-                            d="M0,440 L0,400 Q180,390 360,398 Q540,406 720,392 Q900,378 1080,390 Q1260,402 1440,388 L1440,440 Z"
-                            fill="url(#ocean)"
-                        />
-
-                        {/* Ocean shimmer lines — waves */}
-                        <path d="M0,415 Q120,410 240,415 Q360,420 480,414 Q600,408 720,414 Q840,420 960,413 Q1080,406 1200,413 Q1320,420 1440,412" fill="none" stroke="rgba(56,189,248,0.18)" strokeWidth="1.5" />
-                        <path d="M0,425 Q180,420 360,426 Q540,432 720,424 Q900,416 1080,424 Q1260,432 1440,422" fill="none" stroke="rgba(56,189,248,0.12)" strokeWidth="1" />
-
-                        {/* Foreground coastal cliff — dark */}
-                        <path
-                            d="M0,440 L0,420 Q200,412 400,418 Q600,424 800,416 Q1000,408 1200,416 Q1360,422 1440,415 L1440,440 Z"
-                            fill="rgba(6,27,51,0.97)"
-                        />
-
-                        {/* Ground */}
-                        <path
-                            d="M0,440 L0,432 Q360,428 720,436 Q1080,444 1440,430 L1440,440 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇨🇱</span>
-                            <span className="text-sm font-semibold text-sky-400 uppercase tracking-widest">
-                                Região de Antofagasta · Norte do Chile
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Antofagasta
-                            <br />
-                            <span className="bg-gradient-to-r from-sky-300 via-cyan-400 to-blue-400 bg-clip-text text-transparent text-4xl sm:text-5xl md:text-6xl italic font-display">
-                                Onde o Atacama Beija o Pacífico
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            O portal do Pacífico — destino final da travessia bioceânica
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "500.000 hab.",      sub: "Capital Regional" },
-                                { icon: Anchor,   val: "Porto Pacífico",    sub: "Saída da Rota" },
-                                { icon: MapPin,   val: "Norte do Chile",    sub: "Atacama + Oceano" },
-                                { icon: Eye, val: "Melhores Céus",    sub: "ESO Paranal — VLT" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-sky-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Chile"
+                countryFlag="🇨🇱"
+                region="Regiao de Antofagasta"
+                name={{ first: "Antofagasta", second: "" }}
+                tagline="Onde o Atacama beija o Pacifico — capital do cobre, dos observatorios e da maior vista continental do oceano."
+                scene="pacifico"
+                image="/cities/antofagasta.png"
+                accentColor="#38bdf8"
+                stats={[
+                    { label: "Habitantes", value: 500000 },
+                    { label: "Fundacao", value: 1866 },
+                    { label: "Altitude VLT Paranal (m)", value: 2635, suffix: " m" },
+                    { label: "Km de Santiago", value: 1360, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

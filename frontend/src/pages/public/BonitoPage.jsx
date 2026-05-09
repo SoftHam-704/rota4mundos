@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     MapPin, ArrowRight, ArrowLeft, Clock, Users, Droplets,
     Mountain, Fish, Leaf, Star, Camera, Compass, Waves, ZoomIn, X,
@@ -259,152 +260,23 @@ export default function BonitoPage() {
     return (
         <main className="bg-primary-950 text-white">
 
-            {/* ── HERO ─────────────────────────────────────────────────────── */}
-            <section ref={heroRef} className="relative min-h-screen flex items-end overflow-hidden">
-                {/* Fundo gradiente — tons de mar profundo */}
-                <div className="absolute inset-0 bg-gradient-to-b from-cyan-950 via-teal-950 to-primary-950" />
-
-                {/* Brilho solar na superfície */}
-                <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[700px] h-[700px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-cyan-400/20 via-teal-500/10 to-transparent blur-3xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-radial from-cyan-200/30 via-teal-300/15 to-transparent blur-2xl" />
-                </div>
-
-                {/* Raios de luz subaquática */}
-                <div className="absolute inset-0 pointer-events-none opacity-20">
-                    {[...Array(8)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="absolute top-0 w-[3px] bg-gradient-to-b from-cyan-300/60 via-teal-400/20 to-transparent"
-                            style={{
-                                left: `${10 + i * 11}%`,
-                                height: "70%",
-                                transform: `rotate(${-15 + i * 5}deg)`,
-                                transformOrigin: "top center",
-                            }}
-                        />
-                    ))}
-                </div>
-
-                {/* SVG: silhueta subaquática */}
-                <div className="absolute bottom-0 left-0 right-0 h-80 pointer-events-none">
-                    <svg viewBox="0 0 1440 320" className="absolute bottom-0 w-full h-full" preserveAspectRatio="none">
-                        {/* Leito rochoso */}
-                        <path
-                            d="M0,320 L0,240 Q120,200 240,230 Q360,160 480,210 Q600,180 720,200 Q840,160 960,195 Q1080,175 1200,205 Q1320,185 1440,215 L1440,320 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        {/* Camada de pedras/calcário */}
-                        <path
-                            d="M0,320 L0,270 Q180,250 360,265 Q540,240 720,258 Q900,245 1080,260 Q1260,248 1440,262 L1440,320 Z"
-                            fill="rgba(11,46,79,0.9)"
-                        />
-                        {/* Plantas aquáticas */}
-                        {[80, 200, 340, 500, 660, 820, 980, 1120, 1280, 1400].map((x, i) => (
-                            <g key={i}>
-                                <path
-                                    d={`M${x},320 Q${x - 15},${280 - i * 4} ${x - 5},${240 - i * 3}`}
-                                    fill="none"
-                                    stroke="rgba(34,197,94,0.4)"
-                                    strokeWidth="2"
-                                />
-                                <path
-                                    d={`M${x + 8},320 Q${x + 20},${275 - i * 3} ${x + 12},${235 - i * 4}`}
-                                    fill="none"
-                                    stroke="rgba(20,184,166,0.35)"
-                                    strokeWidth="2"
-                                />
-                            </g>
-                        ))}
-                        {/* Peixes silhueta */}
-                        <ellipse cx="300" cy="210" rx="20" ry="8" fill="rgba(99,199,255,0.15)" />
-                        <ellipse cx="720" cy="195" rx="28" ry="10" fill="rgba(99,199,255,0.12)" />
-                        <ellipse cx="1100" cy="220" rx="22" ry="9" fill="rgba(99,199,255,0.15)" />
-                        {/* Bolhas */}
-                        {[150, 420, 690, 950, 1200].map((x, i) => (
-                            <circle key={i} cx={x} cy={180 + i * 8} r="3" fill="rgba(186,230,253,0.25)" />
-                        ))}
-                    </svg>
-                </div>
-
-                {/* Conteúdo hero */}
-                <div className="relative z-10 container-custom pb-32 pt-40">
-                    <div className="max-w-4xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="flex flex-wrap items-center gap-3 mb-6"
-                        >
-                            <Link
-                                to="/cidades"
-                                className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4" /> Cidades
-                            </Link>
-                            <span className="text-white/20">/</span>
-                            <span className="text-sm text-cyan-400/80">Mato Grosso do Sul · Brasil</span>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/25 mb-6"
-                        >
-                            <Waves className="w-3.5 h-3.5 text-cyan-400" />
-                            <span className="text-xs font-semibold text-cyan-300 uppercase tracking-widest">Capital do Ecoturismo</span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] mb-6"
-                        >
-                            <span className="text-white">Bonito</span>
-                            <br />
-                            <span className="bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-300 bg-clip-text text-transparent">
-                                Onde o Mundo Vê
-                                <br />
-                                Dentro da Água
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed mb-10"
-                        >
-                            600 milhões de anos de calcário criaram rios com visibilidade de 40 metros e grutas
-                            com lagos azul-safira. Uma lei municipal de 1997 garantiu que continuassem assim.
-                            Bonito é a prova de que a natureza e o turismo podem coexistir — se houver coragem
-                            para dizer não quando a cota acabou.
-                        </motion.p>
-
-                        {/* Stats hero */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.6 }}
-                            className="flex flex-wrap gap-6"
-                        >
-                            {[
-                                { v: "297 km", l: "de Campo Grande" },
-                                { v: "140 km", l: "de Porto Murtinho" },
-                                { v: "40 m", l: "de visibilidade" },
-                                { v: "27 anos", l: "de lei preservada" },
-                            ].map((s, i) => (
-                                <div key={i} className="flex flex-col">
-                                    <span className="font-display text-2xl font-bold text-cyan-300">{s.v}</span>
-                                    <span className="text-xs text-white/40">{s.l}</span>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Brasil"
+                countryFlag="🇧🇷"
+                region="Mato Grosso do Sul"
+                name={{ first: "Bonito", second: "" }}
+                tagline="Rios cristalinos de 40 metros de visibilidade — onde a lei de 1997 protege o que o turismo poderia ter destruido."
+                scene="rio-cristalino"
+                image="/cities/bonito.png"
+                accentColor="#22d3ee"
+                stats={[
+                    { label: "Metros de visibilidade", value: 40, suffix: " m" },
+                    { label: "Km de Campo Grande", value: 297, suffix: " km" },
+                    { label: "Km de Porto Murtinho", value: 140, suffix: " km" },
+                    { label: "Anos de lei preservada", value: 27 },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────────────────── */}
             <InfograficoSection />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -214,129 +215,23 @@ export default function SaltaPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — Andean sunset */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-[#1a0a00] to-[#2d0f00]/80" />
-                </div>
-
-                {/* Andean golden glow */}
-                <div className="absolute top-[15%] right-[12%] w-80 h-80 md:w-[420px] md:h-[420px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-orange-500/35 via-red-600/12 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-amber-400/45 via-orange-500/18 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-amber-300 via-orange-500 to-red-600 shadow-[0_0_100px_rgba(249,115,22,0.6)] animate-pulse-slow" />
-                </div>
-
-                {/* Andes mountain silhouette SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 360" className="w-full" preserveAspectRatio="none">
-                        {/* Far mountains — lighter */}
-                        <path
-                            d="M0,360 L0,280 Q60,240 120,220 Q180,200 240,230 Q300,260 360,200 Q420,140 480,170 Q540,200 600,160 Q660,120 720,150 Q780,180 840,130 Q900,80 960,110 Q1020,140 1080,100 Q1140,60 1200,90 Q1260,120 1320,80 Q1380,40 1440,70 L1440,360 Z"
-                            fill="rgba(180,83,9,0.15)"
-                        />
-                        {/* Mid mountains */}
-                        <path
-                            d="M0,360 L0,300 Q80,270 160,250 Q240,230 320,260 Q400,290 480,240 Q560,190 640,220 Q720,250 800,200 Q880,150 960,185 Q1040,220 1120,180 Q1200,140 1280,175 Q1360,210 1440,185 L1440,360 Z"
-                            fill="rgba(154,52,18,0.25)"
-                        />
-                        {/* Front mountains — darkest */}
-                        <path
-                            d="M0,360 L0,320 Q120,295 240,310 Q360,325 480,285 Q600,245 720,270 Q840,295 960,258 Q1080,221 1200,248 Q1320,275 1440,255 L1440,360 Z"
-                            fill="rgba(6,27,51,0.97)"
-                        />
-                        <path
-                            d="M0,360 L0,345 Q360,335 720,348 Q1080,361 1440,342 L1440,360 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Colonial church silhouette */}
-                        <rect x="690" y="248" width="4" height="32" fill="rgba(249,115,22,0.4)" />
-                        <polygon points="692,248 684,262 700,262" fill="rgba(249,115,22,0.35)" />
-                        <rect x="686" y="260" width="16" height="22" fill="rgba(249,115,22,0.25)" />
-                        {/* Stars */}
-                        <circle cx="200" cy="80" r="1" fill="rgba(255,255,255,0.6)" />
-                        <circle cx="450" cy="55" r="1.2" fill="rgba(255,255,255,0.5)" />
-                        <circle cx="700" cy="40" r="0.8" fill="rgba(255,255,255,0.7)" />
-                        <circle cx="950" cy="65" r="1" fill="rgba(255,255,255,0.5)" />
-                        <circle cx="1200" cy="45" r="1.2" fill="rgba(255,255,255,0.6)" />
-                        <circle cx="320" cy="100" r="0.8" fill="rgba(255,255,255,0.4)" />
-                        <circle cx="1050" cy="90" r="1" fill="rgba(255,255,255,0.45)" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇦🇷</span>
-                            <span className="text-sm font-semibold text-orange-400 uppercase tracking-widest">
-                                Província de Salta · Norte Argentino
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Salta
-                            <br />
-                            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 bg-clip-text text-transparent text-5xl sm:text-6xl md:text-7xl italic font-display">
-                                La Linda
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            A Alma Folclórica dos Andes Argentinos
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,    val: "620.000 hab.",    sub: "Capital Provincial" },
-                                { icon: Calendar, val: "1582",             sub: "Fundação Colonial" },
-                                { icon: MapPin,   val: "Norte Argentino",  sub: "Porta dos Andes" },
-                                { icon: Music,    val: "Peñas Folclóricas", sub: "Capital do Folclore" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Argentina"
+                countryFlag="🇦🇷"
+                region="Provincia de Salta"
+                name={{ first: "Salta", second: "La Linda" }}
+                tagline="A alma folclorica dos Andes argentinos — colonial, vibrante e portao para as nuvens."
+                scene="andes"
+                image="/cities/salta.png"
+                accentColor="#f97316"
+                stats={[
+                    { label: "Habitantes", value: 620000 },
+                    { label: "Fundacao Colonial", value: 1582 },
+                    { label: "Altitude (m)", value: 1187, suffix: " m" },
+                    { label: "Km de Buenos Aires", value: 1580, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

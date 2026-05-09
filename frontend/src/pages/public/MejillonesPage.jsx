@@ -6,6 +6,7 @@ import {
     Utensils, Compass, Droplets, Wind,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 
 const AC = "#0891b2";
 const ACDIM = "rgba(8,145,178,0.15)";
@@ -205,70 +206,23 @@ export default function MejillonesPage() {
     return (
         <div style={{ background: "#001e3c", minHeight: "100vh", color: "#fff", fontFamily: "Inter, sans-serif" }}>
 
-            {/* ── HERO ───────────────────────────────────────────────── */}
-            <section style={{ position: "relative", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden", background: "linear-gradient(160deg, #001429 0%, #002952 50%, #003d6e 100%)" }}>
-
-                {/* Glow orb */}
-                <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(8,145,178,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-                {/* SVG */}
-                <div style={{ position: "absolute", inset: 0, opacity: 0.7 }}>
-                    <PortSVG />
-                </div>
-
-                {/* Gradient overlay */}
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #001e3c 0%, rgba(0,30,60,0.55) 50%, rgba(0,20,41,0.2) 100%)" }} />
-
-                <div className="container-rota" style={{ position: "relative", zIndex: 2, paddingTop: "120px", paddingBottom: "80px" }}>
-                    <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-
-                        {/* breadcrumb */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "28px" }}>
-                            <Link to="/" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", textDecoration: "none", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase" }}>Início</Link>
-                            <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px" }}>›</span>
-                            <Link to="/cidades" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", textDecoration: "none", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase" }}>Cidades</Link>
-                            <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px" }}>›</span>
-                            <span style={{ fontSize: "11px", color: AC, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>Mejillones</span>
-                        </div>
-
-                        {/* badge */}
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "20px" }}>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "10px", fontWeight: 700, color: AC, letterSpacing: "0.18em", textTransform: "uppercase", background: "rgba(8,145,178,0.12)", padding: "4px 12px", borderRadius: "100px", border: "1px solid rgba(8,145,178,0.25)" }}>
-                                🇨🇱 Chile · Região de Antofagasta
-                            </span>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", background: "rgba(255,255,255,0.05)", padding: "4px 12px", borderRadius: "100px", border: "1px solid rgba(255,255,255,0.08)" }}>
-                                Ponto 13 · Rota Bioceânica
-                            </span>
-                        </div>
-
-                        <h1 style={{ fontFamily: '"Bebas Neue",sans-serif', fontSize: "clamp(3.5rem, 10vw, 7rem)", lineHeight: 0.9, letterSpacing: "0.04em", marginBottom: "18px", color: "#fff" }}>
-                            MEJILLONES
-                            <br />
-                            <span style={{ color: AC }}>O PORTO DO PACÍFICO</span>
-                        </h1>
-
-                        <p style={{ fontSize: "clamp(14px, 2.2vw, 17px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.75, maxWidth: "580px", marginBottom: "36px" }}>
-                            Depois de travessia pelo Pantanal, Chaco, Andes e Atacama, o viajante chega ao Pacífico em um porto que preserva o que as grandes cidades já perderam: autenticidade marítima, pesca artesanal e silêncio de oceano.
-                        </p>
-
-                        {/* stats */}
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px", maxWidth: "580px" }}>
-                            <StatCard icon={Users} label="Habitantes" value="12.000" />
-                            <StatCard icon={Clock} label="Contexto Hist." value="1879" />
-                            <StatCard icon={MapPin} label="Localização" value="Norte Chile" />
-                            <StatCard icon={Anchor} label="Identidade" value="Porto Artesanal" />
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* scroll cue */}
-                <motion.div
-                    animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}
-                    style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", width: "22px", height: "36px", borderRadius: "11px", border: "2px solid rgba(8,145,178,0.4)", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "5px" }}
-                >
-                    <div style={{ width: "3px", height: "8px", borderRadius: "2px", background: AC, opacity: 0.7 }} />
-                </motion.div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Chile"
+                countryFlag="🇨🇱"
+                region="Regiao de Antofagasta"
+                name={{ first: "Mejillones", second: "" }}
+                tagline="O encerramento simbolico da travessia continental — porto artesanal, camanchaca e o por do sol mais emocionante do Pacifico."
+                scene="pacifico"
+                image="/cities/mejillones.png"
+                accentColor="#0891b2"
+                stats={[
+                    { label: "Habitantes (estimativa)", value: 12000 },
+                    { label: "Fundacao", value: 1879 },
+                    { label: "Km de Antofagasta", value: 60, suffix: " km" },
+                    { label: "Km da rota total", value: 3000, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO LIGHTBOX ────────────────────────────────── */}
             <section style={{ background: "#001428", padding: "80px 0" }}>

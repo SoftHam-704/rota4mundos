@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Ruler, Calendar,
     Flame, Music, Fish, Trees, Camera, Clock, Phone, Mail,
@@ -263,126 +264,23 @@ export default function PortoMurtinhoPage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section ref={heroRef} className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-primary-900 to-amber-950/60" />
-                </div>
-
-                {/* Sun glow */}
-                <div className="absolute top-[18%] right-[15%] w-72 h-72 md:w-96 md:h-96 pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-secondary-400/50 via-secondary-500/20 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-secondary-300/60 via-secondary-400/30 to-transparent blur-2xl" />
-                    <div className="absolute inset-16 rounded-full bg-gradient-to-br from-secondary-200 via-secondary-400 to-orange-500 shadow-[0_0_80px_rgba(244,162,97,0.5)] animate-pulse-slow" />
-                </div>
-
-                {/* River SVG silhouette */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 300" className="w-full" preserveAspectRatio="none">
-                        {/* Water shimmer */}
-                        <path
-                            d="M0,300 L0,200 Q180,160 360,190 Q540,220 720,175 Q900,130 1080,165 Q1260,200 1440,150 L1440,300 Z"
-                            fill="rgba(42,157,143,0.12)"
-                        />
-                        {/* River bank */}
-                        <path
-                            d="M0,300 L0,230 Q200,190 400,215 Q600,240 800,195 Q1000,150 1200,185 Q1350,210 1440,170 L1440,300 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                        {/* Foreground embankment */}
-                        <path
-                            d="M0,300 L0,260 Q300,240 600,255 Q900,270 1200,248 Q1350,240 1440,255 L1440,300 Z"
-                            fill="rgba(11,46,79,1)"
-                        />
-                        {/* Dock / cais suggestion */}
-                        <rect x="280" y="220" width="6" height="50" fill="rgba(244,162,97,0.5)" />
-                        <rect x="260" y="240" width="50" height="4" fill="rgba(244,162,97,0.4)" />
-                        <rect x="620" y="205" width="4" height="45" fill="rgba(244,162,97,0.4)" />
-                        <rect x="600" y="225" width="40" height="3" fill="rgba(244,162,97,0.3)" />
-                        {/* Lights on water */}
-                        <ellipse cx="290" cy="245" rx="30" ry="5" fill="rgba(244,162,97,0.15)" />
-                        <ellipse cx="620" cy="235" rx="25" ry="4" fill="rgba(244,162,97,0.12)" />
-                        {/* Birds */}
-                        <path d="M500,100 Q504,96 508,100" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-                        <path d="M515,88 Q520,84 525,88" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
-                        <path d="M460,115 Q464,111 468,115" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇧🇷</span>
-                            <span className="text-sm font-semibold text-secondary-400 uppercase tracking-widest">
-                                Mato Grosso do Sul · Fronteira Brasil-Paraguai
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Porto
-                            <br />
-                            <span className="bg-gradient-to-r from-secondary-300 via-secondary-400 to-orange-400 bg-clip-text text-transparent">
-                                Murtinho
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            A Guardiã do Rio Paraguai
-                        </motion.p>
-
-                        {/* Stats bar */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users, val: "12.859 hab.", sub: "Censo 2022" },
-                                { icon: Calendar, val: "1912", sub: "Fundação" },
-                                { icon: Ruler, val: "17.502 km²", sub: "Território" },
-                                { icon: MapPin, val: "437 km", sub: "de Campo Grande" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-secondary-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Brasil"
+                countryFlag="🇧🇷"
+                region="Mato Grosso do Sul"
+                name={{ first: "Porto", second: "Murtinho" }}
+                tagline="A ultima cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos."
+                scene="ponte"
+                image="/cities/porto_murtinho.png"
+                accentColor="#F4A261"
+                stats={[
+                    { label: "Habitantes (Censo 2022)", value: 12859 },
+                    { label: "Fundacao", value: 1912 },
+                    { label: "Territorio (km2)", value: 17502 },
+                    { label: "Km de Campo Grande", value: 437, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />

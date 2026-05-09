@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import CityHero from "../../components/CityHero.jsx";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -214,178 +215,23 @@ export default function IquiquePage() {
     return (
         <div className="min-h-screen">
 
-            {/* ── HERO ─────────────────────────────────────────── */}
-            <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-primary-950">
-
-                {/* Sky gradient — Atacama desert night with amber undertone */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-primary-950 via-[#1a0e00] to-[#110900]/80" />
-                </div>
-
-                {/* Desert golden glow — Cerro Dragón */}
-                <div className="absolute top-[15%] right-[12%] w-80 h-80 md:w-[420px] md:h-[420px] pointer-events-none">
-                    <div className="absolute inset-0 rounded-full bg-gradient-radial from-amber-500/28 via-orange-600/10 to-transparent blur-3xl animate-pulse-slow" />
-                    <div className="absolute inset-8 rounded-full bg-gradient-radial from-amber-400/36 via-yellow-500/13 to-transparent blur-2xl" />
-                    <div className="absolute inset-20 rounded-full bg-gradient-to-br from-amber-300 via-orange-400 to-amber-500 shadow-[0_0_100px_rgba(251,191,36,0.50)] animate-pulse-slow" />
-                </div>
-
-                {/* Cerro Dragón + coastal city SVG */}
-                <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-                    <svg viewBox="0 0 1440 440" className="w-full" preserveAspectRatio="none">
-                        <defs>
-                            {/* Dune sand gradient */}
-                            <linearGradient id="dune-sand" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="rgba(217,119,6,0.55)" />
-                                <stop offset="100%" stopColor="rgba(120,53,15,0.82)" />
-                            </linearGradient>
-                            {/* Pacific water shimmer */}
-                            <linearGradient id="pac-water" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="rgba(14,165,233,0.20)" />
-                                <stop offset="100%" stopColor="rgba(7,89,133,0.06)" />
-                            </linearGradient>
-                        </defs>
-
-                        {/* Stars — many for Atacama sky */}
-                        <circle cx="60"  cy="25" r="1.1" fill="rgba(255,255,255,0.75)" />
-                        <circle cx="180" cy="14" r="0.9" fill="rgba(255,255,255,0.68)" />
-                        <circle cx="310" cy="30" r="1.2" fill="rgba(255,255,255,0.72)" />
-                        <circle cx="460" cy="10" r="0.8" fill="rgba(255,255,255,0.65)" />
-                        <circle cx="580" cy="20" r="1.0" fill="rgba(255,255,255,0.70)" />
-                        <circle cx="720" cy="8"  r="1.1" fill="rgba(255,255,255,0.75)" />
-                        <circle cx="850" cy="22" r="0.9" fill="rgba(255,255,255,0.62)" />
-                        <circle cx="990" cy="16" r="1.2" fill="rgba(255,255,255,0.68)" />
-                        <circle cx="1120" cy="30" r="0.8" fill="rgba(255,255,255,0.65)" />
-                        <circle cx="1270" cy="12" r="1.0" fill="rgba(255,255,255,0.70)" />
-                        <circle cx="1400" cy="24" r="0.9" fill="rgba(255,255,255,0.68)" />
-                        <circle cx="140" cy="55" r="0.6" fill="rgba(255,255,255,0.38)" />
-                        <circle cx="390" cy="48" r="0.7" fill="rgba(255,255,255,0.42)" />
-                        <circle cx="650" cy="42" r="0.6" fill="rgba(255,255,255,0.36)" />
-                        <circle cx="920" cy="52" r="0.7" fill="rgba(255,255,255,0.40)" />
-                        <circle cx="1180" cy="44" r="0.6" fill="rgba(255,255,255,0.35)" />
-
-                        {/* Pacific ocean background glow */}
-                        <path
-                            d="M0,440 L0,350 Q200,340 400,348 Q600,356 800,342 Q1000,328 1200,338 Q1360,346 1440,335 L1440,440 Z"
-                            fill="url(#pac-water)"
-                        />
-
-                        {/* ─── Cerro Dragón — the giant dune ─── */}
-                        {/* Main dune silhouette — center-right, sweeping shape */}
-                        <path
-                            d="M600,440 L700,200 Q740,160 760,150 Q790,165 830,200 Q870,240 920,280 Q980,320 1100,360 Q1200,385 1320,395 Q1400,400 1440,398 L1440,440 Z"
-                            fill="url(#dune-sand)"
-                        />
-                        {/* Dune highlight ridge */}
-                        <path
-                            d="M700,200 Q740,160 760,150 Q790,165 830,200"
-                            fill="none" stroke="rgba(251,191,36,0.35)" strokeWidth="2.5"
-                        />
-
-                        {/* Left dune — smaller */}
-                        <path
-                            d="M0,440 L0,395 Q80,375 160,380 Q240,385 300,365 Q360,345 420,360 Q480,375 560,380 Q580,382 600,440 Z"
-                            fill="rgba(180,83,9,0.35)"
-                        />
-
-                        {/* City skyline silhouette — between dune and sea */}
-                        {/* Modern buildings */}
-                        <rect x="680" y="355" width="14" height="55" fill="rgba(6,27,51,0.92)" />
-                        <rect x="700" y="368" width="12" height="42" fill="rgba(6,27,51,0.88)" />
-                        <rect x="718" y="362" width="10" height="48" fill="rgba(6,27,51,0.90)" />
-                        <rect x="734" y="370" width="8"  height="40" fill="rgba(6,27,51,0.85)" />
-                        <rect x="748" y="360" width="12" height="50" fill="rgba(6,27,51,0.90)" />
-                        <rect x="766" y="372" width="10" height="38" fill="rgba(6,27,51,0.85)" />
-
-                        {/* Historic building with tower — Teatro Municipal style */}
-                        <rect x="530" y="370" width="35" height="40" fill="rgba(6,27,51,0.85)" />
-                        <rect x="536" y="358" width="10" height="22" fill="rgba(6,27,51,0.88)" />
-                        <polygon points="541,358 546,348 551,358" fill="rgba(251,191,36,0.40)" />
-                        <rect x="548" y="358" width="10" height="22" fill="rgba(6,27,51,0.88)" />
-                        <polygon points="553,358 558,348 563,358" fill="rgba(251,191,36,0.35)" />
-
-                        {/* Wave lines on ocean */}
-                        <path d="M0,418 Q180,413 360,418 Q540,423 720,417 Q900,411 1080,418 Q1260,425 1440,415" fill="none" stroke="rgba(56,189,248,0.16)" strokeWidth="1.5" />
-                        <path d="M0,428 Q240,424 480,430 Q720,436 960,428 Q1200,420 1440,427" fill="none" stroke="rgba(56,189,248,0.10)" strokeWidth="1" />
-
-                        {/* Foreground coast */}
-                        <path
-                            d="M0,440 L0,424 Q360,416 720,426 Q1080,436 1440,420 L1440,440 Z"
-                            fill="rgba(6,27,51,0.98)"
-                        />
-                    </svg>
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 container-custom pb-24 pt-32 w-full">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                        <Link
-                            to="/cidades"
-                            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors text-sm mb-8"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Cidades da Rota</span>
-                        </Link>
-                    </motion.div>
-
-                    <div className="max-w-3xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="flex items-center gap-3 mb-4"
-                        >
-                            <span className="text-2xl">🇨🇱</span>
-                            <span className="text-sm font-semibold text-amber-400 uppercase tracking-widest">
-                                Região de Tarapacá · Norte do Chile
-                            </span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-display text-6xl sm:text-7xl md:text-8xl font-bold text-white leading-[1.05] mb-4"
-                        >
-                            Iquique
-                            <br />
-                            <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent text-4xl sm:text-5xl md:text-6xl italic font-display">
-                                Deserto, Mar e Memória
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="font-display text-xl md:text-2xl text-white/60 italic mb-10"
-                        >
-                            Onde a duna gigante encontra o oceano e o salitre ainda ecoa
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="flex flex-wrap gap-4"
-                        >
-                            {[
-                                { icon: Users,       val: "235.000 hab.",     sub: "Capital Regional" },
-                                { icon: Mountain,    val: "Cerro Dragón",     sub: "Duna urbana 400m" },
-                                { icon: MapPin,      val: "Norte do Chile",   sub: "Pacífico + Atacama" },
-                                { icon: ShoppingBag, val: "ZOFRI",            sub: "Zona Franca Pacífico" },
-                            ].map((s, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-5 py-3 flex items-center gap-3">
-                                    <s.icon className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                                    <div>
-                                        <div className="text-white font-bold text-sm leading-none">{s.val}</div>
-                                        <div className="text-white/40 text-xs mt-0.5">{s.sub}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                        {/* ── HERO ───────────────────────────────────────── */}
+            <CityHero
+                country="Chile"
+                countryFlag="🇨🇱"
+                region="Regiao de Tarapaca"
+                name={{ first: "Iquique", second: "" }}
+                tagline="Porto historico, duna urbana de 400 metros e a memoria salitreira que moldou o Chile moderno."
+                scene="pacifico"
+                image="/cities/iquique.png"
+                accentColor="#fb923c"
+                stats={[
+                    { label: "Habitantes", value: 235000 },
+                    { label: "Duna urbana (m)", value: 400, suffix: " m" },
+                    { label: "UNESCO Humberstone", value: 2005 },
+                    { label: "Km de Antofagasta", value: 310, suffix: " km" },
+                ]}
+            />
 
             {/* ── INFOGRÁFICO ──────────────────────────────────── */}
             <InfograficoSection />
