@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, TrendingUp, Globe, Users, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 
 /* ── dados das cidades ──────────────────────────────────── */
@@ -69,13 +69,15 @@ function CityCard({ city, index, countryColor }) {
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-30px" }}
             transition={{ duration: 0.6, delay: (index % 4) * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ height: "100%" }}
         >
             <Link
                 to={city.href}
                 ref={cardRef}
                 onMouseMove={handleMouse}
                 style={{
-                    display: "block", textDecoration: "none",
+                    display: "flex", flexDirection: "column", height: "100%",
+                    textDecoration: "none",
                     position: "relative", borderRadius: "18px", overflow: "hidden",
                     background: "rgba(255,255,255,0.03)",
                     border: "1px solid rgba(255,255,255,0.07)",
@@ -120,7 +122,7 @@ function CityCard({ city, index, countryColor }) {
                 </div>
 
                 {/* content */}
-                <div style={{ padding: "16px 18px 18px", position: "relative", zIndex: 2 }}>
+                <div style={{ padding: "16px 18px 18px", position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column" }}>
                     <p style={{ fontSize: "10px", fontWeight: 700, color: city.accent, fontFamily: "Inter, sans-serif", fontStyle: "italic", marginBottom: "4px" }}>
                         {city.tagline}
                     </p>
@@ -132,7 +134,7 @@ function CityCard({ city, index, countryColor }) {
                     }}>
                         {city.name}
                     </h3>
-                    <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.38)", lineHeight: 1.65, fontFamily: "Inter, sans-serif", marginBottom: "14px" }}>
+                    <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.38)", lineHeight: 1.65, fontFamily: "Inter, sans-serif", marginBottom: "14px", flex: 1 }}>
                         {city.desc}
                     </p>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -298,9 +300,89 @@ export default function CitiesPage() {
                 </div>
             </section>
 
+            {/* ── CTA PREFEITOS ──────────────────────────── */}
+            <section style={{ padding: "80px 0 100px", background: "linear-gradient(180deg, #061B33 0%, #08243f 50%, #061B33 100%)", position: "relative", overflow: "hidden" }}>
+                {/* glow */}
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: "700px", height: "400px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(42,157,143,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                <div className="container-rota" style={{ position: "relative" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
+
+                        {/* texto */}
+                        <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+                            <span style={{ display: "inline-block", fontSize: "10px", fontWeight: 700, color: "#F4A261", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "16px", background: "rgba(244,162,97,0.1)", padding: "4px 12px", borderRadius: "100px", border: "1px solid rgba(244,162,97,0.15)" }}>
+                                Para gestores municipais
+                            </span>
+
+                            <h2 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#fff", lineHeight: 1, letterSpacing: "0.04em", marginBottom: "20px" }}>
+                                Sua cidade ainda<br />
+                                <span style={{ color: "#2A9D8F" }}>não está na rota?</span>
+                            </h2>
+
+                            <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, marginBottom: "16px", fontFamily: "Inter, sans-serif" }}>
+                                A Rota Bioceânica já movimenta governos, investidores e turistas de quatro países. Cada cidade incluída no corredor passa a fazer parte do maior projeto de integração continental da América do Sul.
+                            </p>
+                            <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, marginBottom: "32px", fontFamily: "Inter, sans-serif" }}>
+                                Se você é prefeito ou gestor municipal de uma cidade que integra ou conecta ao corredor bioceânico, este é o momento de colocar seu município no mapa continental.
+                            </p>
+
+                            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                                <Link to="/apoie" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "0.875rem 2rem", background: "#2A9D8F", color: "#fff", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.1em", textTransform: "uppercase", borderRadius: "0.75rem", textDecoration: "none", transition: "all 0.3s" }}>
+                                    <Mail size={14} /> Quero incluir minha cidade
+                                </Link>
+                            </div>
+                        </motion.div>
+
+                        {/* cards de benefícios */}
+                        <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+                            style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                            {[
+                                {
+                                    icon: Globe,
+                                    color: "#38bdf8", colorRgb: "56,189,248",
+                                    title: "Visibilidade Internacional",
+                                    desc: "Sua cidade passa a ser apresentada a turistas, investidores, empresários e governos do Brasil, Paraguai, Argentina e Chile. Um portal assistido por quem já está no corredor.",
+                                },
+                                {
+                                    icon: TrendingUp,
+                                    color: "#F4A261", colorRgb: "244,162,97",
+                                    title: "Posicionamento Econômico",
+                                    desc: "O corredor bioceânico movimenta bilhões em comércio internacional anualmente. Cidades no percurso da rota tornam-se pontos estratégicos de parada, serviço e investimento.",
+                                },
+                                {
+                                    icon: Users,
+                                    color: "#a78bfa", colorRgb: "167,139,250",
+                                    title: "Integração e Desenvolvimento",
+                                    desc: "Fazer parte da rota significa infraestrutura compartilhada, articulação com prefeituras de quatro países e acesso a programas de fomento ao turismo e à logística regional.",
+                                },
+                            ].map((item, i) => (
+                                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 + i * 0.12 }}
+                                    style={{ display: "flex", gap: "16px", alignItems: "flex-start", padding: "20px", borderRadius: "16px", background: "rgba(255,255,255,0.03)", border: `1px solid rgba(${item.colorRgb},0.15)` }}>
+                                    <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: `rgba(${item.colorRgb},0.12)`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                        <item.icon size={18} style={{ color: item.color }} />
+                                    </div>
+                                    <div>
+                                        <h4 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "1.1rem", color: "#fff", letterSpacing: "0.04em", marginBottom: "6px" }}>{item.title}</h4>
+                                        <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.45)", lineHeight: 1.65, fontFamily: "Inter, sans-serif" }}>{item.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+
+                            {/* quote */}
+                            <div style={{ padding: "16px 20px", borderRadius: "12px", background: "rgba(42,157,143,0.06)", border: "1px solid rgba(42,157,143,0.15)", marginTop: "4px" }}>
+                                <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", lineHeight: 1.7, fontFamily: "Inter, sans-serif", fontStyle: "italic" }}>
+                                    "A história da integração sul-americana está sendo escrita agora. As cidades que entrarem primeiro serão lembradas como pioneiras de um novo capítulo continental."
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
             <style>{`
                 .cities-page-card:hover { border-color: rgba(255,255,255,0.14) !important; transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
                 .cities-page-card:hover .cities-page-img { transform: scale(1.06); }
+                @media (max-width: 768px) { .cities-mayors-grid { grid-template-columns: 1fr !important; } }
             `}</style>
         </div>
     );
