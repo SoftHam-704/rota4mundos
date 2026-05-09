@@ -601,7 +601,7 @@ export default function CampoGrandePage() {
             <section className="relative overflow-hidden" style={{ background: "#031c1a" }}>
                 {/* foto como fundo suave */}
                 <div className="absolute inset-0">
-                    <img src="/bioparque.jpg" alt="" aria-hidden className="w-full h-full object-cover opacity-20" />
+                    <img src="/cities/bioparque.jpg" alt="" aria-hidden className="w-full h-full object-cover opacity-20" />
                     <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, #031c1a 40%, #031c1a99 70%, transparent 100%)" }} />
                 </div>
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(20,184,166,0.12) 0%, transparent 65%)" }} />
@@ -654,7 +654,7 @@ export default function CampoGrandePage() {
                         <div className="flex flex-col gap-5">
                             <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
                                 className="rounded-3xl overflow-hidden relative" style={{ aspectRatio: "4/3" }}>
-                                <img src="/bioparque.jpg" alt="BIOPARQUE Pantanal — Campo Grande, MS"
+                                <img src="/cities/bioparque.jpg" alt="BIOPARQUE Pantanal — Campo Grande, MS"
                                     className="w-full h-full object-cover" />
                                 <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(3,28,26,0.7) 0%, transparent 60%)" }} />
                                 <div className="absolute bottom-4 left-4 right-4">
