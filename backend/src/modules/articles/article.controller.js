@@ -31,7 +31,9 @@ export const createArticle = asyncHandler(async (req, res) => {
 
 export const listArticles = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, search, category, status = "PUBLISHED", lang = "pt", tag } = req.query;
-    const skip = (page - 1) * limit;
+    const pageNum  = Math.max(1, parseInt(page)  || 1);
+    const limitNum = Math.min(100, parseInt(limit) || 10);
+    const skip = (pageNum - 1) * limitNum;
 
     const where = { lang };
     if (status !== "all") where.status = status;
@@ -42,7 +44,7 @@ export const listArticles = asyncHandler(async (req, res) => {
     const [articles, totalItems] = await Promise.all([
         prisma.article.findMany({
             where,
-            skip, take: limit,
+            skip, take: limitNum,
             orderBy: { publishedAt: "desc" },
             include: {
                 author: { select: { id: true, name: true } },
@@ -54,7 +56,7 @@ export const listArticles = asyncHandler(async (req, res) => {
         prisma.article.count({ where }),
     ]);
 
-    return ApiResponse.paginated(res, articles, { page: +page, limit: +limit, totalItems });
+    return ApiResponse.paginated(res, articles, { page: pageNum, limit: limitNum, totalItems });
 });
 
 export const getArticleBySlug = asyncHandler(async (req, res) => {
