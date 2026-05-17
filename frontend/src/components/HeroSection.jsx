@@ -1,9 +1,76 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Play, Pause, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
 import RotaRings from "./RotaRings.jsx";
+
+/* ─── Player de podcast ─────────────────────────────────────── */
+function PodcastPlayer() {
+    const audioRef = useRef(null);
+    const [playing, setPlaying]   = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [duration, setDuration] = useState(0);
+
+    const toggle = () => {
+        const a = audioRef.current;
+        if (!a) return;
+        if (playing) { a.pause(); setPlaying(false); }
+        else         { a.play(); setPlaying(true); }
+    };
+
+    const fmt = (s) => {
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${m}:${sec.toString().padStart(2, "0")}`;
+    };
+
+    return (
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 16px", borderRadius: "100px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(12px)", maxWidth: "320px" }}>
+            <audio
+                ref={audioRef}
+                src="https://rota4mundos.com.br/audios/podcast-rota-bioceanica.m4a"
+                onTimeUpdate={e => setProgress(e.target.currentTime / (e.target.duration || 1))}
+                onLoadedMetadata={e => setDuration(e.target.duration)}
+                onEnded={() => setPlaying(false)}
+            />
+
+            {/* Botão play/pause */}
+            <button onClick={toggle} style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg, #F4A261, #E9C46A)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 0 16px rgba(244,162,97,0.4)" }}>
+                {playing
+                    ? <Pause  style={{ width: "14px", height: "14px", color: "#061B33" }} />
+                    : <Play   style={{ width: "14px", height: "14px", color: "#061B33", marginLeft: "2px" }} />
+                }
+            </button>
+
+            {/* Info + barra */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "5px" }}>
+                    <Headphones style={{ width: "11px", height: "11px", color: "#F4A261", flexShrink: 0 }} />
+                    <span style={{ fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.85)", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        {playing ? "Reproduzindo..." : "Ouça o Podcast"}
+                    </span>
+                    {duration > 0 && (
+                        <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif", flexShrink: 0 }}>
+                            {fmt(duration * progress)} / {fmt(duration)}
+                        </span>
+                    )}
+                </div>
+                {/* Barra de progresso */}
+                <div
+                    style={{ height: "3px", borderRadius: "4px", background: "rgba(255,255,255,0.1)", cursor: "pointer", position: "relative" }}
+                    onClick={e => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const pct  = (e.clientX - rect.left) / rect.width;
+                        if (audioRef.current) audioRef.current.currentTime = pct * audioRef.current.duration;
+                    }}
+                >
+                    <div style={{ height: "100%", width: `${progress * 100}%`, borderRadius: "4px", background: "linear-gradient(90deg, #F4A261, #E9C46A)", transition: "width 0.25s linear" }} />
+                </div>
+            </div>
+        </div>
+    );
+}
 
 /* ─── Canvas: partículas + pássaros ──────────────────────────── */
 function AtmosphereCanvas() {
@@ -322,6 +389,14 @@ export default function HeroSection() {
                                 <Link to="/noticias" className="btn-ghost" style={{ fontSize: "13px", padding: "13px 28px" }}>
                                     Conheça a Rota
                                 </Link>
+                            </motion.div>
+
+                            {/* Podcast player */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.95 }}
+                                style={{ marginBottom: "clamp(18px, 3vh, 32px)" }}
+                            >
+                                <PodcastPlayer />
                             </motion.div>
 
                             {/* Stats */}
