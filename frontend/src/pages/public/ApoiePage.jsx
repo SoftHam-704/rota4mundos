@@ -1,139 +1,84 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Heart, Building2, Landmark, ArrowRight, CheckCircle, Loader2, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart, Building2, Landmark, ArrowRight, CheckCircle, Loader2, Globe, MapPin, Users, TrendingUp, Zap } from "lucide-react";
 import { sponsorApi } from "../../api/sponsors.js";
 
 const TYPES = [
-    { value: "INDIVIDUAL",    label: "Apoiador Individual",    icon: Heart,     accent: "#2A9D8F" },
-    { value: "EMPRESARIAL",   label: "Patrocinador Empresarial", icon: Building2, accent: "#F4A261" },
-    { value: "INSTITUCIONAL", label: "Parceiro Institucional", icon: Landmark,  accent: "#818cf8" },
-];
-
-const STATS = [
-    { value: "4",      label: "Países" },
-    { value: "3.500",  label: "Km de corredor" },
-    { value: "30+",    label: "Cidades" },
-    { value: "2026",   label: "Janela estratégica" },
+    {
+        value: "INDIVIDUAL",
+        label: "Apoiador Individual",
+        sublabel: "Pessoa física que acredita no projeto",
+        icon: Heart,
+        accent: "#2A9D8F",
+        accentRgb: "42,157,143",
+        glow: "rgba(42,157,143,0.18)",
+        border: "rgba(42,157,143,0.4)",
+    },
+    {
+        value: "EMPRESARIAL",
+        label: "Patrocinador Empresarial",
+        sublabel: "Empresa, hotel, operadora ou comércio",
+        icon: Building2,
+        accent: "#F4A261",
+        accentRgb: "244,162,97",
+        glow: "rgba(244,162,97,0.18)",
+        border: "rgba(244,162,97,0.4)",
+    },
+    {
+        value: "INSTITUCIONAL",
+        label: "Parceiro Institucional",
+        sublabel: "Prefeitura, câmara, secretaria ou entidade",
+        icon: Landmark,
+        accent: "#818cf8",
+        accentRgb: "129,140,248",
+        glow: "rgba(129,140,248,0.18)",
+        border: "rgba(129,140,248,0.4)",
+    },
 ];
 
 const BENEFITS = {
     INDIVIDUAL: [
-        "Seu nome no mural de apoiadores",
-        "Newsletter exclusiva com bastidores editoriais",
-        "Acesso antecipado a guias e conteúdos premium",
-        "Parte da história de integração da América do Sul",
+        { icon: "✦", text: "Seu nome no mural permanente de apoiadores" },
+        { icon: "✦", text: "Newsletter exclusiva com bastidores editoriais" },
+        { icon: "✦", text: "Acesso antecipado a guias e conteúdos premium" },
+        { icon: "✦", text: "Parte da história de integração da América do Sul" },
     ],
     EMPRESARIAL: [
-        "Presença de marca no portal de maior visibilidade da rota",
-        "Conteúdo editorial associado à sua empresa",
-        "Acesso à audiência qualificada: viajantes, investidores e gestores",
-        "Posicionamento antes do pico de atenção de 2026",
-        "Formatos personalizados: banner, artigo patrocinado, guia de cidade",
+        { icon: "✦", text: "Presença de marca no portal de maior visibilidade da rota" },
+        { icon: "✦", text: "Conteúdo editorial associado à sua empresa" },
+        { icon: "✦", text: "Audiência qualificada: viajantes, investidores e gestores" },
+        { icon: "✦", text: "Posicionamento antes do pico de atenção de 2026" },
+        { icon: "✦", text: "Formatos personalizados: banner, artigo patrocinado, guia de cidade" },
     ],
     INSTITUCIONAL: [
-        "Vitrine institucional para sua cidade ou entidade",
-        "Narrativa contemporânea sobre sua região",
-        "Visibilidade junto a turistas, investidores e imprensa",
-        "Cobertura editorial das iniciativas locais",
-        "Conexão com câmaras de comércio dos 4 países",
+        { icon: "✦", text: "Vitrine institucional para sua cidade ou entidade" },
+        { icon: "✦", text: "Narrativa contemporânea sobre sua região" },
+        { icon: "✦", text: "Visibilidade junto a turistas, investidores e imprensa" },
+        { icon: "✦", text: "Cobertura editorial das iniciativas locais" },
+        { icon: "✦", text: "Conexão com câmaras de comércio dos 4 países" },
     ],
 };
 
-function StatBar() {
-    return (
-        <div style={{
-            display: "flex", flexWrap: "wrap", justifyContent: "center",
-            gap: "0", margin: "48px 0 0",
-        }}>
-            {STATS.map((s, i) => (
-                <div key={i} style={{
-                    textAlign: "center", padding: "0 40px",
-                    borderRight: i < STATS.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
-                }}>
-                    <div style={{
-                        fontFamily: '"Bebas Neue", sans-serif',
-                        fontSize: "2.8rem", color: "#F4A261",
-                        letterSpacing: "0.04em", lineHeight: 1,
-                    }}>
-                        {s.value}
-                    </div>
-                    <div style={{
-                        fontSize: "10px", color: "rgba(255,255,255,0.35)",
-                        fontFamily: "Inter, sans-serif",
-                        letterSpacing: "0.15em", textTransform: "uppercase",
-                        marginTop: "4px",
-                    }}>
-                        {s.label}
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}
+const STATS = [
+    { icon: Globe,     value: "4",      label: "Países conectados" },
+    { icon: MapPin,    value: "13",     label: "Cidades no portal" },
+    { icon: Users,     value: "3.500",  label: "Km de corredor" },
+    { icon: TrendingUp,value: "2026",   label: "Janela estratégica" },
+];
 
-function TypeSelector({ selected, onChange }) {
-    return (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "28px" }}>
-            {TYPES.map(({ value, label, icon: Icon, accent }) => {
-                const active = selected === value;
-                return (
-                    <button
-                        key={value}
-                        type="button"
-                        onClick={() => onChange(value)}
-                        style={{
-                            display: "inline-flex", alignItems: "center", gap: "8px",
-                            padding: "10px 18px", borderRadius: "100px",
-                            border: `1px solid ${active ? accent : "rgba(255,255,255,0.1)"}`,
-                            background: active ? `rgba(${value === "INDIVIDUAL" ? "42,157,143" : value === "EMPRESARIAL" ? "244,162,97" : "129,140,248"},0.12)` : "rgba(255,255,255,0.03)",
-                            color: active ? accent : "rgba(255,255,255,0.45)",
-                            fontSize: "12px", fontWeight: 600,
-                            fontFamily: "Inter, sans-serif",
-                            letterSpacing: "0.04em",
-                            cursor: "pointer",
-                            transition: "all 0.25s",
-                        }}
-                    >
-                        <Icon size={13} />
-                        {label}
-                    </button>
-                );
-            })}
-        </div>
-    );
-}
-
-function BenefitsList({ type }) {
-    const items = BENEFITS[type] || BENEFITS.EMPRESARIAL;
-    const accent = TYPES.find(t => t.value === type)?.accent || "#F4A261";
-
-    return (
-        <motion.ul
-            key={type}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px" }}
-        >
-            {items.map((item, i) => (
-                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                    <CheckCircle size={15} style={{ color: accent, flexShrink: 0, marginTop: "1px" }} />
-                    <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", fontFamily: "Inter, sans-serif", lineHeight: 1.6 }}>
-                        {item}
-                    </span>
-                </li>
-            ))}
-        </motion.ul>
-    );
-}
+const OPPS = [
+    { n: "01", accent: "#F4A261", title: "Janela de 2026", text: "A conclusão da rota cria um pico de atenção sem precedente. Quem entra antes captura autoridade, audiência e parceiros." },
+    { n: "02", accent: "#2A9D8F", title: "Lacuna de mercado", text: "Nenhuma plataforma trata a rota sob o ângulo humano. Este portal nasce para liderar essa categoria." },
+    { n: "03", accent: "#818cf8", title: "Audiência qualificada", text: "Viajantes, investidores e gestores públicos. Não é um site genérico — é o hub de quem decide sobre o corredor." },
+];
 
 export default function ApoiePage() {
     const [searchParams] = useSearchParams();
-    const [type, setType]           = useState(searchParams.get("tipo") || "EMPRESARIAL");
-    const [form, setForm]           = useState({ name: "", email: "", organization: "", message: "" });
-    const [status, setStatus]       = useState("idle"); // idle | loading | success | error
-    const [errorMsg, setErrorMsg]   = useState("");
+    const [type, setType]     = useState(searchParams.get("tipo") || "EMPRESARIAL");
+    const [form, setForm]     = useState({ name: "", email: "", organization: "", message: "" });
+    const [status, setStatus] = useState("idle");
+    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
         const t = searchParams.get("tipo");
@@ -149,10 +94,8 @@ export default function ApoiePage() {
     async function handleSubmit(e) {
         e.preventDefault();
         if (!form.name || !form.email) return;
-
         setStatus("loading");
         setErrorMsg("");
-
         try {
             await sponsorApi.submitInterest({ ...form, type });
             setStatus("success");
@@ -164,14 +107,14 @@ export default function ApoiePage() {
     }
 
     const inputStyle = {
-        width: "100%", padding: "12px 16px",
+        width: "100%", padding: "13px 16px",
         borderRadius: "12px",
-        background: "rgba(255,255,255,0.05)",
+        background: "rgba(255,255,255,0.04)",
         border: "1px solid rgba(255,255,255,0.1)",
-        color: "#fff", fontSize: "13px",
+        color: "#fff", fontSize: "14px",
         fontFamily: "Inter, sans-serif",
         outline: "none", boxSizing: "border-box",
-        transition: "border-color 0.2s",
+        transition: "border-color 0.2s, background 0.2s",
     };
 
     return (
@@ -179,301 +122,373 @@ export default function ApoiePage() {
 
             {/* ── HERO ── */}
             <section style={{
-                background: "linear-gradient(to bottom, #061B33, #020d1a)",
-                padding: "120px 0 80px", textAlign: "center",
+                background: "linear-gradient(160deg, #061B33 0%, #031020 60%, #020d1a 100%)",
+                padding: "130px 0 80px", textAlign: "center",
                 position: "relative", overflow: "hidden",
             }}>
-                <div style={{
-                    position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
-                    width: "800px", height: "400px", borderRadius: "50%",
-                    background: "radial-gradient(ellipse, rgba(42,157,143,0.07) 0%, transparent 70%)",
-                    pointerEvents: "none",
-                }} />
+                {/* glows decorativos */}
+                <div style={{ position: "absolute", top: "-60px", left: "50%", transform: "translateX(-50%)", width: "1000px", height: "600px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(42,157,143,0.09) 0%, transparent 65%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-120px", right: "-80px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(244,162,97,0.07) 0%, transparent 65%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(129,140,248,0.05) 0%, transparent 65%)", pointerEvents: "none" }} />
+
+                {/* linha de rota decorativa */}
+                <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent 0%, rgba(244,162,97,0.08) 20%, rgba(42,157,143,0.12) 50%, rgba(244,162,97,0.08) 80%, transparent 100%)", pointerEvents: "none" }} />
 
                 <div className="container-rota" style={{ position: "relative" }}>
+
+                    {/* badge urgência */}
+                    <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "10px", fontWeight: 700, color: "#F4A261", letterSpacing: "0.22em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "28px", background: "rgba(244,162,97,0.1)", padding: "6px 18px", borderRadius: "100px", border: "1px solid rgba(244,162,97,0.22)" }}>
+                            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#F4A261", display: "inline-block", animation: "pulse 2s ease-in-out infinite" }} />
+                            Janela de captação aberta — 2026 está chegando
+                        </span>
+                    </motion.div>
+
+                    {/* bandeiras dos 4 países */}
                     <motion.div
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", marginBottom: "32px" }}
+                    >
+                        {["🇧🇷", "🇵🇾", "🇦🇷", "🇨🇱"].map((flag, i) => (
+                            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                                <span style={{ fontSize: "22px", filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}>{flag}</span>
+                                {i < 3 && <span style={{ width: "24px", height: "1px", background: "rgba(255,255,255,0.15)", display: "inline-block" }} />}
+                            </span>
+                        ))}
+                    </motion.div>
+
+                    {/* H1 */}
+                    <motion.h1
                         initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "clamp(3rem, 8.5vw, 7rem)", color: "#fff", lineHeight: 0.9, letterSpacing: "0.04em", marginBottom: "32px" }}
                     >
-                        <span style={{
-                            display: "inline-flex", alignItems: "center", gap: "8px",
-                            fontSize: "10px", fontWeight: 700, color: "#F4A261",
-                            letterSpacing: "0.2em", textTransform: "uppercase",
-                            fontFamily: "Inter, sans-serif", marginBottom: "20px",
-                            background: "rgba(244,162,97,0.1)", padding: "4px 14px",
-                            borderRadius: "100px", border: "1px solid rgba(244,162,97,0.15)",
-                        }}>
-                            <Globe size={11} /> Apoie o projeto
-                        </span>
+                        EM 2026, TODOS VÃO<br />
+                        QUERER DIZER QUE<br />
+                        <span style={{ color: "#2A9D8F" }}>ESTAVAM AQUI<br />DESDE O INÍCIO.</span>
+                    </motion.h1>
 
-                        <h1 style={{
-                            fontFamily: '"Bebas Neue", sans-serif',
-                            fontSize: "clamp(2.8rem, 8vw, 6rem)",
-                            color: "#fff", lineHeight: 0.95,
-                            letterSpacing: "0.04em", marginBottom: "24px",
-                        }}>
-                            A ROTA É FEITA<br />DE ASFALTO.<br />
-                            <span style={{ color: "#2A9D8F" }}>ESTE PORTAL É<br />FEITO DE PESSOAS.</span>
-                        </h1>
-
-                        <p style={{
-                            fontSize: "16px", color: "rgba(255,255,255,0.5)",
-                            lineHeight: 1.8, fontFamily: "Inter, sans-serif",
-                            maxWidth: "560px", margin: "0 auto",
-                        }}>
-                            Quatro países. Dois oceanos. Um corredor que vai mudar o comércio da América do Sul.
-                            Você pode fazer parte disso — antes que todos queiram.
+                    {/* subtítulo com 3 linhas de impacto */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.35 }}
+                        style={{ maxWidth: "560px", margin: "0 auto 40px" }}
+                    >
+                        <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.5)", lineHeight: 1.8, fontFamily: "Inter, sans-serif", marginBottom: "20px" }}>
+                            A Rota Bioceânica conecta o Atlântico ao Pacífico atravessando <strong style={{ color: "rgba(255,255,255,0.75)" }}>Brasil, Paraguai, Argentina e Chile</strong>. O maior corredor de integração da América do Sul já tem data. Falta o seu nome nele.
                         </p>
+                        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px" }}>
+                            {["Viajantes", "Investidores", "Prefeituras", "Empresas", "Imprensa"].map((tag, i) => (
+                                <span key={i} style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "100px", padding: "3px 12px" }}>{tag}</span>
+                            ))}
+                        </div>
+                    </motion.div>
 
-                        <StatBar />
+                    {/* CTAs */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.45 }}
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", flexWrap: "wrap", marginBottom: "60px" }}
+                    >
+                        <a
+                            href="#formulario"
+                            onClick={e => { e.preventDefault(); document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" }); }}
+                            style={{ display: "inline-flex", alignItems: "center", gap: "9px", padding: "15px 32px", borderRadius: "14px", background: "linear-gradient(135deg, #F4A261, #E9C46A)", color: "#061B33", fontSize: "13px", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textDecoration: "none", boxShadow: "0 8px 28px rgba(244,162,97,0.3)", transition: "opacity 0.2s, transform 0.2s" }}
+                            onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
+                        >
+                            Quero fazer parte <ArrowRight size={15} />
+                        </a>
+                        <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.2)", fontFamily: "Inter, sans-serif" }}>
+                            Sem compromisso financeiro nesta etapa
+                        </span>
+                    </motion.div>
+
+                    {/* Stats strip */}
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.55 }}
+                        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0", padding: "28px 0 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                    >
+                        {STATS.map((s, i) => (
+                            <div key={i} style={{ textAlign: "center", padding: "0 36px", borderRight: i < STATS.length - 1 ? "1px solid rgba(255,255,255,0.07)" : "none" }}>
+                                <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "2.6rem", color: "#F4A261", letterSpacing: "0.04em", lineHeight: 1 }}>{s.value}</div>
+                                <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.28)", fontFamily: "Inter, sans-serif", letterSpacing: "0.15em", textTransform: "uppercase", marginTop: "4px" }}>{s.label}</div>
+                            </div>
+                        ))}
                     </motion.div>
                 </div>
             </section>
 
-            {/* ── OPORTUNIDADE ── */}
-            <section style={{ padding: "80px 0", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+            {/* ── FORMULÁRIO — destaque principal ── */}
+            <section id="formulario" style={{ padding: "0 0 100px", position: "relative", overflow: "hidden" }}>
+                {/* glow dinâmico que acompanha o tipo selecionado */}
+                <motion.div
+                    key={type}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    style={{ position: "absolute", top: "0", left: "50%", transform: "translateX(-50%)", width: "1000px", height: "600px", borderRadius: "50%", background: `radial-gradient(ellipse, ${activeType?.glow} 0%, transparent 65%)`, pointerEvents: "none" }}
+                />
+
+                <div className="container-rota" style={{ position: "relative" }}>
+
+                    {/* título da seção */}
+                    <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} style={{ textAlign: "center", padding: "72px 0 56px" }}>
+                        <span style={{ fontSize: "10px", fontWeight: 700, color: activeType?.accent, letterSpacing: "0.22em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", display: "block", marginBottom: "14px", transition: "color 0.3s" }}>
+                            Manifeste seu interesse
+                        </span>
+                        <h2 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff", letterSpacing: "0.04em", lineHeight: 1, marginBottom: "16px" }}>
+                            ESCOLHA COMO<br />
+                            <motion.span key={type} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} style={{ color: activeType?.accent }}>
+                                VOCÊ FAZ PARTE
+                            </motion.span>
+                        </h2>
+                        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", maxWidth: "420px", margin: "0 auto" }}>
+                            Sem compromisso financeiro nesta etapa — estamos mapeando quem acredita no projeto.
+                        </p>
+                    </motion.div>
+
+                    {/* type selector — 3 cards grandes */}
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px", marginBottom: "48px" }}>
+                        {TYPES.map(({ value, label, sublabel, icon: Icon, accent, glow, border }) => {
+                            const active = type === value;
+                            return (
+                                <button
+                                    key={value}
+                                    type="button"
+                                    onClick={() => setType(value)}
+                                    style={{
+                                        display: "flex", flexDirection: "column", alignItems: "flex-start",
+                                        gap: "10px", padding: "20px 22px",
+                                        borderRadius: "16px", cursor: "pointer", textAlign: "left",
+                                        border: `1px solid ${active ? border : "rgba(255,255,255,0.07)"}`,
+                                        background: active ? glow : "rgba(255,255,255,0.02)",
+                                        boxShadow: active ? `0 0 32px ${glow}` : "none",
+                                        transition: "all 0.3s",
+                                    }}
+                                >
+                                    <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: active ? `rgba(${TYPES.find(t=>t.value===value)?.accentRgb},0.2)` : "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.3s" }}>
+                                        <Icon size={17} style={{ color: active ? accent : "rgba(255,255,255,0.3)", transition: "color 0.3s" }} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: "13px", fontWeight: 700, color: active ? accent : "rgba(255,255,255,0.5)", fontFamily: "Inter, sans-serif", marginBottom: "3px", transition: "color 0.3s" }}>{label}</div>
+                                        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif", lineHeight: 1.4 }}>{sublabel}</div>
+                                    </div>
+                                    {active && (
+                                        <motion.div layoutId="type-dot" style={{ width: "6px", height: "6px", borderRadius: "50%", background: accent, marginTop: "auto", alignSelf: "flex-end" }} />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </motion.div>
+
+                    {/* grid principal — benefícios + form */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start" }}>
+
+                        {/* ── ESQUERDA — benefícios ── */}
+                        <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+                            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "20px", padding: "36px 32px", height: "100%" }}>
+                                <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "1.6rem", color: "#fff", letterSpacing: "0.04em", marginBottom: "6px" }}>
+                                    O que você recebe
+                                </h3>
+                                <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif", marginBottom: "28px" }}>
+                                    Benefícios para {activeType?.label.toLowerCase()}
+                                </p>
+
+                                <AnimatePresence mode="wait">
+                                    <motion.ul
+                                        key={type}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.35 }}
+                                        style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "16px" }}
+                                    >
+                                        {BENEFITS[type].map((item, i) => (
+                                            <motion.li
+                                                key={i}
+                                                initial={{ opacity: 0, x: -12 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.3, delay: i * 0.06 }}
+                                                style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}
+                                            >
+                                                <span style={{ color: activeType?.accent, fontSize: "10px", marginTop: "3px", flexShrink: 0 }}>{item.icon}</span>
+                                                <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", fontFamily: "Inter, sans-serif", lineHeight: 1.65 }}>{item.text}</span>
+                                            </motion.li>
+                                        ))}
+                                    </motion.ul>
+                                </AnimatePresence>
+
+                                {/* divider + oportunidade */}
+                                <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "32px", paddingTop: "28px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
+                                        <Zap size={13} style={{ color: "#F4A261" }} />
+                                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#F4A261", letterSpacing: "0.15em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>Por que agora?</span>
+                                    </div>
+                                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", lineHeight: 1.75 }}>
+                                        A conclusão estrutural da rota em <strong style={{ color: "rgba(255,255,255,0.55)" }}>2026</strong> cria um pico de atenção sem precedente. Quem entra antes captura autoridade, audiência e parceiros — essa janela não volta.
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* ── DIREITA — formulário ── */}
+                        <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}>
+                            <motion.div
+                                key={`form-${type}`}
+                                animate={{ boxShadow: `0 0 60px ${activeType?.glow}, 0 0 0 1px ${activeType?.border}` }}
+                                transition={{ duration: 0.5 }}
+                                style={{ borderRadius: "24px", padding: "40px 36px", background: "rgba(6,27,51,0.6)", backdropFilter: "blur(24px)", border: `1px solid ${activeType?.border}` }}
+                            >
+                                {status === "success" ? (
+                                    <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: "center", padding: "48px 0" }}>
+                                        <motion.div
+                                            initial={{ scale: 0 }} animate={{ scale: 1 }}
+                                            transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                                            style={{ width: "72px", height: "72px", borderRadius: "50%", background: "rgba(42,157,143,0.15)", border: "1px solid rgba(42,157,143,0.4)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}
+                                        >
+                                            <CheckCircle size={36} style={{ color: "#2A9D8F" }} />
+                                        </motion.div>
+                                        <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "2.2rem", color: "#fff", letterSpacing: "0.04em", marginBottom: "14px" }}>
+                                            SEMENTE PLANTADA!
+                                        </h3>
+                                        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)", fontFamily: "Inter, sans-serif", lineHeight: 1.75, maxWidth: "300px", margin: "0 auto 28px" }}>
+                                            Recebemos seu interesse. Você também recebeu um e-mail de confirmação. Em breve entraremos em contato.
+                                        </p>
+                                        <button onClick={() => setStatus("idle")} style={{ fontSize: "12px", color: "#2A9D8F", background: "none", border: "1px solid rgba(42,157,143,0.3)", borderRadius: "8px", padding: "8px 20px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
+                                            Enviar outro interesse
+                                        </button>
+                                    </motion.div>
+                                ) : (
+                                    <>
+                                        <div style={{ marginBottom: "28px" }}>
+                                            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "1.7rem", color: "#fff", letterSpacing: "0.04em", marginBottom: "6px" }}>
+                                                Manifeste seu interesse
+                                            </h3>
+                                            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif" }}>
+                                                Preenchendo como: <span style={{ color: activeType?.accent, fontWeight: 600 }}>{activeType?.label}</span>
+                                            </p>
+                                        </div>
+
+                                        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                                            <div>
+                                                <label style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "7px" }}>Nome completo *</label>
+                                                <input
+                                                    name="name" value={form.name} onChange={handleChange}
+                                                    placeholder="Seu nome"
+                                                    required style={inputStyle}
+                                                    onFocus={e => { e.target.style.borderColor = activeType?.border; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                                                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "7px" }}>E-mail *</label>
+                                                <input
+                                                    name="email" type="email" value={form.email} onChange={handleChange}
+                                                    placeholder="seu@email.com"
+                                                    required style={inputStyle}
+                                                    onFocus={e => { e.target.style.borderColor = activeType?.border; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                                                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "7px" }}>Empresa / Organização</label>
+                                                <input
+                                                    name="organization" value={form.organization} onChange={handleChange}
+                                                    placeholder="Opcional"
+                                                    style={inputStyle}
+                                                    onFocus={e => { e.target.style.borderColor = activeType?.border; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                                                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "7px" }}>Como posso contribuir?</label>
+                                                <textarea
+                                                    name="message" value={form.message} onChange={handleChange}
+                                                    placeholder="Conte um pouco sobre seu interesse (opcional)"
+                                                    rows={3}
+                                                    style={{ ...inputStyle, resize: "none" }}
+                                                    onFocus={e => { e.target.style.borderColor = activeType?.border; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                                                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                                                />
+                                            </div>
+
+                                            {errorMsg && (
+                                                <p style={{ fontSize: "12px", color: "#f87171", fontFamily: "Inter, sans-serif" }}>{errorMsg}</p>
+                                            )}
+
+                                            <motion.button
+                                                type="submit"
+                                                disabled={status === "loading"}
+                                                whileHover={{ scale: status === "loading" ? 1 : 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                                style={{
+                                                    display: "flex", alignItems: "center", justifyContent: "center", gap: "9px",
+                                                    padding: "15px",
+                                                    borderRadius: "14px",
+                                                    background: `linear-gradient(135deg, ${activeType?.accent}, ${activeType?.accent}cc)`,
+                                                    border: "none", color: "#061B33",
+                                                    fontSize: "13px", fontWeight: 800,
+                                                    letterSpacing: "0.08em", textTransform: "uppercase",
+                                                    cursor: status === "loading" ? "not-allowed" : "pointer",
+                                                    fontFamily: "Inter, sans-serif",
+                                                    opacity: status === "loading" ? 0.7 : 1,
+                                                    marginTop: "4px",
+                                                    boxShadow: `0 8px 24px ${activeType?.glow}`,
+                                                    transition: "background 0.3s, box-shadow 0.3s",
+                                                }}
+                                            >
+                                                {status === "loading"
+                                                    ? <><Loader2 size={15} style={{ animation: "spin 1s linear infinite" }} /> Enviando...</>
+                                                    : <>Manifestar interesse <ArrowRight size={15} /></>
+                                                }
+                                            </motion.button>
+                                        </form>
+                                    </>
+                                )}
+                            </motion.div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── POR QUE AGORA — 3 cards ── */}
+            <section style={{ padding: "60px 0 100px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                 <div className="container-rota">
-                    <div style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                        gap: "24px",
-                    }}>
-                        {[
-                            {
-                                n: "01",
-                                title: "Janela de 2026",
-                                text: "A conclusão estrutural da rota cria um pico de atenção sem precedente. Quem entra antes captura autoridade, audiência e parceiros. Essa janela não volta.",
-                                accent: "#F4A261",
-                            },
-                            {
-                                n: "02",
-                                title: "Lacuna real de mercado",
-                                text: "Nenhuma plataforma digital trata a rota sob o ângulo humano — cidades, turismo, pessoas, oportunidades. Este portal nasce para liderar essa categoria.",
-                                accent: "#2A9D8F",
-                            },
-                            {
-                                n: "03",
-                                title: "Audiência qualificada",
-                                text: "Viajantes, investidores, gestores públicos, empreendedores locais e imprensa regional. Não é um site genérico — é o hub de quem decide sobre o corredor.",
-                                accent: "#818cf8",
-                            },
-                        ].map((item, i) => (
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: "48px" }}>
+                        <h2 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "#fff", letterSpacing: "0.04em", marginBottom: "12px" }}>
+                            POR QUE ENTRAR AGORA?
+                        </h2>
+                        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif" }}>
+                            Três razões que definem quem chega primeiro
+                        </p>
+                    </motion.div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+                        {OPPS.map((item, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                                viewport={{ once: true, margin: "-40px" }}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                                style={{
-                                    padding: "28px 24px",
-                                    borderRadius: "16px",
-                                    background: "rgba(255,255,255,0.03)",
-                                    border: "1px solid rgba(255,255,255,0.07)",
-                                    backdropFilter: "blur(12px)",
-                                }}
+                                style={{ padding: "32px 28px", borderRadius: "18px", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}
                             >
-                                <div style={{
-                                    fontSize: "11px", color: item.accent,
-                                    fontFamily: "Inter, sans-serif", fontWeight: 700,
-                                    letterSpacing: "0.1em", marginBottom: "12px",
-                                }}>
-                                    {item.n}
-                                </div>
-                                <h3 style={{
-                                    fontFamily: '"Bebas Neue", sans-serif',
-                                    fontSize: "1.5rem", color: "#fff",
-                                    letterSpacing: "0.04em", marginBottom: "10px",
-                                }}>
-                                    {item.title}
-                                </h3>
-                                <p style={{
-                                    fontSize: "13px", color: "rgba(255,255,255,0.4)",
-                                    lineHeight: 1.75, fontFamily: "Inter, sans-serif",
-                                }}>
-                                    {item.text}
-                                </p>
+                                <div style={{ fontSize: "11px", color: item.accent, fontFamily: "Inter, sans-serif", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "14px" }}>{item.n}</div>
+                                <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: "1.5rem", color: "#fff", letterSpacing: "0.04em", marginBottom: "10px" }}>{item.title}</h3>
+                                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.38)", lineHeight: 1.8, fontFamily: "Inter, sans-serif" }}>{item.text}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* ── FORMULÁRIO ── */}
-            <section style={{ padding: "80px 0 120px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="container-rota">
-                    <div style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-                        gap: "64px", alignItems: "start",
-                    }}>
-
-                        {/* left — benefits */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7 }}
-                        >
-                            <span style={{
-                                fontSize: "10px", fontWeight: 700, color: "#F4A261",
-                                letterSpacing: "0.2em", textTransform: "uppercase",
-                                fontFamily: "Inter, sans-serif", marginBottom: "16px",
-                                display: "block",
-                            }}>
-                                O que você recebe
-                            </span>
-                            <h2 style={{
-                                fontFamily: '"Bebas Neue", sans-serif',
-                                fontSize: "clamp(2rem, 4vw, 3rem)",
-                                color: "#fff", lineHeight: 1,
-                                letterSpacing: "0.04em", marginBottom: "32px",
-                            }}>
-                                SELECIONE SEU<br />
-                                <span style={{ color: activeType?.accent }}>PERFIL</span>
-                            </h2>
-
-                            <TypeSelector selected={type} onChange={setType} />
-                            <BenefitsList type={type} />
-
-                            <p style={{
-                                fontSize: "11px", color: "rgba(255,255,255,0.2)",
-                                fontFamily: "Inter, sans-serif", marginTop: "28px",
-                                lineHeight: 1.6, fontStyle: "italic",
-                            }}>
-                                * Nenhum compromisso financeiro nesta etapa. Estamos apenas
-                                mapeando quem acredita no projeto.
-                            </p>
-                        </motion.div>
-
-                        {/* right — form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.1 }}
-                        >
-                            <div style={{
-                                borderRadius: "24px", padding: "40px 36px",
-                                background: "rgba(255,255,255,0.03)",
-                                border: "1px solid rgba(255,255,255,0.08)",
-                                backdropFilter: "blur(20px)",
-                            }}>
-                                {status === "success" ? (
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        style={{ textAlign: "center", padding: "40px 0" }}
-                                    >
-                                        <CheckCircle size={48} style={{ color: "#2A9D8F", margin: "0 auto 20px", display: "block" }} />
-                                        <h3 style={{
-                                            fontFamily: '"Bebas Neue", sans-serif',
-                                            fontSize: "2rem", color: "#fff",
-                                            letterSpacing: "0.04em", marginBottom: "12px",
-                                        }}>
-                                            SEMENTE PLANTADA!
-                                        </h3>
-                                        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)", fontFamily: "Inter, sans-serif", lineHeight: 1.7 }}>
-                                            Recebemos seu interesse. Em breve entraremos em contato para conversar sobre as possibilidades.
-                                        </p>
-                                    </motion.div>
-                                ) : (
-                                    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                                        <div>
-                                            <label style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: "6px" }}>
-                                                Nome *
-                                            </label>
-                                            <input
-                                                name="name" value={form.name} onChange={handleChange}
-                                                placeholder="Seu nome completo"
-                                                required style={inputStyle}
-                                                onFocus={e => e.target.style.borderColor = "rgba(42,157,143,0.5)"}
-                                                onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: "6px" }}>
-                                                E-mail *
-                                            </label>
-                                            <input
-                                                name="email" type="email" value={form.email} onChange={handleChange}
-                                                placeholder="seu@email.com"
-                                                required style={inputStyle}
-                                                onFocus={e => e.target.style.borderColor = "rgba(42,157,143,0.5)"}
-                                                onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: "6px" }}>
-                                                Empresa / Organização / Cargo
-                                            </label>
-                                            <input
-                                                name="organization" value={form.organization} onChange={handleChange}
-                                                placeholder="Opcional"
-                                                style={inputStyle}
-                                                onFocus={e => e.target.style.borderColor = "rgba(42,157,143,0.5)"}
-                                                onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: "6px" }}>
-                                                Como posso ajudar?
-                                            </label>
-                                            <textarea
-                                                name="message" value={form.message} onChange={handleChange}
-                                                placeholder="Conte um pouco sobre seu interesse (opcional)"
-                                                rows={4}
-                                                style={{ ...inputStyle, resize: "vertical", minHeight: "100px" }}
-                                                onFocus={e => e.target.style.borderColor = "rgba(42,157,143,0.5)"}
-                                                onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
-                                            />
-                                        </div>
-
-                                        {errorMsg && (
-                                            <p style={{ fontSize: "12px", color: "#f87171", fontFamily: "Inter, sans-serif" }}>
-                                                {errorMsg}
-                                            </p>
-                                        )}
-
-                                        <button
-                                            type="submit"
-                                            disabled={status === "loading"}
-                                            style={{
-                                                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                                                padding: "14px",
-                                                borderRadius: "12px",
-                                                background: "linear-gradient(135deg, #F4A261, #E9C46A)",
-                                                border: "none", color: "#061B33",
-                                                fontSize: "13px", fontWeight: 800,
-                                                letterSpacing: "0.08em", textTransform: "uppercase",
-                                                cursor: status === "loading" ? "not-allowed" : "pointer",
-                                                fontFamily: "Inter, sans-serif",
-                                                opacity: status === "loading" ? 0.7 : 1,
-                                                transition: "opacity 0.2s, transform 0.2s",
-                                            }}
-                                        >
-                                            {status === "loading"
-                                                ? <><Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Enviando...</>
-                                                : <> Manifestar interesse <ArrowRight size={14} /></>
-                                            }
-                                        </button>
-
-                                        <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", fontFamily: "Inter, sans-serif", textAlign: "center", lineHeight: 1.6 }}>
-                                            Sem compromisso. Nenhum valor é cobrado nesta etapa.
-                                        </p>
-                                    </form>
-                                )}
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
             <style>{`
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+                @media (max-width: 768px) {
+                    .apoie-grid { grid-template-columns: 1fr !important; }
+                }
             `}</style>
         </div>
     );

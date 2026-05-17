@@ -1,46 +1,57 @@
 import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { articlesApi } from "../api/articles.js";
 
-const articles = [
-    {
-        category: "Infraestrutura",
-        categoryColor: "#F4A261",
-        accentRgb: "244,162,97",
-        title: "Ponte Bioceânica entre Brasil e Paraguai: obras avançam para conclusão em 2025",
-        excerpt: "A Ponte Internacional da Amizade sobre o Rio Paraguai, ligando Porto Murtinho (BR) a Carmelo Peralta (PY), representa o maior projeto de integração continental da América do Sul.",
-        date: "28 Abr 2026",
-        readTime: "4 min",
-        href: "/noticias",
-        // ponte suspensa — condiz com artigo da Ponte Bioceânica
-        image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=260&fit=crop&auto=format&q=80",
-    },
-    {
-        category: "Turismo",
-        categoryColor: "#2A9D8F",
-        accentRgb: "42,157,143",
-        title: "Bonito bate recorde de visitantes e consolida posição como destino ecoturístico global",
-        excerpt: "Com mais de 300.000 visitantes em 2025, o município sul-mato-grossense recebe reconhecimento da ONU pelo modelo pioneiro de voucher único e capacidade de carga controlada.",
-        date: "15 Abr 2026",
-        readTime: "3 min",
-        href: "/noticias",
-        // cardume em água cristalina turquesa — Bonito / Rio da Prata
-        image: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=600&h=260&fit=crop&auto=format&q=80",
-    },
-    {
-        category: "Economia",
-        categoryColor: "#818cf8",
-        accentRgb: "129,140,248",
-        title: "Rota Bioceânica deve movimentar US$ 2,4 bilhões em comércio entre Brasil e Chile até 2030",
-        excerpt: "Estudo da CEPAL aponta que o corredor rodoviário conectando o Atlântico ao Pacífico vai reduzir em 30% o custo logístico de exportações do Centro-Oeste brasileiro para os mercados asiáticos.",
-        date: "02 Abr 2026",
-        readTime: "5 min",
-        href: "/noticias",
-        // navio porta-contêineres em porto — logística internacional
-        image: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=600&h=260&fit=crop&auto=format&q=80",
-    },
-];
+const CATEGORY_STYLE = {
+    "Infraestrutura": { color: "#F4A261", rgb: "244,162,97" },
+    "Turismo":        { color: "#2A9D8F", rgb: "42,157,143"  },
+    "Economia":       { color: "#818cf8", rgb: "129,140,248" },
+    "Cultura":        { color: "#f472b6", rgb: "244,114,182" },
+    "Meio Ambiente":  { color: "#4ade80", rgb: "74,222,128"  },
+    "Política":       { color: "#fb923c", rgb: "251,146,60"  },
+};
+const DEFAULT_STYLE = { color: "#F4A261", rgb: "244,162,97" };
+
+const CATEGORY_IMG = {
+    "Infraestrutura": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=260&fit=crop&auto=format&q=80",
+    "Turismo":        "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=600&h=260&fit=crop&auto=format&q=80",
+    "Economia":       "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=600&h=260&fit=crop&auto=format&q=80",
+    "Cultura":        "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&h=260&fit=crop&auto=format&q=80",
+    "Meio Ambiente":  "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=260&fit=crop&auto=format&q=80",
+    "Política":       "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&h=260&fit=crop&auto=format&q=80",
+};
+const DEFAULT_IMG = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=260&fit=crop&auto=format&q=80";
+
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    try {
+        return new Date(dateStr).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+    } catch { return ""; }
+}
+
+function readTime(content) {
+    return Math.max(1, Math.ceil((content?.length || 0) / 800));
+}
+
+function mapArticle(art) {
+    const catName = art.category?.name || "";
+    const style   = CATEGORY_STYLE[catName] || DEFAULT_STYLE;
+    const image   = art.featuredImage || CATEGORY_IMG[catName] || DEFAULT_IMG;
+    return {
+        category:      catName || "Notícias",
+        categoryColor: style.color,
+        accentRgb:     style.rgb,
+        title:         art.title,
+        excerpt:       art.excerpt || "",
+        date:          formatDate(art.publishedAt || art.createdAt),
+        readTime:      `${readTime(art.content)} min`,
+        href:          `/noticias/${art.slug}`,
+        image,
+    };
+}
 
 function ArticleCard({ art, index }) {
     const cardRef = useRef(null);
@@ -86,39 +97,23 @@ function ArticleCard({ art, index }) {
                     pointerEvents: "none", zIndex: 3,
                 }} />
 
-                {/* image banner */}
+                {/* image */}
                 <div style={{ position: "relative", height: "160px", flexShrink: 0, overflow: "hidden" }}>
                     <img
                         src={art.image}
                         alt={art.category}
-                        style={{
-                            width: "100%", height: "100%",
-                            objectFit: "cover",
-                            transition: "transform 0.6s ease",
-                            display: "block",
-                        }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", display: "block" }}
                         className="article-card-img"
                         loading="lazy"
                     />
-                    {/* dark overlay */}
-                    <div style={{
-                        position: "absolute", inset: 0,
-                        background: "linear-gradient(to bottom, rgba(2,13,26,0.25) 0%, rgba(2,13,26,0.72) 100%)",
-                    }} />
-                    {/* category badge */}
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(2,13,26,0.25) 0%, rgba(2,13,26,0.72) 100%)" }} />
                     <span style={{
                         position: "absolute", bottom: "12px", left: "14px",
-                        fontSize: "9px", fontWeight: 700,
-                        fontFamily: "Inter, sans-serif",
-                        color: "#fff",
-                        background: `rgba(${art.accentRgb},0.25)`,
-                        backdropFilter: "blur(8px)",
+                        fontSize: "9px", fontWeight: 700, fontFamily: "Inter, sans-serif", color: "#fff",
+                        background: `rgba(${art.accentRgb},0.25)`, backdropFilter: "blur(8px)",
                         border: `1px solid rgba(${art.accentRgb},0.35)`,
-                        padding: "3px 10px",
-                        borderRadius: "100px",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        zIndex: 2,
+                        padding: "3px 10px", borderRadius: "100px",
+                        letterSpacing: "0.1em", textTransform: "uppercase", zIndex: 2,
                     }}>
                         {art.category}
                     </span>
@@ -127,44 +122,20 @@ function ArticleCard({ art, index }) {
                 {/* content */}
                 <div style={{ padding: "20px 20px 22px", position: "relative", zIndex: 2, display: "flex", flexDirection: "column", flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "11px" }}>
-                        <span style={{
-                            display: "flex", alignItems: "center", gap: "4px",
-                            fontSize: "10px", color: "rgba(255,255,255,0.25)",
-                            fontFamily: "Inter, sans-serif",
-                        }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10px", color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif" }}>
                             <Calendar size={9} /> {art.date}
                         </span>
-                        <span style={{
-                            display: "flex", alignItems: "center", gap: "4px",
-                            fontSize: "10px", color: "rgba(255,255,255,0.25)",
-                            fontFamily: "Inter, sans-serif",
-                        }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "10px", color: "rgba(255,255,255,0.25)", fontFamily: "Inter, sans-serif" }}>
                             <Clock size={9} /> {art.readTime}
                         </span>
                     </div>
-
-                    <h3 style={{
-                        fontSize: "14px", fontWeight: 700, color: "rgba(255,255,255,0.88)",
-                        fontFamily: "Inter, sans-serif", lineHeight: 1.55,
-                        marginBottom: "10px", flex: 1,
-                    }}>
+                    <h3 style={{ fontSize: "14px", fontWeight: 700, color: "rgba(255,255,255,0.88)", fontFamily: "Inter, sans-serif", lineHeight: 1.55, marginBottom: "10px", flex: 1 }}>
                         {art.title}
                     </h3>
-
-                    <p style={{
-                        fontSize: "12px", color: "rgba(255,255,255,0.35)",
-                        lineHeight: 1.7, fontFamily: "Inter, sans-serif",
-                        marginBottom: "16px",
-                    }}>
+                    <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)", lineHeight: 1.7, fontFamily: "Inter, sans-serif", marginBottom: "16px" }}>
                         {art.excerpt}
                     </p>
-
-                    <span style={{
-                        display: "inline-flex", alignItems: "center", gap: "4px",
-                        fontSize: "11px", fontWeight: 700, color: art.categoryColor,
-                        fontFamily: "Inter, sans-serif",
-                        letterSpacing: "0.08em", textTransform: "uppercase",
-                    }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: 700, color: art.categoryColor, fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                         Ler mais <ArrowRight size={11} />
                     </span>
                 </div>
@@ -173,84 +144,112 @@ function ArticleCard({ art, index }) {
     );
 }
 
-export default function ArticlesSection() {
+const SKELETON_ACCENT = ["244,162,97", "42,157,143", "129,140,248"];
+
+function SkeletonCard({ index }) {
     return (
-        <section style={{ background: "#020d1a", padding: "100px 0", position: "relative", overflow: "hidden" }}>
-            {/* ambient glows */}
-            <div style={{
-                position: "absolute", top: "30%", right: "-10%",
-                width: "600px", height: "600px", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(244,162,97,0.04) 0%, transparent 70%)",
-                pointerEvents: "none",
-            }} />
-            <div style={{
-                position: "absolute", bottom: "10%", left: "-5%",
-                width: "500px", height: "500px", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(129,140,248,0.04) 0%, transparent 70%)",
-                pointerEvents: "none",
-            }} />
+        <div style={{ borderRadius: "20px", overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <div style={{ height: "160px", background: `radial-gradient(circle at 30% 50%, rgba(${SKELETON_ACCENT[index]},0.08), transparent 70%)`, animation: "pulse 1.8s ease-in-out infinite" }} />
+            <div style={{ padding: "20px" }}>
+                {[80, 100, 65].map((w, i) => (
+                    <div key={i} style={{ height: i === 1 ? "14px" : "10px", width: `${w}%`, borderRadius: "6px", background: "rgba(255,255,255,0.06)", marginBottom: "10px", animation: "pulse 1.8s ease-in-out infinite", animationDelay: `${i * 0.15}s` }} />
+                ))}
+            </div>
+        </div>
+    );
+}
 
-            <div className="container-rota" style={{ position: "relative" }}>
+export default function ArticlesSection() {
+    const { data, isLoading } = useQuery({
+        queryKey: ["articles-home"],
+        queryFn: () => articlesApi.list({ limit: 3, status: "PUBLISHED", lang: "pt" }),
+        staleTime: 0,
+        refetchOnWindowFocus: true,
+    });
+
+    const articles = (data?.data?.data || []).map(mapArticle);
+
+    return (
+        <section id="noticias" style={{ background: "#020d1a", position: "relative", overflow: "hidden" }}>
+
+            {/* ── Hero image ── */}
+            <div style={{ position: "relative", width: "100%", lineHeight: 0 }}>
+                <motion.img
+                    src="/ultimas_noticias.png"
+                    alt="Últimas Atualizações — Rota Bioceânica"
+                    initial={{ opacity: 0, scale: 1.03 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    style={{ width: "100%", height: "auto", display: "block", maxHeight: "420px", objectFit: "cover", objectPosition: "center" }}
+                    draggable={false}
+                />
+                {/* fade inferior para fundir com os cards */}
                 <div style={{
-                    display: "flex", alignItems: "flex-end",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap", gap: "16px",
-                    marginBottom: "56px",
-                }}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.7 }}
-                    >
-                        <span style={{
-                            display: "inline-block", fontSize: "10px", fontWeight: 700,
-                            color: "#F4A261", letterSpacing: "0.2em", textTransform: "uppercase",
-                            fontFamily: "Inter, sans-serif", marginBottom: "14px",
-                            background: "rgba(244,162,97,0.1)", padding: "4px 12px",
-                            borderRadius: "100px", border: "1px solid rgba(244,162,97,0.15)",
-                        }}>
-                            Notícias
-                        </span>
-                        <h2 style={{
-                            fontFamily: '"Bebas Neue", sans-serif',
-                            fontSize: "clamp(2.5rem, 6vw, 4rem)",
-                            color: "#fff", lineHeight: 1,
-                            letterSpacing: "0.04em",
-                        }}>
-                            ÚLTIMAS <span style={{ color: "#2A9D8F" }}>ATUALIZAÇÕES</span>
-                        </h2>
-                    </motion.div>
+                    position: "absolute", bottom: 0, left: 0, right: 0,
+                    height: "55%",
+                    background: "linear-gradient(to bottom, transparent, #020d1a)",
+                    pointerEvents: "none",
+                }} />
+                {/* link "Ver todas" clicável sobre o botão da imagem */}
+                <Link
+                    to="/noticias"
+                    style={{
+                        position: "absolute", bottom: "18%", left: "5.5%",
+                        display: "inline-flex", alignItems: "center", gap: "5px",
+                        fontSize: "11px", fontWeight: 700,
+                        color: "rgba(255,255,255,0.0)",
+                        padding: "8px 20px", borderRadius: "100px",
+                        textDecoration: "none",
+                    }}
+                    aria-label="Ver todas as notícias"
+                />
+            </div>
 
+            {/* ── Cards ── */}
+            <div className="container-rota" style={{ paddingTop: "0px", paddingBottom: "80px", position: "relative" }}>
+                {/* ambient glows */}
+                <div style={{ position: "absolute", top: "10%", right: "-10%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "5%", left: "-5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(129,140,248,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px", alignItems: "stretch" }}>
+                    {isLoading && [0, 1, 2].map(i => <SkeletonCard key={i} index={i} />)}
+
+                    {!isLoading && articles.map((art, i) => (
+                        <ArticleCard key={art.href + i} art={art} index={i} />
+                    ))}
+
+                    {!isLoading && articles.length === 0 && (
+                        <div style={{ gridColumn: "1 / -1", padding: "40px 0", textAlign: "center", color: "rgba(255,255,255,0.18)", fontFamily: "Inter, sans-serif", fontSize: "13px" }}>
+                            Nenhuma notícia publicada ainda.
+                        </div>
+                    )}
+                </div>
+
+                {/* Ver todas — link abaixo dos cards */}
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
                     <Link to="/noticias" style={{
                         display: "inline-flex", alignItems: "center", gap: "6px",
                         fontSize: "12px", fontWeight: 700, color: "#2A9D8F",
                         fontFamily: "Inter, sans-serif", textDecoration: "none",
                         letterSpacing: "0.08em", textTransform: "uppercase",
                         border: "1px solid rgba(42,157,143,0.3)",
-                        padding: "8px 16px", borderRadius: "100px",
+                        padding: "8px 24px", borderRadius: "100px",
                         backdropFilter: "blur(8px)",
                         transition: "all 0.3s ease",
-                    }}>
-                        Ver todas <ArrowRight size={13} />
+                    }}
+                    className="ver-todas-link"
+                    >
+                        Ver todas as notícias <ArrowRight size={13} />
                     </Link>
-                </div>
-
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                    gap: "16px",
-                    alignItems: "stretch",
-                }}>
-                    {articles.map((art, i) => (
-                        <ArticleCard key={i} art={art} index={i} />
-                    ))}
                 </div>
             </div>
 
             <style>{`
                 .article-glass-card:hover { border-color: rgba(255,255,255,0.14) !important; transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
                 .article-glass-card:hover .article-card-img { transform: scale(1.06); }
+                .ver-todas-link:hover { border-color: rgba(42,157,143,0.6) !important; color: #4bc9b8 !important; }
+                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
             `}</style>
         </section>
     );

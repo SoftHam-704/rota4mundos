@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Globe, Lock, Mail } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore.js";
@@ -16,7 +16,8 @@ export default function LoginPage() {
         const result = await login(formData);
         if (result.success) {
             toast.success("Login realizado com sucesso!");
-            navigate("/");
+            const { user } = useAuthStore.getState();
+            navigate(user?.role === "ADMIN" || user?.role === "EDITOR" ? "/admin" : "/");
         } else {
             toast.error(result.error);
         }
@@ -87,27 +88,6 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-white/60 text-sm">
-                            Não tem conta?{" "}
-                            <Link to="/registro" className="text-secondary-400 hover:text-secondary-300 font-medium">Registre-se</Link>
-                        </p>
-                    </div>
-
-                    <div className="mt-6 pt-6 border-t border-white/10">
-                        <p className="text-center text-xs text-white/40 mb-3">Contas de demonstração</p>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                            <div className="bg-white/5 rounded-lg p-2 text-white/60">
-                                <span className="block font-medium text-white/80">Admin</span>
-                                admin@rotabio.com
-                            </div>
-                            <div className="bg-white/5 rounded-lg p-2 text-white/60">
-                                <span className="block font-medium text-white/80">Editor</span>
-                                editor@rotabio.com
-                            </div>
-                        </div>
-                        <p className="text-center text-xs text-white/30 mt-2">Senha: admin@123 / editor@123</p>
-                    </div>
                 </div>
             </motion.div>
         </div>

@@ -6,4 +6,5 @@ export const articlesApi = {
     create: (data) => apiClient.post("/articles", data),
     update: (id, data) => apiClient.put(`/articles/${id}`, data),
     delete: (id) => apiClient.delete(`/articles/${id}`),
+    fetchWithAI: () => apiClient.post("/ai-news/fetch"),
 };

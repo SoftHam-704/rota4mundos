@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, X, FileText, Eye } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X, FileText, Sparkles, Loader2 } from "lucide-react";
 import { articlesApi } from "../../api/articles.js";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -15,7 +15,7 @@ export default function AdminArticlesPage() {
 
     const { data, isLoading } = useQuery({
         queryKey: ["admin-articles", search],
-        queryFn: () => articlesApi.list({ search, limit: 50, status: undefined }),
+        queryFn: () => articlesApi.list({ search, limit: 50, status: "all" }),
     });
 
     const createMutation = useMutation({
@@ -33,6 +33,20 @@ export default function AdminArticlesPage() {
     const deleteMutation = useMutation({
         mutationFn: articlesApi.delete,
         onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-articles"] }); toast.success("Artigo removido!"); },
+    });
+
+    const aiNewsMutation = useMutation({
+        mutationFn: articlesApi.fetchWithAI,
+        onSuccess: (res) => {
+            const { created, total } = res.data?.data || {};
+            queryClient.invalidateQueries({ queryKey: ["admin-articles"] });
+            if (created > 0) {
+                toast.success(`${created} artigo(s) criado(s) como rascunho de ${total} notícias encontradas`);
+            } else {
+                toast(`Nenhum artigo novo: ${total} notícias analisadas, sem novidades relevantes`, { icon: "ℹ️" });
+            }
+        },
+        onError: (err) => toast.error(err.response?.data?.message || "Erro ao buscar notícias com IA"),
     });
 
     const articles = data?.data?.data || [];
@@ -57,6 +71,7 @@ export default function AdminArticlesPage() {
     };
 
     const statusColors = { DRAFT: "bg-amber-50 text-amber-600", PUBLISHED: "bg-emerald-50 text-emerald-600", SCHEDULED: "bg-blue-50 text-blue-600", ARCHIVED: "bg-slate-50 text-slate-600" };
+    const statusLabels = { DRAFT: "Rascunho", PUBLISHED: "Publicado", SCHEDULED: "Agendado", ARCHIVED: "Arquivado" };
 
     return (
         <div>
@@ -65,7 +80,19 @@ export default function AdminArticlesPage() {
                     <h1 className="font-display text-3xl font-bold text-primary-950">Artigos</h1>
                     <p className="text-slate-500 mt-1">Gerencie as notícias e conteúdos do portal</p>
                 </div>
-                <button onClick={() => openModal()} className="btn-primary"><Plus className="w-5 h-5 mr-2" /> Novo Artigo</button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => aiNewsMutation.mutate()}
+                        disabled={aiNewsMutation.isPending}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 text-white font-semibold text-sm hover:bg-violet-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {aiNewsMutation.isPending
+                            ? <><Loader2 className="w-4 h-4 animate-spin" /> Buscando...</>
+                            : <><Sparkles className="w-4 h-4" /> Buscar com IA</>
+                        }
+                    </button>
+                    <button onClick={() => openModal()} className="btn-primary"><Plus className="w-5 h-5 mr-2" /> Novo Artigo</button>
+                </div>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100">
@@ -86,11 +113,14 @@ export default function AdminArticlesPage() {
                                 {articles.map((article) => (
                                     <tr key={article.id} className="hover:bg-slate-50/50">
                                         <td className="px-6 py-4"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center"><FileText className="w-5 h-5 text-primary-600" /></div><div><p className="font-medium text-primary-950">{article.title}</p><p className="text-xs text-slate-500">{article.author?.name}</p></div></div></td>
-                                        <td className="px-6 py-4"><span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[article.status] || statusColors.DRAFT}`}>{article.status}</span></td>
-                                        <td className="px-6 py-4 text-sm text-slate-600">{article.publishedAt ? dayjs(article.publishedAt).format("DD/MM/YYYY") : "—"}</td>
+                                        <td className="px-6 py-4"><span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[article.status] || statusColors.DRAFT}`}>{statusLabels[article.status] || article.status}</span></td>
+                                        <td className="px-6 py-4 text-sm text-slate-600">{article.publishedAt ? dayjs(article.publishedAt).format("DD/MM/YYYY") : dayjs(article.createdAt).format("DD/MM/YYYY")}</td>
                                         <td className="px-6 py-4 text-right"><div className="flex items-center justify-end gap-2"><button onClick={() => openModal(article)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-primary-600"><Pencil className="w-4 h-4" /></button><button onClick={() => deleteMutation.mutate(article.id)} className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button></div></td>
                                     </tr>
                                 ))}
+                                {articles.length === 0 && (
+                                    <tr><td colSpan={4} className="px-6 py-12 text-center text-slate-400 text-sm">Nenhum artigo encontrado. Use "Buscar com IA" para gerar conteúdo automaticamente.</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
