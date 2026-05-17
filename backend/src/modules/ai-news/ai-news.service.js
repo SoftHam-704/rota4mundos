@@ -21,45 +21,42 @@ const RSS_FEEDS = [
     "https://www.latercera.com/feed/",
 ];
 
-// Somente termos que identificam EXCLUSIVAMENTE o Corredor Bioceânico
+// Pré-filtro amplo — Claude faz a triagem real de relevância
 const KEYWORDS = [
-    // Nomes da rota
-    "rota bioceânica",
-    "corredor bioceânico",
-    "corredor bioceanico",
-    "bioceanica",
-    "bioceanico",
-    "rota atlantico pacifico",
+    // Nomes da rota (cobre todas variantes pt/es com/sem acento após normalização)
+    "biocean",           // bioceânica, bioceânico, bioceanica, bioceanico, bioceánico
     "rota 4 mundos",
+    "rota atlantico",
+    "corredor atlantico",
+    "atlantico pacifico",
     // Infraestrutura específica
-    "ponte bioceânica",
-    "ponte de porto murtinho",
-    // Cidades-chave do corredor (Brasil)
     "porto murtinho",
-    // Cidades-chave (Paraguai)
+    "ponte bioce",
+    "ponte de porto murtinho",
+    // Cidades-chave do corredor
     "carmelo peralta",
     "filadelfia chaco",
     "mariscal estigarribia",
-    // Cidades-chave (Argentina / Chile — sempre junto ao contexto da rota)
     "paso de jama",
     "mejillones",
-    // Integração diretamente nomeada
-    "corredor vial bioceânico",
+    // Termos de integração regional
     "integracion bioceanica",
+    "corredor vial bioceanico",
+    // Fronteira MS/PY
+    "bela vista ms",
+    "ponta pora fronteira",
 ];
 
+const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
 function matchesKeywords(text) {
-    const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
     const haystack = norm(text);
     return KEYWORDS.some((kw) => haystack.includes(norm(kw)));
 }
 
 function slugify(text) {
     return (
-        text
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[̀-ͯ]/g, "")
+        norm(text)
             .replace(/[^a-z0-9\s-]/g, "")
             .trim()
             .replace(/\s+/g, "-")
@@ -100,13 +97,13 @@ export async function runIrisFetch(authorId, options = {}) {
     const feedItems = feedResults.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
     logger.info(`IRIS: ${feedItems.length} itens coletados de ${RSS_FEEDS.length} feeds`);
 
-    // 2. Filtrar por keywords estritas
+    // 2. Pré-filtrar por keywords
     const relevant = feedItems.filter((item) =>
         matchesKeywords(`${item.title || ""} ${item.contentSnippet || ""}`)
     );
 
     if (relevant.length === 0) {
-        logger.info("IRIS: nenhum item relevante encontrado");
+        logger.info("IRIS: nenhum item relevante encontrado nos feeds");
         return { published: 0, drafted: 0, skipped: 0, total: 0 };
     }
 
@@ -119,12 +116,10 @@ export async function runIrisFetch(authorId, options = {}) {
         return true;
     });
 
-    logger.info(`IRIS: ${unique.length} itens únicos relevantes`);
+    logger.info(`IRIS: ${unique.length} itens únicos passaram pelo pré-filtro`);
 
-    // 4. Processar com Claude Haiku
-    let published = 0,
-        drafted = 0,
-        skipped = 0;
+    // 4. Processar com Claude Haiku (triagem e geração de artigo)
+    let published = 0, drafted = 0, skipped = 0;
 
     for (const item of unique.slice(0, maxItems)) {
         try {
@@ -141,32 +136,31 @@ Link: ${item.link || ""}`;
                         role: "user",
                         content: `Você é a IRIS, editora do portal "Rota Bioceânica" — sobre o Corredor Bioceânico Atlântico-Pacífico (Brasil → Paraguai → Argentina → Chile).
 
-Analise SOMENTE se a notícia trata diretamente do Corredor Bioceânico, suas obras, sua rota, seu comércio ou cidades específicas da rota (Porto Murtinho, Carmelo Peralta, Filadelfia, Mariscal Estigarribia, Paso de Jama, Mejillones).
+Avalie se a notícia trata DIRETAMENTE do Corredor Bioceânico, suas obras, comércio ou cidades específicas da rota (Porto Murtinho, Carmelo Peralta, Filadelfia, Mariscal Estigarribia, Paso de Jama, Mejillones).
 
 NÃO é relevante (relevância ≤ 4):
-- Notícias gerais do estado do Mato Grosso do Sul que não mencionam o Corredor Bioceânico
+- Notícias gerais do Mato Grosso do Sul sem relação com o Corredor
 - Acidentes, crimes, catástrofes climáticas (granizo, enchentes, etc.)
-- Casos trabalhistas, ações judiciais sem relação com o Corredor
-- Empresas de logística genéricas sem menção expressa à Rota Bioceânica
-- Política estadual/municipal sem conexão direta com o Corredor
-- Turismo genérico não ligado ao eixo da Rota
+- Casos trabalhistas ou judiciais sem conexão com o Corredor
+- Logística genérica, transporte sem citar a Rota Bioceânica
+- Política estadual/municipal desconectada do Corredor
+- Turismo genérico fora do eixo da Rota
 
 É relevante (relevância ≥ 7) quando:
 - Cita explicitamente "Corredor Bioceânico", "Rota Bioceânica" ou "ponte de Porto Murtinho"
-- Trata de obras, investimentos, acordos diplomáticos no eixo Brasil-Paraguai-Argentina-Chile
-- Envolve comércio, exportação, logística ESPECIFICAMENTE pela rota do Corredor
+- Trata de obras, investimentos, acordos diplomáticos no eixo BR-PY-AR-CL
+- Envolve comércio ou exportação especificamente pela rota do Corredor
 
-Responda APENAS com JSON válido (sem markdown, sem blocos de código):
+Responda APENAS com JSON válido (sem markdown):
 
 ${source}
 
-Retorne exatamente:
 {
   "relevance": <inteiro 1-10>,
   "category": "<Infraestrutura | Turismo | Economia | Cultura | Meio Ambiente | Política>",
-  "title": "<título jornalístico em PT-BR, máx 90 chars>",
+  "title": "<título jornalístico PT-BR, máx 90 chars>",
   "excerpt": "<resumo factual PT-BR, 1-2 frases, máx 220 chars>",
-  "content": "<artigo completo HTML simples (p, strong, h3), 3-5 parágrafos, PT-BR, baseado nos fatos>"
+  "content": "<artigo HTML simples (p, strong, h3), 3-5 parágrafos, PT-BR, baseado nos fatos>"
 }`,
                     },
                 ],
@@ -185,6 +179,7 @@ Retorne exatamente:
             }
 
             if (!parsed.relevance || parsed.relevance < draftThreshold) {
+                logger.info(`IRIS: ignorado — "${item.title}" (relevância ${parsed.relevance ?? "?"}})`);
                 skipped++;
                 continue;
             }
@@ -201,22 +196,21 @@ Retorne exatamente:
 
             const status = parsed.relevance >= autoPublishThreshold ? "PUBLISHED" : "DRAFT";
 
-            // Usa a data original da notícia; fallback para agora
             const originalDate = item.pubDate ? new Date(item.pubDate) : new Date();
             const pubDate = isNaN(originalDate.getTime()) ? new Date() : originalDate;
 
             await prisma.article.create({
                 data: {
-                    title: parsed.title,
-                    slug: slugify(parsed.title),
-                    excerpt: parsed.excerpt || null,
-                    content: parsed.content || "<p>Conteúdo em processamento.</p>",
+                    title:       parsed.title,
+                    slug:        slugify(parsed.title),
+                    excerpt:     parsed.excerpt || null,
+                    content:     parsed.content || "<p>Conteúdo em processamento.</p>",
                     status,
                     publishedAt: pubDate,
                     authorId,
-                    lang: "pt",
-                    metaTitle: parsed.title,
-                    metaDesc: parsed.excerpt || null,
+                    lang:        "pt",
+                    metaTitle:   parsed.title,
+                    metaDesc:    parsed.excerpt || null,
                 },
             });
 
