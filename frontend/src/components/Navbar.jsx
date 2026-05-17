@@ -33,6 +33,10 @@ export default function Navbar() {
     const isActive = (path) =>
         path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
+    // Páginas sem hero escuro precisam do navbar sempre opaco
+    const isHeroPage = location.pathname === "/";
+    const opaque = isScrolled || !isHeroPage;
+
     return (
         <motion.nav
             initial={{ y: -100 }}
@@ -41,14 +45,14 @@ export default function Navbar() {
             style={{
                 position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
                 transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
-                background: isScrolled
-                    ? "rgba(6,27,51,0.92)"
+                background: opaque
+                    ? "rgba(6,27,51,0.97)"
                     : "transparent",
-                backdropFilter: isScrolled ? "blur(20px)" : "none",
-                borderBottom: isScrolled
+                backdropFilter: opaque ? "blur(20px)" : "none",
+                borderBottom: opaque
                     ? "1px solid rgba(255,255,255,0.07)"
                     : "1px solid transparent",
-                boxShadow: isScrolled
+                boxShadow: opaque
                     ? "0 4px 32px rgba(0,0,0,0.35)"
                     : "none",
             }}
