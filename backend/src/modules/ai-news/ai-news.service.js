@@ -10,7 +10,12 @@ const parser = new Parser({
 });
 
 const RSS_FEEDS = [
-    // Brasil
+    // Google News — buscas diretas pelo tema (mais assertivo)
+    "https://news.google.com/rss/search?q=corredor+bioce%C3%A2nico&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+    "https://news.google.com/rss/search?q=rota+bioce%C3%A2nica&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+    "https://news.google.com/rss/search?q=porto+murtinho+corredor&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+    "https://news.google.com/rss/search?q=corredor+bioceanico&hl=es&gl=PY&ceid=PY:es-419",
+    // Brasil — feeds gerais (complemento)
     "https://g1.globo.com/rss/g1/ms/",
     "https://www.campograndenews.com.br/rss.xml",
     "https://correiodoestado.com.br/feed/",
