@@ -1,422 +1,317 @@
-import { useRef } from "react";
-import { motion } from "framer-motion";
-import { MapPin, ArrowRight } from "lucide-react";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
-// Ordem da rota: Atlântico → Pacífico
-const cities = [
-    // ── Brasil ─────────────────────────────────────────────────────────────
+// card filename por país (paraguai usa "paraguay" no arquivo)
+const CARD_FILE = {
+    brasil:    "card_brasil.png",
+    paraguai:  "card_paraguay.png",
+    argentina: "card_argentina.png",
+    chile:     "card_chile.png",
+};
+
+const COUNTRIES = [
     {
-        name: "Campo Grande",
-        country: "Brasil 🇧🇷",
-        state: "Mato Grosso do Sul",
-        tagline: "A Capital Morena do Cerrado",
-        desc: "Ponto de partida da rota. Hub logístico e cultural do corredor. Gastronomia plural, BIOPARQUE Pantanal e energia de capital em expansão.",
-        href: "/cidades/campo-grande",
+        id: "brasil",
+        flag: "🇧🇷",
         accent: "#2A9D8F",
         accentRgb: "42,157,143",
-        pop: "906.092",
-        image: "/cities/campo_grande.png",
-        routeOrder: 1,
+        zone: { top: "19%", left: "13%", width: "36%", height: "36%" },
+        cities: [
+            { n: "01", name: "Campo Grande",   tagline: "A Capital Morena do Cerrado",             href: "/cidades/campo-grande",   image: "/cities/campo_grande.png" },
+            { n: "02", name: "Sidrolândia",    tagline: "O Coração Produtivo do MS",               href: "/cidades/sidrolandia",    image: "/cities/sidrolandia.png" },
+            { n: "03", name: "Jardim",          tagline: "Portal da Serra da Bodoquena",            href: "/cidades/jardim",         image: "/cities/jardim.png" },
+            { n: "04", name: "Bonito",          tagline: "O Aquário Natural do Mundo",              href: "/cidades/bonito",         image: "/cities/bonito.png" },
+            { n: "05", name: "Porto Murtinho",  tagline: "A Guardiã do Rio Paraguai",               href: "/cidades/porto-murtinho", image: "/cities/porto_murtinho.png" },
+        ],
     },
     {
-        name: "Bonito",
-        country: "Brasil 🇧🇷",
-        state: "Mato Grosso do Sul",
-        tagline: "O Aquário Natural do Mundo",
-        desc: "Rios de visibilidade cristalina de 40m, grutas e cachoeiras. Referência global em ecoturismo sustentável.",
-        href: "/cidades/bonito",
-        accent: "#22d3ee",
-        accentRgb: "34,211,238",
-        pop: "21.368",
-        image: "/cities/bonito.png",
-        routeOrder: 2,
-    },
-    {
-        name: "Jardim",
-        country: "Brasil 🇧🇷",
-        state: "Mato Grosso do Sul",
-        tagline: "Portal da Serra da Bodoquena",
-        desc: "Município-sede da Serra da Bodoquena e porta de entrada histórica para Bonito. Rica em cavernas, grutas e paisagens do Planalto da Bodoquena.",
-        href: "/cidades/jardim",
-        accent: "#86efac",
-        accentRgb: "134,239,172",
-        pop: "27.245",
-        image: "/cities/jardim.png",
-        routeOrder: 3,
-    },
-    {
-        name: "Porto Murtinho",
-        country: "Brasil 🇧🇷",
-        state: "Mato Grosso do Sul",
-        tagline: "A Guardiã do Rio Paraguai",
-        desc: "Última cidade brasileira antes da travessia. Pantanal, Toro Candil e a ponte binacional sobre o Rio Paraguai.",
-        href: "/cidades/porto-murtinho",
-        accent: "#F4A261",
-        accentRgb: "244,162,97",
-        pop: "12.859",
-        image: "/cities/porto_murtinho.png",
-        routeOrder: 4,
-    },
-    // ── Paraguai ────────────────────────────────────────────────────────────
-    {
-        name: "Carmelo Peralta",
-        country: "Paraguai 🇵🇾",
-        state: "Alto Paraguay",
-        tagline: "A Travessia Histórica",
-        desc: "Fronteira com Porto Murtinho — onde a ponte binacional sobre o Rio Paraguai conecta dois oceanos. Epicentro da integração.",
-        href: "/cidades/carmelo-peralta",
-        accent: "#818cf8",
-        accentRgb: "129,140,248",
-        pop: "5.000",
-        image: "/cities/carmelo_peralta.png",
-        routeOrder: 5,
-    },
-    {
-        name: "Mariscal Estigarribia",
-        country: "Paraguai 🇵🇾",
-        state: "Boquerón",
-        tagline: "O Novo Polo Logístico do Chaco",
-        desc: "Cidade em ascensão no coração do Chaco paraguaio. 65% de população indígena, 270 km de rota já pavimentada e vocação logística crescente.",
-        href: "/cidades/mariscal-estigarribia",
+        id: "paraguai",
+        flag: "🇵🇾",
         accent: "#a78bfa",
         accentRgb: "167,139,250",
-        pop: "8.000",
-        image: "/cities/mariscal_estigarribia.png",
-        routeOrder: 6,
+        zone: { top: "19%", left: "51%", width: "36%", height: "36%" },
+        cities: [
+            { n: "06", name: "Carmelo Peralta",       tagline: "A Travessia Histórica",        href: "/cidades/carmelo-peralta",       image: "/cities/carmelo_peralta.png" },
+            { n: "07", name: "Mariscal Estigarribia", tagline: "O Polo Logístico do Chaco",    href: "/cidades/mariscal-estigarribia", image: "/cities/mariscal_estigarribia.png" },
+            { n: "08", name: "Filadelfia",            tagline: "A Alma Europeia do Chaco",     href: "/cidades/filadelfia",            image: "/cities/filadelfia.png" },
+        ],
     },
     {
-        name: "Filadelfia",
-        country: "Paraguai 🇵🇾",
-        state: "Boquerón",
-        tagline: "A Alma Europeia do Chaco",
-        desc: "Colônia mennonita que transformou o deserto em polo agroindustrial. Queijos, embutidos artesanais e a Cooperativa Fernheim — referência continental em cooperativismo.",
-        href: "/cidades/filadelfia",
-        accent: "#84cc16",
-        accentRgb: "132,204,22",
-        pop: "14.000",
-        image: "/cities/filadelfia.png",
-        routeOrder: 7,
-    },
-    // ── Argentina ───────────────────────────────────────────────────────────
-    {
-        name: "Salta",
-        country: "Argentina 🇦🇷",
-        state: "Província de Salta",
-        tagline: "La Linda — Capital do Folclore Andino",
-        desc: "Centro histórico colonial, Tren a las Nubes a 4.220m de altitude e peñas folclóricas onde zamba e chacarera soam ao vivo toda noite.",
-        href: "/cidades/salta",
-        accent: "#f97316",
-        accentRgb: "249,115,22",
-        pop: "620.000",
-        image: "/cities/salta.png",
-        routeOrder: 8,
-    },
-    {
-        name: "Jujuy",
-        country: "Argentina 🇦🇷",
-        state: "Província de Jujuy",
-        tagline: "A Alma Ancestral dos Andes",
-        desc: "Quebrada de Humahuaca (UNESCO), Cerro de los Siete Colores, Pachamama viva e 10.000 anos de memória andina. O capítulo mais espiritual da travessia bioceânica.",
-        href: "/cidades/jujuy",
-        accent: "#f43f5e",
-        accentRgb: "244,63,94",
-        pop: "320.000",
-        image: "/cities/jujuy.png",
-        routeOrder: 9,
-    },
-    {
-        name: "Tartagal",
-        country: "Argentina 🇦🇷",
-        state: "Salta — NOA Profundo",
-        tagline: "Fronteira Cultural do Norte Argentino",
-        desc: "Cinco povos originários ativos, floresta subtropical das Yungas, transição para o Gran Chaco. A Argentina multicultural e autêntica que nenhum guia turístico mostrou.",
-        href: "/cidades/tartagal",
-        accent: "#10b981",
-        accentRgb: "16,185,129",
-        pop: "70.000",
-        image: "/cities/tartagal.png",
-        routeOrder: 10,
-    },
-    // ── Chile ───────────────────────────────────────────────────────────────
-    {
-        name: "Antofagasta",
-        country: "Chile 🇨🇱",
-        state: "Região de Antofagasta",
-        tagline: "Onde o Atacama Beija o Pacífico",
-        desc: "Destino final da Rota Bioceânica. La Portada, observatórios ESO, capital do cobre e o porto onde o continente finalmente encontra o oceano.",
-        href: "/cidades/antofagasta",
-        accent: "#38bdf8",
-        accentRgb: "56,189,248",
-        pop: "500.000",
-        image: "/cities/antofagasta.png",
-        routeOrder: 11,
-    },
-    {
-        name: "Iquique",
-        country: "Chile 🇨🇱",
-        state: "Região de Tarapacá",
-        tagline: "Porto Histórico e Zona Franca",
-        desc: "Porto de história centenária e zona franca de referência. Integrado ao corredor como segunda grande saída chilena para o Oceano Pacífico.",
-        href: "/cidades/iquique",
+        id: "argentina",
+        flag: "🇦🇷",
         accent: "#fb923c",
         accentRgb: "251,146,60",
-        pop: "235.000",
-        image: "/cities/iquique.png",
-        routeOrder: 12,
+        zone: { top: "55%", left: "13%", width: "36%", height: "28%" },
+        cities: [
+            { n: "09", name: "Tartagal", tagline: "Fronteira Cultural do Norte Argentino",  href: "/cidades/tartagal", image: "/cities/tartagal.png" },
+            { n: "10", name: "Jujuy",    tagline: "A Alma Ancestral dos Andes",             href: "/cidades/jujuy",    image: "/cities/jujuy.png" },
+            { n: "11", name: "Salta",    tagline: "La Linda — Capital do Folclore Andino",  href: "/cidades/salta",    image: "/cities/salta.png" },
+        ],
     },
     {
-        name: "Mejillones",
-        country: "Chile 🇨🇱",
-        state: "Região de Antofagasta",
-        tagline: "O Porto Autêntico do Pacífico",
-        desc: "Encerramento simbólico da Rota Bioceânica. Porto artesanal, pesca centenária, frutos do mar frescos e o pôr do sol mais emocionante da travessia continental.",
-        href: "/cidades/mejillones",
-        accent: "#0891b2",
-        accentRgb: "8,145,178",
-        pop: "12.000",
-        image: "/cities/mejillones.png",
-        routeOrder: 13,
+        id: "chile",
+        flag: "🇨🇱",
+        accent: "#38bdf8",
+        accentRgb: "56,189,248",
+        zone: { top: "55%", left: "51%", width: "36%", height: "28%" },
+        cities: [
+            { n: "12", name: "Antofagasta", tagline: "Onde o Atacama Beija o Pacífico", href: "/cidades/antofagasta", image: "/cities/antofagasta.png" },
+            { n: "13", name: "Iquique",     tagline: "Porto Histórico e Zona Franca",   href: "/cidades/iquique",     image: "/cities/iquique.png" },
+            { n: "14", name: "Mejillones",  tagline: "O Porto Autêntico do Pacífico",   href: "/cidades/mejillones",  image: "/cities/mejillones.png" },
+        ],
     },
 ];
 
-function CityCard({ city, index }) {
-    const cardRef = useRef(null);
-
-    function handleMouseMove(e) {
-        const card = cardRef.current;
-        if (!card) return;
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-        card.style.setProperty("--my", `${e.clientY - rect.top}px`);
-    }
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.65, delay: (index % 4) * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-            <Link
-                to={city.href}
-                ref={cardRef}
-                onMouseMove={handleMouseMove}
-                style={{
-                    display: "block", textDecoration: "none",
-                    position: "relative", borderRadius: "20px", overflow: "hidden",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    backdropFilter: "blur(16px)",
-                    transition: "border-color 0.3s, transform 0.3s, box-shadow 0.3s",
-                }}
-                className="city-glass-card"
-            >
-                {/* flashlight */}
-                <div style={{
-                    position: "absolute", inset: 0, borderRadius: "20px",
-                    background: `radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(${city.accentRgb},0.08), transparent 60%)`,
-                    pointerEvents: "none", zIndex: 3,
-                }} />
-
-                {/* route order badge */}
-                <div style={{
-                    position: "absolute", top: "12px", right: "12px",
-                    width: "26px", height: "26px", borderRadius: "50%",
-                    background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)",
-                    border: `1px solid rgba(${city.accentRgb},0.4)`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    zIndex: 4,
-                }}>
-                    <span style={{ fontSize: "9px", fontWeight: 800, color: city.accent, fontFamily: "Inter, sans-serif" }}>
-                        {city.routeOrder}
-                    </span>
-                </div>
-
-                {/* image */}
-                <div style={{ position: "relative", height: "160px", overflow: "hidden" }}>
-                    <img
-                        src={city.image}
-                        alt={city.name}
-                        style={{
-                            width: "100%", height: "100%", objectFit: "cover",
-                            transition: "transform 0.6s ease", display: "block",
-                        }}
-                        className="city-card-img"
-                        loading="lazy"
-                    />
-                    <div style={{
-                        position: "absolute", inset: 0,
-                        background: "linear-gradient(to bottom, rgba(6,27,51,0.15) 0%, rgba(6,27,51,0.72) 100%)",
-                    }} />
-                    <div style={{
-                        position: "absolute", top: 0, left: 0, right: 0, height: "2px",
-                        background: `linear-gradient(90deg, transparent, ${city.accent}cc, transparent)`,
-                        zIndex: 2,
-                    }} />
-                    <div style={{
-                        position: "absolute", bottom: "12px", left: "14px",
-                        display: "flex", alignItems: "center", gap: "5px", zIndex: 2,
-                    }}>
-                        <MapPin size={10} style={{ color: city.accent }} />
-                        <span style={{
-                            fontSize: "9px", fontWeight: 600, color: "rgba(255,255,255,0.7)",
-                            fontFamily: "Inter, sans-serif", letterSpacing: "0.1em", textTransform: "uppercase",
-                        }}>
-                            {city.country} · {city.state}
-                        </span>
-                    </div>
-                </div>
-
-                {/* content */}
-                <div style={{ padding: "20px 22px 22px", position: "relative", zIndex: 2 }}>
-                    <h3 style={{
-                        fontFamily: '"Bebas Neue", sans-serif',
-                        fontSize: "1.75rem", color: "#fff",
-                        letterSpacing: "0.05em", lineHeight: 1, marginBottom: "5px",
-                    }}>
-                        {city.name}
-                    </h3>
-
-                    <p style={{
-                        fontSize: "11px", color: city.accent,
-                        fontWeight: 600, fontFamily: "Inter, sans-serif",
-                        fontStyle: "italic", marginBottom: "10px",
-                    }}>
-                        {city.tagline}
-                    </p>
-
-                    <p style={{
-                        fontSize: "12px", color: "rgba(255,255,255,0.4)",
-                        lineHeight: 1.7, fontFamily: "Inter, sans-serif", marginBottom: "16px",
-                    }}>
-                        {city.desc}
-                    </p>
-
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", fontFamily: "Inter, sans-serif" }}>
-                            {city.pop} hab.
-                        </span>
-                        <span style={{
-                            display: "inline-flex", alignItems: "center", gap: "4px",
-                            fontSize: "11px", fontWeight: 700, color: city.accent,
-                            fontFamily: "Inter, sans-serif", letterSpacing: "0.08em", textTransform: "uppercase",
-                        }}>
-                            Explorar <ArrowRight size={11} />
-                        </span>
-                    </div>
-                </div>
-            </Link>
-        </motion.div>
-    );
-}
-
 export default function CitiesSection() {
-    const { t } = useTranslation();
+    const [activeId, setActiveId]   = useState(null);
+    const [hoveredId, setHoveredId] = useState(null);
+
+    const scrollRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: scrollRef,
+        offset: ["start start", "end end"],
+    });
+    const imageY     = useTransform(scrollYProgress, [0, 0.75, 1], ["0%", "-14%", "-14%"]);
+    const hintOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
+    const country = COUNTRIES.find(c => c.id === activeId);
 
     return (
-        <section id="cidades" style={{ background: "#061B33", padding: "100px 0", position: "relative", overflow: "hidden" }}>
-            <div style={{
-                position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
-                width: "900px", height: "500px", borderRadius: "50%",
-                background: "radial-gradient(ellipse, rgba(42,157,143,0.05) 0%, transparent 70%)",
-                pointerEvents: "none",
-            }} />
+        <section id="cidades" style={{ background: "#080704" }}>
 
-            <div className="container-rota" style={{ position: "relative" }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            {/* hint */}
+            <div className="container-rota" style={{ paddingTop: "60px", paddingBottom: "20px" }}>
+                <motion.p
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
-                    style={{ maxWidth: "560px", marginBottom: "56px" }}
+                    style={{
+                        textAlign: "center",
+                        fontFamily: '"Playfair Display", serif',
+                        fontSize: "11px", fontStyle: "italic",
+                        letterSpacing: "0.2em", textTransform: "uppercase",
+                        color: "rgba(200,146,42,0.45)",
+                    }}
                 >
-                    <span style={{
-                        display: "inline-block", fontSize: "10px", fontWeight: 700,
-                        color: "#F4A261", letterSpacing: "0.2em", textTransform: "uppercase",
-                        fontFamily: "Inter, sans-serif", marginBottom: "14px",
-                        background: "rgba(244,162,97,0.1)", padding: "4px 12px",
-                        borderRadius: "100px", border: "1px solid rgba(244,162,97,0.15)",
-                    }}>
-                        {t('cities.routeIndicator')}
-                    </span>
-                    <h2 style={{
-                        fontFamily: '"Bebas Neue", sans-serif',
-                        fontSize: "clamp(2.5rem, 6vw, 4rem)",
-                        color: "#fff", lineHeight: 1,
-                        letterSpacing: "0.04em", marginBottom: "16px",
-                    }}>
-                        {t('cities.sectionTitle')}<br />
-                        <span style={{ color: "#2A9D8F" }}>{t('cities.sectionTitleHighlight')}</span>
-                    </h2>
-                    <p style={{
-                        fontSize: "15px", color: "rgba(255,255,255,0.45)",
-                        lineHeight: 1.7, fontFamily: "Inter, sans-serif",
-                    }}>
-                        {t('cities.sectionDescription')}
-                    </p>
-                </motion.div>
-
-                {/* country strip */}
-                <div style={{
-                    display: "flex", gap: "8px", marginBottom: "32px", flexWrap: "wrap",
-                }}>
-                    {[
-                        { flag: "🇧🇷", label: t('cities.countries.brazil'),    count: 4, color: "#2A9D8F" },
-                        { flag: "🇵🇾", label: t('cities.countries.paraguay'),  count: 3, color: "#818cf8" },
-                        { flag: "🇦🇷", label: t('cities.countries.argentina'), count: 4, color: "#f43f5e" },
-                        { flag: "🇨🇱", label: t('cities.countries.chile'),     count: 3, color: "#f87171" },
-                    ].map(({ flag, label, count, color }) => (
-                        <span key={label} style={{
-                            display: "inline-flex", alignItems: "center", gap: "6px",
-                            fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.5)",
-                            fontFamily: "Inter, sans-serif",
-                            background: "rgba(255,255,255,0.04)",
-                            border: "1px solid rgba(255,255,255,0.07)",
-                            padding: "5px 12px", borderRadius: "100px",
-                        }}>
-                            {flag} {label}
-                            <span style={{ color, fontWeight: 800 }}>{count}</span>
-                        </span>
-                    ))}
-                </div>
-
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: "16px",
-                }}>
-                    {cities.map((city, i) => (
-                        <CityCard key={city.name} city={city} index={i} />
-                    ))}
-                </div>
-
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                    style={{ textAlign: "center", marginTop: "48px" }}
-                >
-                    <Link to="/cidades" style={{
-                        display: "inline-flex", alignItems: "center", gap: "8px",
-                        padding: "0.875rem 2rem", background: "transparent",
-                        color: "#2A9D8F", fontWeight: 700, fontSize: "0.8rem",
-                        letterSpacing: "0.1em", textTransform: "uppercase",
-                        borderRadius: "0.75rem",
-                        border: "1px solid rgba(42,157,143,0.35)",
-                        textDecoration: "none", backdropFilter: "blur(8px)",
-                        transition: "all 0.3s ease",
-                    }}>
-                        Ver todas as cidades da rota <ArrowRight size={14} />
-                    </Link>
-                </motion.div>
+                    Selecione um país para explorar as cidades
+                </motion.p>
             </div>
 
+            {/* sticky scroll */}
+            <div ref={scrollRef} style={{ height: "220vh" }}>
+                <div style={{
+                    position: "sticky", top: 0,
+                    height: "100vh", overflow: "hidden",
+                    display: "flex", alignItems: "flex-start",
+                }}>
+                    <motion.div style={{ position: "relative", width: "100%", userSelect: "none", lineHeight: 0, y: imageY }}>
+                        <img
+                            src="/Quarto_paises.png"
+                            alt="Um Corredor, Quatro Mundos"
+                            style={{ width: "100%", height: "auto", display: "block" }}
+                            draggable={false}
+                        />
+
+                        {COUNTRIES.map((c) => {
+                            const isHovered = hoveredId === c.id;
+                            return (
+                                <div
+                                    key={c.id}
+                                    onClick={() => setActiveId(c.id)}
+                                    onMouseEnter={() => setHoveredId(c.id)}
+                                    onMouseLeave={() => setHoveredId(null)}
+                                    style={{
+                                        position: "absolute",
+                                        top: c.zone.top, left: c.zone.left,
+                                        width: c.zone.width, height: c.zone.height,
+                                        cursor: "pointer", borderRadius: "4px",
+                                        background: isHovered ? "rgba(200,146,42,0.08)" : "transparent",
+                                        border: isHovered ? "1px solid rgba(200,146,42,0.28)" : "1px solid transparent",
+                                        transition: "background 0.3s, border-color 0.3s",
+                                        display: "flex", alignItems: "flex-end", justifyContent: "center",
+                                        paddingBottom: "10px",
+                                    }}
+                                >
+                                    {isHovered && (
+                                        <motion.span
+                                            initial={{ opacity: 0, y: 6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            style={{
+                                                fontFamily: '"Playfair Display", serif',
+                                                fontSize: "11px", fontStyle: "italic",
+                                                color: "#e8c97a",
+                                                background: "rgba(0,0,0,0.68)",
+                                                padding: "3px 12px", borderRadius: "100px",
+                                                backdropFilter: "blur(8px)",
+                                                border: "1px solid rgba(200,146,42,0.2)",
+                                                pointerEvents: "none",
+                                            }}
+                                        >
+                                            {c.flag} Ver cidades →
+                                        </motion.span>
+                                    )}
+                                </div>
+                            );
+                        })}
+
+                        {/* hint de scroll */}
+                        <motion.div style={{
+                            position: "absolute", bottom: "20px", left: "50%", x: "-50%",
+                            opacity: hintOpacity, pointerEvents: "none",
+                        }}>
+                            <motion.div
+                                animate={{ y: [0, 7, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.9, ease: "easeInOut" }}
+                                style={{
+                                    fontFamily: '"Playfair Display", serif',
+                                    fontSize: "10px", fontStyle: "italic",
+                                    color: "rgba(200,146,42,0.55)",
+                                    letterSpacing: "0.15em", textAlign: "center", whiteSpace: "nowrap",
+                                }}
+                            >
+                                ↓ role para ver o livro completo
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* atalhos de bandeira */}
+            <div className="container-rota" style={{ paddingBottom: "56px" }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: "24px", marginTop: "20px", flexWrap: "wrap" }}>
+                    {COUNTRIES.map(c => (
+                        <button
+                            key={c.id}
+                            onClick={() => setActiveId(c.id)}
+                            style={{
+                                background: "none", border: "none", cursor: "pointer",
+                                fontFamily: '"Playfair Display", serif',
+                                fontSize: "12px", fontStyle: "italic",
+                                color: "rgba(200,146,42,0.4)", transition: "color 0.2s", padding: "4px 10px",
+                            }}
+                            className="flag-btn"
+                        >
+                            {c.flag}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* ── MODAL PERGAMINHO ── */}
+            <AnimatePresence>
+                {activeId && country && (
+                    <>
+                        {/* backdrop com spotlight central */}
+                        <motion.div
+                            key="backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.22 }}
+                            onClick={() => setActiveId(null)}
+                            style={{
+                                position: "fixed", inset: 0, zIndex: 50,
+                                background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.92) 100%)",
+                                backdropFilter: "blur(9px)",
+                            }}
+                        />
+
+                        {/* scroll card — animação de desenrolar */}
+                        <motion.div
+                            key="modal"
+                            initial={{ opacity: 0, scaleY: 0.03, y: -60 }}
+                            animate={{ opacity: 1, scaleY: 1,   y: 0 }}
+                            exit={{
+                                opacity: 0, scaleY: 0.05, y: -40,
+                                transition: { duration: 0.22, ease: "easeIn" }
+                            }}
+                            transition={{
+                                opacity:  { duration: 0.18 },
+                                scaleY:   { type: "spring", stiffness: 160, damping: 18 },
+                                y:        { type: "spring", stiffness: 180, damping: 20 },
+                            }}
+                            style={{
+                                position: "fixed",
+                                top: "50%", left: "50%",
+                                x: "-50%", y: "-50%",
+                                zIndex: 51,
+                                width: "min(580px, 90vw)",
+                                aspectRatio: "4/3",
+                                borderRadius: "3px",
+                                overflow: "hidden",
+                                transformOrigin: "top center",
+                                boxShadow: "0 50px 150px rgba(0,0,0,0.95), 0 0 80px rgba(200,146,42,0.08)",
+                                userSelect: "none",
+                            }}
+                        >
+                            {/* imagem de fundo do pergaminho */}
+                            <img
+                                src={`/${CARD_FILE[country.id]}`}
+                                alt=""
+                                style={{
+                                    position: "absolute", inset: 0,
+                                    width: "100%", height: "100%",
+                                    objectFit: "cover", objectPosition: "center",
+                                }}
+                                draggable={false}
+                            />
+
+                            {/* botão fechar — canto superior direito do header */}
+                            <button
+                                onClick={() => setActiveId(null)}
+                                style={{
+                                    position: "absolute", top: "9%", right: "12%",
+                                    zIndex: 3, width: "26px", height: "26px",
+                                    borderRadius: "50%",
+                                    border: "1px solid rgba(60,30,5,0.35)",
+                                    background: "rgba(60,30,5,0.15)",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    cursor: "pointer", color: "rgba(60,30,5,0.55)",
+                                }}
+                            >
+                                <X size={11} />
+                            </button>
+
+                            {/* faixas clicáveis transparentes sobre cada linha do pergaminho */}
+                            <div style={{
+                                position: "absolute",
+                                top: "23%", bottom: "13%",
+                                left: "12%", right: "6%",
+                                zIndex: 2,
+                                display: "flex", flexDirection: "column",
+                            }}>
+                                {country.cities.map((city, i) => (
+                                    <motion.div
+                                        key={city.name}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: 0.28 + i * 0.07 }}
+                                        style={{ flex: 1 }}
+                                    >
+                                        <Link
+                                            to={city.href}
+                                            onClick={() => setActiveId(null)}
+                                            style={{
+                                                display: "block",
+                                                width: "100%", height: "100%",
+                                                borderRadius: "6px",
+                                                transition: "background 0.2s",
+                                            }}
+                                            className="scroll-row"
+                                        />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
             <style>{`
-                .city-glass-card:hover { border-color: rgba(255,255,255,0.14) !important; transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-                .city-glass-card:hover .city-card-img { transform: scale(1.06); }
+                .flag-btn:hover { color: rgba(200,146,42,0.75) !important; }
+                .scroll-row:hover { background: rgba(200,146,42,0.14) !important; cursor: pointer; }
             `}</style>
         </section>
     );

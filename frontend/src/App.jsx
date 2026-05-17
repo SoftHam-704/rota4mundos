@@ -15,6 +15,7 @@ import PortoMurtinhoPage from "./pages/public/PortoMurtinhoPage.jsx";
 import CampoGrandePage from "./pages/public/CampoGrandePage.jsx";
 import BonitoPage from "./pages/public/BonitoPage.jsx";
 import JardimPage from "./pages/public/JardimPage.jsx";
+import SidrolandiaPage from "./pages/public/SidrolandiaPage.jsx";
 import CarmeloPeraltaPage from "./pages/public/CarmeloPeraltaPage.jsx";
 import MariscalEstigarribiaPage from "./pages/public/MariscalEstigarribiaPage.jsx";
 import FiladelfiePage from "./pages/public/FiladelfiePage.jsx";
@@ -55,6 +56,7 @@ function App() {
                 <Route path="/cidades/porto-murtinho" element={<PortoMurtinhoPage />} />
                 <Route path="/cidades/campo-grande" element={<CampoGrandePage />} />
                 <Route path="/cidades/bonito" element={<BonitoPage />} />
+                <Route path="/cidades/sidrolandia" element={<SidrolandiaPage />} />
                 <Route path="/cidades/jardim" element={<JardimPage />} />
                 <Route path="/cidades/carmelo-peralta" element={<CarmeloPeraltaPage />} />
                 <Route path="/cidades/mariscal-estigarribia" element={<MariscalEstigarribiaPage />} />
