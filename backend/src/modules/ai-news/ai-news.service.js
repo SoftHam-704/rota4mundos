@@ -112,10 +112,19 @@ export async function runIrisFetch(authorId, options = {}) {
         return { published: 0, drafted: 0, skipped: 0, total: 0 };
     }
 
-    // 3. Deduplicar por título
+    // 3. Deduplicar: mesma data + primeiras 2 palavras significativas = mesma notícia
     const seen = new Set();
     const unique = relevant.filter((item) => {
-        const key = (item.title || "").toLowerCase().slice(0, 50);
+        const day = item.pubDate
+            ? new Date(item.pubDate).toISOString().slice(0, 10)
+            : "nodate";
+        const words = norm(item.title || "")
+            .replace(/[^a-z0-9\s]/g, "")
+            .split(/\s+/)
+            .filter((w) => w.length > 2)
+            .slice(0, 2)
+            .join(" ");
+        const key = `${day}:${words}`;
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
