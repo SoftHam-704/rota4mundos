@@ -33,7 +33,8 @@ export const listArticles = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, search, category, status = "PUBLISHED", lang = "pt", tag } = req.query;
     const skip = (page - 1) * limit;
 
-    const where = { status, lang };
+    const where = { lang };
+    if (status !== "all") where.status = status;
     if (search) where.OR = [{ title: { contains: search, mode: "insensitive" } }, { excerpt: { contains: search, mode: "insensitive" } }];
     if (category) where.categoryId = category;
     if (tag) where.tags = { some: { tag: { slug: tag } } };

@@ -2,6 +2,7 @@ import app from "./app.js";
 import { env } from "./config/env.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import logger from "./config/logger.js";
+import { startAiNewsJob } from "./jobs/aiNewsJob.js";
 
 const PORT = env.PORT;
 
@@ -16,6 +17,9 @@ async function startServer() {
             logger.info(`📡 Ambiente: ${env.NODE_ENV}`);
             logger.info(`🔗 URL base: ${env.APP_BASE_URL}`);
         });
+
+        // Inicia IRIS — busca diária de notícias
+        startAiNewsJob();
 
         // Graceful shutdown
         const gracefulShutdown = async (signal) => {
