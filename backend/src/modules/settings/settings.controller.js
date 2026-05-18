@@ -24,12 +24,18 @@ export const updateSetting = asyncHandler(async (req, res) => {
 });
 
 export const getDashboardStats = asyncHandler(async (req, res) => {
-    const [users, articles, cities, comments, subscribers] = await Promise.all([
+    const [
+        users, articles, subscribers,
+        siteLikes,
+        pendingContributions,
+        pendingSocialPosts,
+    ] = await Promise.all([
         prisma.user.count(),
         prisma.article.count(),
-        prisma.city.count(),
-        prisma.comment.count(),
         prisma.newsletterSubscriber.count({ where: { active: true } }),
+        prisma.siteLike.count(),
+        prisma.contribution.count({ where: { status: "PENDENTE" } }),
+        prisma.socialPost.count({ where: { status: "DRAFT" } }),
     ]);
 
     const recentArticles = await prisma.article.findMany({
@@ -38,5 +44,11 @@ export const getDashboardStats = asyncHandler(async (req, res) => {
         select: { id: true, title: true, status: true, createdAt: true },
     });
 
-    return ApiResponse.success(res, { users, articles, cities, comments, subscribers, recentArticles });
+    return ApiResponse.success(res, {
+        users, articles, subscribers,
+        siteLikes,
+        pendingContributions,
+        pendingSocialPosts,
+        recentArticles,
+    });
 });
