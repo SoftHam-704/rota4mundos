@@ -2,13 +2,20 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { X, ArrowRight, MousePointer2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const CARD_FILE = {
-    brasil:    "card_brasil.jpg",
-    paraguai:  "card_paraguay.jpg",
-    argentina: "card_argentina.jpg",
-    chile:     "card_chile.jpg",
+const CARD_BASE = {
+    brasil:    "card_brasil",
+    paraguai:  "card_paraguay",
+    argentina: "card_argentina",
+    chile:     "card_chile",
 };
+
+function getCardFile(id, lang) {
+    const base = CARD_BASE[id];
+    const suffix = (lang === "es" || lang === "en") ? `_${lang}` : "";
+    return `${base}${suffix}.jpg`;
+}
 
 const COUNTRIES = [
     {
@@ -164,7 +171,7 @@ function DesktopMap({ onPick }) {
 }
 
 /* ── mobile: grid de cards de país ──────────────────────────── */
-function MobileGrid({ onPick }) {
+function MobileGrid({ onPick, lang }) {
     return (
         <div className="container-rota" style={{ paddingTop: "8px", paddingBottom: "8px" }}>
             <div className="cities-mobile-grid">
@@ -189,7 +196,7 @@ function MobileGrid({ onPick }) {
                         }}
                     >
                         <img
-                            src={`/${CARD_FILE[c.id]}`}
+                            src={`/${getCardFile(c.id, lang)}`}
                             alt=""
                             style={{
                                 position: "absolute", inset: 0,
@@ -260,7 +267,8 @@ function MobileGrid({ onPick }) {
 }
 
 /* ── modal pergaminho — UI mobile-friendly ──────────────────── */
-function CountryModal({ country, isMobile, onClose }) {
+function CountryModal({ country, isMobile, lang, onClose }) {
+    const { i18n: _i18n } = useTranslation(); // garante re-render ao trocar idioma
     return (
         <>
             <motion.div
@@ -300,7 +308,7 @@ function CountryModal({ country, isMobile, onClose }) {
                 }}
             >
                 <img
-                    src={`/${CARD_FILE[country.id]}`}
+                    src={`/${getCardFile(country.id, lang)}`}
                     alt=""
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
                     draggable={false}
@@ -354,8 +362,10 @@ function CountryModal({ country, isMobile, onClose }) {
 /* ── componente principal ───────────────────────────────────── */
 export default function CitiesSection() {
     const [activeId, setActiveId] = useState(null);
-    const isMobile = useMediaQuery("(max-width: 767px)");
-    const country  = COUNTRIES.find(c => c.id === activeId);
+    const isMobile  = useMediaQuery("(max-width: 767px)");
+    const { i18n }  = useTranslation();
+    const lang      = i18n.language.startsWith("es") ? "es" : i18n.language.startsWith("en") ? "en" : "pt";
+    const country   = COUNTRIES.find(c => c.id === activeId);
 
     return (
         <section id="cidades" style={{ background: "#080704" }}>
@@ -407,7 +417,7 @@ export default function CitiesSection() {
 
             {/* desktop: sticky map | mobile: grid */}
             {isMobile
-                ? <MobileGrid onPick={setActiveId} />
+                ? <MobileGrid onPick={setActiveId} lang={lang} />
                 : <DesktopMap onPick={setActiveId} />
             }
 
@@ -438,7 +448,7 @@ export default function CitiesSection() {
 
             <AnimatePresence>
                 {activeId && country && (
-                    <CountryModal country={country} isMobile={isMobile} onClose={() => setActiveId(null)} />
+                    <CountryModal country={country} isMobile={isMobile} lang={lang} onClose={() => setActiveId(null)} />
                 )}
             </AnimatePresence>
 
