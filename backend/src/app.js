@@ -21,6 +21,7 @@ import pageviewRoutes from "./modules/pageviews/pageview.routes.js";
 import aiNewsRoutes from "./modules/ai-news/ai-news.routes.js";
 import socialPostRoutes from "./modules/social-posts/social-post.routes.js";
 import siteRoutes from "./modules/site/site.routes.js";
+import contributionRoutes from "./modules/contributions/contribution.routes.js";
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use("/api/pageviews", pageviewRoutes);
 app.use("/api/ai-news", aiNewsRoutes);
 app.use("/api/social-posts", socialPostRoutes);
 app.use("/api/site", siteRoutes);
+app.use("/api/contributions", contributionRoutes);
 
 // Serve arquivos estáticos de uploads em desenvolvimento
 if (env.NODE_ENV === "development") {

@@ -10,6 +10,7 @@ import {
     Globe,
     ChevronRight,
     Send,
+    Feather,
 } from "lucide-react";
 
 const menuItems = [
@@ -18,6 +19,7 @@ const menuItems = [
     { to: "/admin/artigos", label: "Artigos", icon: FileText },
     { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
     { to: "/admin/publicacoes", label: "Publicações", icon: Send },
+    { to: "/admin/colaboracoes", label: "Colaborações", icon: Feather },
 ];
 
 export default function AdminSidebar() {

@@ -216,6 +216,39 @@ model AuditLog {
     @@map("audit_logs")
 }
 
+enum ContributionType {
+    ARTIGO
+    FOTO
+    CONTO
+    DEPOIMENTO
+    OUTRO
+}
+
+enum ContributionStatus {
+    PENDENTE
+    EM_REVISAO
+    APROVADO
+    PUBLICADO
+    REJEITADO
+}
+
+model Contribution {
+    id        String             @id @default(uuid())
+    name      String
+    email     String
+    city      String
+    type      ContributionType
+    title     String
+    content   String             @db.Text
+    fileUrl   String?
+    status    ContributionStatus @default(PENDENTE)
+    notes     String?            @db.Text
+    createdAt DateTime           @default(now())
+    updatedAt DateTime           @updatedAt
+
+    @@map("contributions")
+}
+
 model SiteLike {
     id          String   @id @default(uuid())
     fingerprint String   @unique
