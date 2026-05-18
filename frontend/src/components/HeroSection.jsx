@@ -515,12 +515,11 @@ export default function HeroSection() {
                                 </motion.div>
                             </div>
 
-                            {/* Coluna direita (escondida no mobile via CSS) */}
-                            <motion.div
+                            {/* Coluna direita — não renderiza no mobile (evita override de inline style) */}
+                            {!isMobile && <motion.div
                                 initial={{ opacity: 0, x: 40, scale: 0.96 }}
                                 animate={{ opacity: 1, x: 0, scale: 1 }}
                                 transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                className="hero-right-col"
                                 style={{ display: "flex", flexDirection: "column", gap: "20px" }}
                             >
                                 <div className="glass-card-amber" style={{ padding: "28px 24px", textAlign: "center", boxShadow: "0 0 40px rgba(244,162,97,0.08), inset 0 1px 0 rgba(244,162,97,0.15)" }}>
@@ -544,7 +543,7 @@ export default function HeroSection() {
                                         <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", lineHeight: 1.5 }}>Patrimônio cultural e natural reconhecido internacionalmente ao longo do corredor</div>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </motion.div>}
                         </div>
                     </div>
                 </motion.div>
