@@ -683,7 +683,7 @@ export default function HeroSection() {
                                                 }}>
                                                     {siteLike.liked
                                                         ? (siteLike.count > 1 ? `${siteLike.count.toLocaleString("pt-BR")} curtidas` : "Curtido!")
-                                                        : "Curtir este projeto"}
+                                                        : "Curtir a Rota"}
                                                 </span>
                                             </button>
                                         </div>
