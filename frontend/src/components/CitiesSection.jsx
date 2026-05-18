@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, MousePointer2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CARD_FILE = {
@@ -404,26 +404,58 @@ export default function CitiesSection() {
     return (
         <section id="cidades" style={{ background: "#080704" }}>
 
-            {/* hint topo */}
+            {/* cabeçalho da seção */}
             <div className="container-rota" style={{
-                paddingTop: isMobile ? "40px" : "60px",
-                paddingBottom: isMobile ? "16px" : "20px",
+                paddingTop: isMobile ? "44px" : "64px",
+                paddingBottom: isMobile ? "24px" : "32px",
+                textAlign: "center",
             }}>
-                <motion.p
-                    initial={{ opacity: 0, y: 14 }}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    style={{
-                        textAlign: "center",
-                        fontFamily: '"Playfair Display", serif',
-                        fontSize: isMobile ? "10px" : "11px",
-                        fontStyle: "italic",
-                        letterSpacing: "0.2em", textTransform: "uppercase",
-                        color: "rgba(200,146,42,0.5)",
-                    }}
+                    transition={{ duration: 0.6 }}
                 >
-                    Selecione um país para explorar as cidades
-                </motion.p>
+                    <p style={{
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: isMobile ? "10px" : "11px",
+                        fontWeight: 700, letterSpacing: "0.22em",
+                        textTransform: "uppercase",
+                        color: "#C8922A", marginBottom: "12px",
+                    }}>
+                        Explore o Corredor
+                    </p>
+                    <h2 style={{
+                        fontFamily: '"Bebas Neue", sans-serif',
+                        fontSize: isMobile ? "clamp(2rem,10vw,2.6rem)" : "clamp(2.6rem,5vw,3.8rem)",
+                        color: "#F5EDD6",
+                        letterSpacing: "0.05em", lineHeight: 1,
+                        margin: "0 0 16px",
+                    }}>
+                        Um Corredor, Quatro Mundos
+                    </h2>
+                    <motion.div
+                        style={{
+                            display: "inline-flex", alignItems: "center", gap: "8px",
+                            padding: "8px 20px", borderRadius: "50px",
+                            border: "1px solid rgba(200,146,42,0.35)",
+                            background: "rgba(200,146,42,0.08)",
+                        }}
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <MousePointer2 size={14} style={{ color: "#C8922A" }} />
+                        <span style={{
+                            fontFamily: '"Playfair Display", serif',
+                            fontSize: isMobile ? "12px" : "13px",
+                            fontStyle: "italic",
+                            color: "rgba(200,146,42,0.9)",
+                            letterSpacing: "0.05em",
+                        }}>
+                            {isMobile ? "Toque em um país para explorar" : "Clique em um país para explorar as cidades"}
+                        </span>
+                    </motion.div>
+                </motion.div>
             </div>
 
             {/* desktop: sticky map | mobile: grid */}
