@@ -349,12 +349,20 @@ export default function HeroSection() {
                 overflow: "hidden", background: "#020d1a",
                 display: "flex", alignItems: "center",
             }}>
-                <motion.div style={{ y: videoY, position: "absolute", inset: "-8% 0 -8% 0", zIndex: 0 }}>
-                    <video autoPlay muted loop playsInline
-                        style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.52) saturate(1.3) contrast(1.05)" }}
-                        src="/hero-bridge.mp4"
-                    />
-                </motion.div>
+                {/* No mobile: sem vídeo (16MB) — gradiente escuro instantâneo */}
+                {isMobile ? (
+                    <div style={{
+                        position: "absolute", inset: 0, zIndex: 0,
+                        background: "radial-gradient(ellipse at 40% 35%, #0d2d4a 0%, #061B33 45%, #020d1a 100%)",
+                    }} />
+                ) : (
+                    <motion.div style={{ y: videoY, position: "absolute", inset: "-8% 0 -8% 0", zIndex: 0 }}>
+                        <video autoPlay muted loop playsInline
+                            style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.52) saturate(1.3) contrast(1.05)" }}
+                            src="/hero-bridge.mp4"
+                        />
+                    </motion.div>
+                )}
 
                 <SunGlow />
 
@@ -513,6 +521,21 @@ export default function HeroSection() {
                                         </div>
                                     ))}
                                 </motion.div>
+
+                                {/* RotaRings no mobile — SVG puro, sem download */}
+                                {isMobile && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.7, delay: 1.2 }}
+                                        className="glass-card-amber"
+                                        style={{ marginTop: "24px", padding: "20px 16px", textAlign: "center" }}
+                                    >
+                                        <p style={{ fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "12px" }}>
+                                            Os 4 países da rota
+                                        </p>
+                                        <RotaRings />
+                                    </motion.div>
+                                )}
                             </div>
 
                             {/* Coluna direita — não renderiza no mobile (evita override de inline style) */}
