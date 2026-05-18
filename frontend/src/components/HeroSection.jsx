@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon, Heart } from "lucide-react";
+import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon, Heart, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
 import RotaRings from "./RotaRings.jsx";
@@ -23,10 +23,11 @@ function useMediaQuery(query) {
 
 /* ─── Hook: likes do site ───────────────────────────────────────── */
 function useSiteLike() {
-    const [liked, setLiked]     = useState(false);
-    const [count, setCount]     = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [burst, setBurst]     = useState(false);
+    const [liked, setLiked]           = useState(false);
+    const [count, setCount]           = useState(0);
+    const [loading, setLoading]       = useState(false);
+    const [burst, setBurst]           = useState(false);
+    const [showFollow, setShowFollow] = useState(false);
 
     useEffect(() => {
         siteApi.getLikes()
@@ -45,7 +46,10 @@ function useSiteLike() {
         const nextLiked = !liked;
         setLiked(nextLiked);
         setCount(c => nextLiked ? c + 1 : Math.max(0, c - 1));
-        if (nextLiked) setBurst(true);
+        if (nextLiked) {
+            setBurst(true);
+            setTimeout(() => setShowFollow(true), 700);
+        }
         try {
             const res = await siteApi.toggleLike();
             const d = res.data?.data;
@@ -60,7 +64,9 @@ function useSiteLike() {
         }
     };
 
-    return { liked, count, loading, burst, toggle };
+    const dismissFollow = () => setShowFollow(false);
+
+    return { liked, count, loading, burst, toggle, showFollow, dismissFollow };
 }
 
 /* ─── Player de podcast (compartilhado entre inline + flutuante) ── */
@@ -689,6 +695,85 @@ export default function HeroSection() {
                                         </div>
                                     )}
                                 </motion.div>
+
+                                {/* Banner "Siga no Instagram" — aparece só após curtir */}
+                                <AnimatePresence>
+                                    {siteLike.showFollow && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 14, scale: 0.97 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                            style={{
+                                                marginTop: "16px",
+                                                display: "flex", alignItems: "center",
+                                                gap: "12px",
+                                                padding: "12px 16px",
+                                                borderRadius: "14px",
+                                                background: "linear-gradient(135deg, rgba(131,58,180,0.18), rgba(253,29,29,0.12), rgba(252,176,69,0.14))",
+                                                border: "1px solid rgba(253,29,29,0.25)",
+                                                backdropFilter: "blur(12px)",
+                                                maxWidth: "420px",
+                                            }}
+                                        >
+                                            {/* Ícone Instagram */}
+                                            <div style={{
+                                                width: "36px", height: "36px", borderRadius: "10px", flexShrink: 0,
+                                                background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                            }}>
+                                                <Instagram size={18} style={{ color: "#fff" }} />
+                                            </div>
+
+                                            {/* Texto */}
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <p style={{
+                                                    fontSize: "13px", fontWeight: 700,
+                                                    color: "#fff", fontFamily: "Inter, sans-serif",
+                                                    margin: 0, lineHeight: 1.3,
+                                                }}>
+                                                    Agora siga a rota no Instagram
+                                                </p>
+                                                <p style={{
+                                                    fontSize: "11px", color: "rgba(255,255,255,0.5)",
+                                                    fontFamily: "Inter, sans-serif", margin: "2px 0 0",
+                                                }}>
+                                                    @rota4mundos · novidades de 4 países
+                                                </p>
+                                            </div>
+
+                                            {/* Botão seguir */}
+                                            <a
+                                                href="https://www.instagram.com/rota4mundos"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    flexShrink: 0,
+                                                    padding: "6px 14px", borderRadius: "50px",
+                                                    background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
+                                                    color: "#fff", fontSize: "11px", fontWeight: 700,
+                                                    fontFamily: "Inter, sans-serif",
+                                                    textDecoration: "none", whiteSpace: "nowrap",
+                                                }}
+                                            >
+                                                Seguir
+                                            </a>
+
+                                            {/* Fechar */}
+                                            <button
+                                                onClick={siteLike.dismissFollow}
+                                                style={{
+                                                    flexShrink: 0, background: "none", border: "none",
+                                                    cursor: "pointer", padding: "2px",
+                                                    color: "rgba(255,255,255,0.35)",
+                                                    display: "flex", alignItems: "center",
+                                                }}
+                                            >
+                                                <XIcon size={14} />
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
                                 {/* RotaRings no mobile — SVG puro, sem download */}
                                 {isMobile && (
