@@ -113,54 +113,10 @@ function DesktopMap({ onPick }) {
                                     background: isHovered ? `rgba(${c.accentRgb},0.1)` : "transparent",
                                     border: isHovered ? `1px solid rgba(${c.accentRgb},0.35)` : "1px solid transparent",
                                     transition: "background 0.3s, border-color 0.3s",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    display: "flex", alignItems: "flex-end", justifyContent: "center",
+                                    paddingBottom: "10px",
                                 }}
                             >
-                                {/* Beacon pulsante — visível sempre, desaparece no hover */}
-                                <motion.div
-                                    animate={{ opacity: isHovered ? 0 : 1 }}
-                                    transition={{ duration: 0.25 }}
-                                    style={{ position: "relative", pointerEvents: "none" }}
-                                >
-                                    {/* Anel externo */}
-                                    <motion.div
-                                        animate={{ scale: [1, 2.8], opacity: [0.55, 0] }}
-                                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-                                        style={{
-                                            position: "absolute", top: "50%", left: "50%",
-                                            transform: "translate(-50%, -50%)",
-                                            width: "38px", height: "38px", borderRadius: "50%",
-                                            background: `rgba(${c.accentRgb}, 0.35)`,
-                                            pointerEvents: "none",
-                                        }}
-                                    />
-                                    {/* Anel médio — defasado */}
-                                    <motion.div
-                                        animate={{ scale: [1, 2.0], opacity: [0.45, 0] }}
-                                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: 0.7 }}
-                                        style={{
-                                            position: "absolute", top: "50%", left: "50%",
-                                            transform: "translate(-50%, -50%)",
-                                            width: "38px", height: "38px", borderRadius: "50%",
-                                            background: `rgba(${c.accentRgb}, 0.25)`,
-                                            pointerEvents: "none",
-                                        }}
-                                    />
-                                    {/* Badge central */}
-                                    <div style={{
-                                        position: "relative",
-                                        width: "40px", height: "40px", borderRadius: "50%",
-                                        background: "rgba(8,6,4,0.72)",
-                                        border: `2px solid rgba(${c.accentRgb}, 0.9)`,
-                                        backdropFilter: "blur(8px)",
-                                        boxShadow: `0 0 20px rgba(${c.accentRgb}, 0.6), inset 0 0 12px rgba(${c.accentRgb}, 0.12)`,
-                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                        fontSize: "20px", lineHeight: 1,
-                                    }}>
-                                        {c.flag}
-                                    </div>
-                                </motion.div>
-
                                 {/* Tooltip no hover */}
                                 {isHovered && (
                                     <motion.span
