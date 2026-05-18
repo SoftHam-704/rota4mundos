@@ -349,11 +349,14 @@ export default function HeroSection() {
                 overflow: "hidden", background: "#020d1a",
                 display: "flex", alignItems: "center",
             }}>
-                {/* No mobile: sem vídeo (16MB) — gradiente escuro instantâneo */}
+                {/* No mobile: foto da ponte (1MB) em vez do vídeo (16.8MB) */}
                 {isMobile ? (
                     <div style={{
                         position: "absolute", inset: 0, zIndex: 0,
-                        background: "radial-gradient(ellipse at 40% 35%, #0d2d4a 0%, #061B33 45%, #020d1a 100%)",
+                        backgroundImage: "url(/hero-ponte.png)",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center 40%",
+                        filter: "brightness(0.52) saturate(1.3) contrast(1.05)",
                     }} />
                 ) : (
                     <motion.div style={{ y: videoY, position: "absolute", inset: "-8% 0 -8% 0", zIndex: 0 }}>
