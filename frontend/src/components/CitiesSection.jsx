@@ -149,13 +149,13 @@ function DesktopMap({ onPick }) {
                                     {/* Badge central */}
                                     <div style={{
                                         position: "relative",
-                                        width: "38px", height: "38px", borderRadius: "50%",
-                                        background: `rgba(${c.accentRgb}, 0.18)`,
-                                        border: `1.5px solid rgba(${c.accentRgb}, 0.75)`,
-                                        backdropFilter: "blur(6px)",
-                                        boxShadow: `0 0 18px rgba(${c.accentRgb}, 0.5)`,
+                                        width: "40px", height: "40px", borderRadius: "50%",
+                                        background: "rgba(8,6,4,0.72)",
+                                        border: `2px solid rgba(${c.accentRgb}, 0.9)`,
+                                        backdropFilter: "blur(8px)",
+                                        boxShadow: `0 0 20px rgba(${c.accentRgb}, 0.6), inset 0 0 12px rgba(${c.accentRgb}, 0.12)`,
                                         display: "flex", alignItems: "center", justifyContent: "center",
-                                        fontSize: "19px", lineHeight: 1,
+                                        fontSize: "20px", lineHeight: 1,
                                     }}>
                                         {c.flag}
                                     </div>
