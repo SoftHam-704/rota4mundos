@@ -11,10 +11,19 @@ const CARD_BASE = {
     chile:     "card_chile",
 };
 
-function getCardFile(id, lang) {
-    const base = CARD_BASE[id];
-    const suffix = (lang === "es" || lang === "en") ? `_${lang}` : "";
-    return `${base}${suffix}.jpg`;
+function CardImage({ id, lang, style }) {
+    const base    = CARD_BASE[id];
+    const primary = lang !== "pt" ? `/${base}_${lang}.jpg` : `/${base}.jpg`;
+    const fallback = `/${base}.jpg`;
+    return (
+        <img
+            src={primary}
+            onError={e => { if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback; }}
+            alt=""
+            style={style}
+            draggable={false}
+        />
+    );
 }
 
 const COUNTRIES = [
@@ -195,18 +204,13 @@ function MobileGrid({ onPick, lang }) {
                             WebkitTapHighlightColor: "transparent",
                         }}
                     >
-                        <img
-                            src={`/${getCardFile(c.id, lang)}`}
-                            alt=""
-                            style={{
-                                position: "absolute", inset: 0,
-                                width: "100%", height: "100%",
-                                objectFit: "cover",
-                                filter: "brightness(0.55) saturate(1.1)",
-                            }}
-                            draggable={false}
-                            loading="lazy"
-                        />
+                        <CardImage id={c.id} lang={lang} style={{
+                            position: "absolute", inset: 0,
+                            width: "100%", height: "100%",
+                            objectFit: "cover",
+                            filter: "brightness(0.55) saturate(1.1)",
+                            loading: "lazy",
+                        }} />
                         <div style={{
                             position: "absolute", inset: 0,
                             background: `linear-gradient(180deg, rgba(8,7,4,0.2) 0%, rgba(8,7,4,0.65) 60%, rgba(${c.accentRgb},0.3) 100%)`,
@@ -307,12 +311,10 @@ function CountryModal({ country, isMobile, lang, onClose }) {
                     userSelect: "none",
                 }}
             >
-                <img
-                    src={`/${getCardFile(country.id, lang)}`}
-                    alt=""
-                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-                    draggable={false}
-                />
+                <CardImage id={country.id} lang={lang} style={{
+                    position: "absolute", inset: 0, width: "100%", height: "100%",
+                    objectFit: "cover", objectPosition: "center",
+                }} />
 
                 <button
                     onClick={onClose}
