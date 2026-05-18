@@ -334,6 +334,60 @@ function SunGlow() {
     );
 }
 
+/* ─── Like button (desktop — coluna na stats bar) ──────────── */
+function SiteLikeButton({ siteLike }) {
+    return (
+        <button
+            onClick={siteLike.toggle}
+            disabled={siteLike.loading}
+            title={siteLike.liked ? "Descurtir" : "Curtir este projeto"}
+            style={{
+                display: "flex", flexDirection: "column",
+                alignItems: "center", gap: "4px",
+                background: "none", border: "none",
+                cursor: siteLike.loading ? "default" : "pointer",
+                padding: "0", outline: "none",
+            }}
+        >
+            <motion.div
+                animate={siteLike.burst
+                    ? { scale: [1, 1.5, 1.15, 1], rotate: [0, -10, 10, 0] }
+                    : { scale: 1, rotate: 0 }
+                }
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                style={{ lineHeight: 1 }}
+            >
+                <Heart style={{
+                    width: "clamp(22px, 5.5vw, 28px)",
+                    height: "clamp(22px, 5.5vw, 28px)",
+                    fill: siteLike.liked ? "#F43F5E" : "none",
+                    stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.45)",
+                    strokeWidth: 1.8,
+                    transition: "fill 0.2s, stroke 0.2s",
+                    filter: siteLike.liked ? "drop-shadow(0 0 8px rgba(244,63,94,0.6))" : "none",
+                }} />
+            </motion.div>
+            <div style={{
+                fontFamily: '"Bebas Neue", sans-serif',
+                fontSize: "clamp(1.1rem, 4.5vw, 1.6rem)",
+                color: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.55)",
+                lineHeight: 1, letterSpacing: "0.04em",
+                transition: "color 0.2s",
+            }}>
+                {siteLike.count > 0 ? siteLike.count.toLocaleString("pt-BR") : "—"}
+            </div>
+            <div style={{
+                fontSize: "clamp(9px, 2.4vw, 10px)",
+                color: "rgba(255,255,255,0.4)",
+                fontFamily: "Inter, sans-serif",
+                letterSpacing: "0.06em",
+            }}>
+                curtidas
+            </div>
+        </button>
+    );
+}
+
 /* ─── Stat com CountUp ──────────────────────────────────────── */
 function StatCard({ value, suffix, label, color, delay }) {
     const [started, setStarted] = useState(false);
@@ -544,88 +598,96 @@ export default function HeroSection() {
                                     </motion.div>
                                 )}
 
-                                {/* Stats + Like */}
+                                {/* Stats */}
                                 <motion.div
                                     initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.7, delay: 1.05 }}
                                     style={{
-                                        display: "flex", gap: 0,
                                         borderTop: "1px solid rgba(255,255,255,0.08)",
                                         paddingTop: "clamp(14px, 2.5vh, 28px)",
                                     }}
                                 >
-                                    {[
-                                        { value: 3500, suffix: "km", label: "extensão total",    color: "#F4A261", delay: 1200 },
-                                        { value: 4,    suffix: "",   label: "países integrados", color: "#2dd4bf", delay: 1350 },
-                                        { value: 12,   suffix: "",   label: "cidades na rota",   color: "#60a5fa", delay: 1500 },
-                                    ].map((s, i) => (
-                                        <div key={i} style={{
-                                            flex: 1,
-                                            paddingRight: "clamp(10px, 3vw, 20px)",
-                                            borderRight: "1px solid rgba(255,255,255,0.08)",
-                                            paddingLeft: i > 0 ? "clamp(10px, 3vw, 20px)" : 0,
-                                        }}>
-                                            <StatCard {...s} />
-                                        </div>
-                                    ))}
+                                    {/* 3 stats numéricos */}
+                                    <div style={{ display: "flex", gap: 0, marginBottom: isMobile ? "16px" : 0 }}>
+                                        {[
+                                            { value: 3500, suffix: "km", label: "extensão total",    color: "#F4A261", delay: 1200 },
+                                            { value: 4,    suffix: "",   label: "países integrados", color: "#2dd4bf", delay: 1350 },
+                                            { value: 12,   suffix: "",   label: "cidades na rota",   color: "#60a5fa", delay: 1500 },
+                                        ].map((s, i) => (
+                                            <div key={i} style={{
+                                                flex: 1,
+                                                paddingRight: i < 2 ? "clamp(10px, 3vw, 20px)" : 0,
+                                                borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                                paddingLeft: i > 0 ? "clamp(10px, 3vw, 20px)" : 0,
+                                            }}>
+                                                <StatCard {...s} />
+                                            </div>
+                                        ))}
 
-                                    {/* Curtir o projeto */}
-                                    <div style={{
-                                        flex: 1,
-                                        paddingLeft: "clamp(10px, 3vw, 20px)",
-                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                    }}>
-                                        <button
-                                            onClick={siteLike.toggle}
-                                            disabled={siteLike.loading}
-                                            title={siteLike.liked ? "Descurtir" : "Curtir este projeto"}
-                                            style={{
-                                                display: "flex", flexDirection: "column",
-                                                alignItems: "center", gap: "4px",
-                                                background: "none", border: "none",
-                                                cursor: siteLike.loading ? "default" : "pointer",
-                                                padding: "0", outline: "none",
-                                            }}
-                                        >
-                                            <motion.div
-                                                animate={siteLike.burst
-                                                    ? { scale: [1, 1.5, 1.15, 1], rotate: [0, -10, 10, 0] }
-                                                    : { scale: 1, rotate: 0 }
-                                                }
-                                                transition={{ duration: 0.5, ease: "easeOut" }}
-                                                style={{ lineHeight: 1 }}
-                                            >
-                                                <Heart style={{
-                                                    width: "clamp(22px, 5.5vw, 28px)",
-                                                    height: "clamp(22px, 5.5vw, 28px)",
-                                                    fill: siteLike.liked ? "#F43F5E" : "none",
-                                                    stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.45)",
-                                                    strokeWidth: 1.8,
-                                                    transition: "fill 0.2s, stroke 0.2s",
-                                                    filter: siteLike.liked ? "drop-shadow(0 0 8px rgba(244,63,94,0.6))" : "none",
-                                                }} />
-                                            </motion.div>
+                                        {/* No desktop: curtir como 4º item na mesma linha */}
+                                        {!isMobile && (
                                             <div style={{
-                                                fontFamily: '"Bebas Neue", sans-serif',
-                                                fontSize: "clamp(1.1rem, 4.5vw, 1.6rem)",
-                                                color: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.55)",
-                                                lineHeight: 1,
-                                                letterSpacing: "0.04em",
-                                                transition: "color 0.2s",
+                                                flex: 1,
+                                                paddingLeft: "clamp(10px, 3vw, 20px)",
+                                                borderLeft: "1px solid rgba(255,255,255,0.08)",
+                                                display: "flex", alignItems: "center", justifyContent: "center",
                                             }}>
-                                                {siteLike.count > 0 ? siteLike.count.toLocaleString("pt-BR") : "—"}
+                                                <SiteLikeButton siteLike={siteLike} />
                                             </div>
-                                            <div style={{
-                                                fontSize: "clamp(9px, 2.4vw, 10px)",
-                                                color: "rgba(255,255,255,0.4)",
-                                                fontFamily: "Inter, sans-serif",
-                                                letterSpacing: "0.06em",
-                                                marginTop: "0px",
-                                            }}>
-                                                curtidas
-                                            </div>
-                                        </button>
+                                        )}
                                     </div>
+
+                                    {/* No mobile: curtir em linha própria, como pill centralizado */}
+                                    {isMobile && (
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                            <button
+                                                onClick={siteLike.toggle}
+                                                disabled={siteLike.loading}
+                                                style={{
+                                                    display: "inline-flex", alignItems: "center", gap: "8px",
+                                                    padding: "10px 22px", borderRadius: "50px",
+                                                    border: siteLike.liked
+                                                        ? "1px solid rgba(244,63,94,0.5)"
+                                                        : "1px solid rgba(255,255,255,0.15)",
+                                                    background: siteLike.liked
+                                                        ? "rgba(244,63,94,0.12)"
+                                                        : "rgba(255,255,255,0.05)",
+                                                    backdropFilter: "blur(8px)",
+                                                    cursor: siteLike.loading ? "default" : "pointer",
+                                                    outline: "none",
+                                                    transition: "all 0.2s",
+                                                }}
+                                            >
+                                                <motion.div
+                                                    animate={siteLike.burst
+                                                        ? { scale: [1, 1.6, 1.2, 1], rotate: [0, -12, 12, 0] }
+                                                        : { scale: 1, rotate: 0 }
+                                                    }
+                                                    transition={{ duration: 0.5, ease: "easeOut" }}
+                                                    style={{ display: "flex", alignItems: "center" }}
+                                                >
+                                                    <Heart style={{
+                                                        width: "18px", height: "18px",
+                                                        fill: siteLike.liked ? "#F43F5E" : "none",
+                                                        stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.6)",
+                                                        strokeWidth: 1.8,
+                                                        transition: "all 0.2s",
+                                                        filter: siteLike.liked ? "drop-shadow(0 0 6px rgba(244,63,94,0.7))" : "none",
+                                                    }} />
+                                                </motion.div>
+                                                <span style={{
+                                                    fontSize: "13px", fontWeight: 600,
+                                                    fontFamily: "Inter, sans-serif",
+                                                    color: siteLike.liked ? "#F87171" : "rgba(255,255,255,0.7)",
+                                                    transition: "color 0.2s",
+                                                }}>
+                                                    {siteLike.liked
+                                                        ? (siteLike.count > 1 ? `${siteLike.count.toLocaleString("pt-BR")} curtidas` : "Curtido!")
+                                                        : "Curtir este projeto"}
+                                                </span>
+                                            </button>
+                                        </div>
+                                    )}
                                 </motion.div>
 
                                 {/* RotaRings no mobile — SVG puro, sem download */}
