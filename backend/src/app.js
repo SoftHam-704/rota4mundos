@@ -25,6 +25,10 @@ import contributionRoutes from "./modules/contributions/contribution.routes.js";
 
 const app = express();
 
+// Necessário para o Railway (e qualquer proxy reverso) — garante que
+// express-rate-limit leia o IP real do visitante via X-Forwarded-For
+app.set("trust proxy", 1);
+
 // Configuração de CORS — aceita múltiplas origens separadas por vírgula
 const allowedOrigins = env.CORS_ORIGIN.split(",").map(o => o.trim());
 app.use(
