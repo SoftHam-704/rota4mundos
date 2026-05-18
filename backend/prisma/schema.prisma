@@ -216,6 +216,14 @@ model AuditLog {
     @@map("audit_logs")
 }
 
+model SiteLike {
+    id          String   @id @default(uuid())
+    fingerprint String   @unique
+    createdAt   DateTime @default(now())
+
+    @@map("site_likes")
+}
+
 model ArticleLike {
     id          String   @id @default(uuid())
     articleId   String

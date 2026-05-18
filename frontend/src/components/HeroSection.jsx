@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon } from "lucide-react";
+import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
 import RotaRings from "./RotaRings.jsx";
+import { siteApi } from "../api/site.js";
 
 /* ── helper: media query reativo ───────────────────────────── */
 function useMediaQuery(query) {
@@ -18,6 +19,48 @@ function useMediaQuery(query) {
         return () => mq.removeEventListener("change", handler);
     }, [query]);
     return matches;
+}
+
+/* ─── Hook: likes do site ───────────────────────────────────────── */
+function useSiteLike() {
+    const [liked, setLiked]     = useState(false);
+    const [count, setCount]     = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [burst, setBurst]     = useState(false);
+
+    useEffect(() => {
+        siteApi.getLikes()
+            .then(res => {
+                const d = res.data?.data;
+                setLiked(d?.liked ?? false);
+                setCount(d?.count ?? 0);
+            })
+            .catch(() => {});
+    }, []);
+
+    const toggle = async () => {
+        if (loading) return;
+        setLoading(true);
+        const prev = { liked, count };
+        const nextLiked = !liked;
+        setLiked(nextLiked);
+        setCount(c => nextLiked ? c + 1 : Math.max(0, c - 1));
+        if (nextLiked) setBurst(true);
+        try {
+            const res = await siteApi.toggleLike();
+            const d = res.data?.data;
+            setLiked(d?.liked ?? nextLiked);
+            setCount(d?.count ?? prev.count);
+        } catch {
+            setLiked(prev.liked);
+            setCount(prev.count);
+        } finally {
+            setLoading(false);
+            setTimeout(() => setBurst(false), 600);
+        }
+    };
+
+    return { liked, count, loading, burst, toggle };
 }
 
 /* ─── Player de podcast (compartilhado entre inline + flutuante) ── */
@@ -321,6 +364,8 @@ export default function HeroSection() {
     const contentY = useTransform(scrollY, [0, 700], [0, isMobile ? -25 : -55]);
     const opacity  = useTransform(scrollY, [0, 450], [1, 0]);
 
+    const siteLike = useSiteLike();
+
     const [wordIdx, setWordIdx] = useState(0);
     const words = ["DOIS OCEANOS", "UMA HISTÓRIA", "UM FUTURO"];
     useEffect(() => {
@@ -499,7 +544,7 @@ export default function HeroSection() {
                                     </motion.div>
                                 )}
 
-                                {/* Stats */}
+                                {/* Stats + Like */}
                                 <motion.div
                                     initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.7, delay: 1.05 }}
@@ -516,13 +561,71 @@ export default function HeroSection() {
                                     ].map((s, i) => (
                                         <div key={i} style={{
                                             flex: 1,
-                                            paddingRight: i < 2 ? "clamp(10px, 3vw, 20px)" : 0,
-                                            borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                                            paddingRight: "clamp(10px, 3vw, 20px)",
+                                            borderRight: "1px solid rgba(255,255,255,0.08)",
                                             paddingLeft: i > 0 ? "clamp(10px, 3vw, 20px)" : 0,
                                         }}>
                                             <StatCard {...s} />
                                         </div>
                                     ))}
+
+                                    {/* Curtir o projeto */}
+                                    <div style={{
+                                        flex: 1,
+                                        paddingLeft: "clamp(10px, 3vw, 20px)",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                    }}>
+                                        <button
+                                            onClick={siteLike.toggle}
+                                            disabled={siteLike.loading}
+                                            title={siteLike.liked ? "Descurtir" : "Curtir este projeto"}
+                                            style={{
+                                                display: "flex", flexDirection: "column",
+                                                alignItems: "center", gap: "4px",
+                                                background: "none", border: "none",
+                                                cursor: siteLike.loading ? "default" : "pointer",
+                                                padding: "0", outline: "none",
+                                            }}
+                                        >
+                                            <motion.div
+                                                animate={siteLike.burst
+                                                    ? { scale: [1, 1.5, 1.15, 1], rotate: [0, -10, 10, 0] }
+                                                    : { scale: 1, rotate: 0 }
+                                                }
+                                                transition={{ duration: 0.5, ease: "easeOut" }}
+                                                style={{ lineHeight: 1 }}
+                                            >
+                                                <Heart style={{
+                                                    width: "clamp(22px, 5.5vw, 28px)",
+                                                    height: "clamp(22px, 5.5vw, 28px)",
+                                                    fill: siteLike.liked ? "#F43F5E" : "none",
+                                                    stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.45)",
+                                                    strokeWidth: 1.8,
+                                                    transition: "fill 0.2s, stroke 0.2s",
+                                                    filter: siteLike.liked ? "drop-shadow(0 0 8px rgba(244,63,94,0.6))" : "none",
+                                                }} />
+                                            </motion.div>
+                                            <div style={{
+                                                fontFamily: '"Bebas Neue", sans-serif',
+                                                fontSize: "clamp(1.1rem, 4.5vw, 1.6rem)",
+                                                color: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.55)",
+                                                lineHeight: 1,
+                                                letterSpacing: "0.04em",
+                                                transition: "color 0.2s",
+                                            }}>
+                                                {siteLike.count > 0 ? siteLike.count.toLocaleString("pt-BR") : "—"}
+                                            </div>
+                                            <div style={{
+                                                fontSize: "clamp(9px, 2.4vw, 10px)",
+                                                color: "rgba(255,255,255,0.4)",
+                                                fontFamily: "Inter, sans-serif",
+                                                letterSpacing: "0.06em",
+                                                marginTop: "0px",
+                                            }}>
+                                                curtidas
+                                            </div>
+                                        </button>
+                                    </div>
                                 </motion.div>
 
                                 {/* RotaRings no mobile — SVG puro, sem download */}
