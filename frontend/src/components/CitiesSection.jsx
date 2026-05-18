@@ -4,10 +4,10 @@ import { X, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CARD_FILE = {
-    brasil:    "card_brasil.png",
-    paraguai:  "card_paraguay.png",
-    argentina: "card_argentina.png",
-    chile:     "card_chile.png",
+    brasil:    "card_brasil.jpg",
+    paraguai:  "card_paraguay.jpg",
+    argentina: "card_argentina.jpg",
+    chile:     "card_chile.jpg",
 };
 
 const COUNTRIES = [
@@ -18,10 +18,10 @@ const COUNTRIES = [
         thumb: "/cities/campo_grande.png",
         cities: [
             { n: "01", name: "Campo Grande",   tagline: "A Capital Morena do Cerrado",       href: "/cidades/campo-grande",   image: "/cities/campo_grande.png" },
-            { n: "02", name: "Sidrolândia",    tagline: "O Coração Produtivo do MS",         href: "/cidades/sidrolandia",    image: "/cities/sidrolandia.png" },
-            { n: "03", name: "Jardim",         tagline: "Portal da Serra da Bodoquena",      href: "/cidades/jardim",         image: "/cities/jardim.png" },
+            { n: "02", name: "Sidrolândia",    tagline: "O Coração Produtivo do MS",         href: "/cidades/sidrolandia",    image: "/cities/sidrolandia.jpg" },
+            { n: "03", name: "Jardim",         tagline: "Portal da Serra da Bodoquena",      href: "/cidades/jardim",         image: "/cities/jardim.jpg" },
             { n: "04", name: "Bonito",         tagline: "O Aquário Natural do Mundo",        href: "/cidades/bonito",         image: "/cities/bonito.png" },
-            { n: "05", name: "Porto Murtinho", tagline: "A Guardiã do Rio Paraguai",         href: "/cidades/porto-murtinho", image: "/cities/porto_murtinho.png" },
+            { n: "05", name: "Porto Murtinho", tagline: "A Guardiã do Rio Paraguai",         href: "/cidades/porto-murtinho", image: "/cities/porto_murtinho.jpg" },
         ],
     },
     {
@@ -39,20 +39,20 @@ const COUNTRIES = [
         id: "argentina", flag: "🇦🇷", name: "Argentina",
         accent: "#fb923c", accentRgb: "251,146,60",
         zone: { top: "55%", left: "13%", width: "36%", height: "28%" },
-        thumb: "/cities/salta.png",
+        thumb: "/cities/salta.jpg",
         cities: [
-            { n: "09", name: "Tartagal", tagline: "Fronteira Cultural do Norte",         href: "/cidades/tartagal", image: "/cities/tartagal.png" },
-            { n: "10", name: "Jujuy",    tagline: "A Alma Ancestral dos Andes",          href: "/cidades/jujuy",    image: "/cities/jujuy.png" },
-            { n: "11", name: "Salta",    tagline: "La Linda — Capital do Folclore",      href: "/cidades/salta",    image: "/cities/salta.png" },
+            { n: "09", name: "Tartagal", tagline: "Fronteira Cultural do Norte",         href: "/cidades/tartagal", image: "/cities/tartagal.jpg" },
+            { n: "10", name: "Jujuy",    tagline: "A Alma Ancestral dos Andes",          href: "/cidades/jujuy",    image: "/cities/jujuy.jpg" },
+            { n: "11", name: "Salta",    tagline: "La Linda — Capital do Folclore",      href: "/cidades/salta",    image: "/cities/salta.jpg" },
         ],
     },
     {
         id: "chile", flag: "🇨🇱", name: "Chile",
         accent: "#38bdf8", accentRgb: "56,189,248",
         zone: { top: "55%", left: "51%", width: "36%", height: "28%" },
-        thumb: "/cities/antofagasta.png",
+        thumb: "/cities/antofagasta.jpg",
         cities: [
-            { n: "12", name: "Antofagasta", tagline: "Onde o Atacama Beija o Pacífico", href: "/cidades/antofagasta", image: "/cities/antofagasta.png" },
+            { n: "12", name: "Antofagasta", tagline: "Onde o Atacama Beija o Pacífico", href: "/cidades/antofagasta", image: "/cities/antofagasta.jpg" },
             { n: "13", name: "Iquique",     tagline: "Porto Histórico e Zona Franca",   href: "/cidades/iquique",     image: "/cities/iquique.png" },
             { n: "14", name: "Mejillones",  tagline: "O Porto Autêntico do Pacífico",   href: "/cidades/mejillones",  image: "/cities/mejillones.png" },
         ],
@@ -110,25 +110,71 @@ function DesktopMap({ onPick }) {
                                     top: c.zone.top, left: c.zone.left,
                                     width: c.zone.width, height: c.zone.height,
                                     cursor: "pointer", borderRadius: "4px",
-                                    background: isHovered ? "rgba(200,146,42,0.08)" : "transparent",
-                                    border: isHovered ? "1px solid rgba(200,146,42,0.28)" : "1px solid transparent",
+                                    background: isHovered ? `rgba(${c.accentRgb},0.1)` : "transparent",
+                                    border: isHovered ? `1px solid rgba(${c.accentRgb},0.35)` : "1px solid transparent",
                                     transition: "background 0.3s, border-color 0.3s",
-                                    display: "flex", alignItems: "flex-end", justifyContent: "center",
-                                    paddingBottom: "10px",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
                                 }}
                             >
+                                {/* Beacon pulsante — visível sempre, desaparece no hover */}
+                                <motion.div
+                                    animate={{ opacity: isHovered ? 0 : 1 }}
+                                    transition={{ duration: 0.25 }}
+                                    style={{ position: "relative", pointerEvents: "none" }}
+                                >
+                                    {/* Anel externo */}
+                                    <motion.div
+                                        animate={{ scale: [1, 2.8], opacity: [0.55, 0] }}
+                                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+                                        style={{
+                                            position: "absolute", top: "50%", left: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            width: "38px", height: "38px", borderRadius: "50%",
+                                            background: `rgba(${c.accentRgb}, 0.35)`,
+                                            pointerEvents: "none",
+                                        }}
+                                    />
+                                    {/* Anel médio — defasado */}
+                                    <motion.div
+                                        animate={{ scale: [1, 2.0], opacity: [0.45, 0] }}
+                                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: 0.7 }}
+                                        style={{
+                                            position: "absolute", top: "50%", left: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            width: "38px", height: "38px", borderRadius: "50%",
+                                            background: `rgba(${c.accentRgb}, 0.25)`,
+                                            pointerEvents: "none",
+                                        }}
+                                    />
+                                    {/* Badge central */}
+                                    <div style={{
+                                        position: "relative",
+                                        width: "38px", height: "38px", borderRadius: "50%",
+                                        background: `rgba(${c.accentRgb}, 0.18)`,
+                                        border: `1.5px solid rgba(${c.accentRgb}, 0.75)`,
+                                        backdropFilter: "blur(6px)",
+                                        boxShadow: `0 0 18px rgba(${c.accentRgb}, 0.5)`,
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        fontSize: "19px", lineHeight: 1,
+                                    }}>
+                                        {c.flag}
+                                    </div>
+                                </motion.div>
+
+                                {/* Tooltip no hover */}
                                 {isHovered && (
                                     <motion.span
                                         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                                         style={{
+                                            position: "absolute", bottom: "10px",
                                             fontFamily: '"Playfair Display", serif',
                                             fontSize: "11px", fontStyle: "italic",
                                             color: "#e8c97a",
-                                            background: "rgba(0,0,0,0.68)",
+                                            background: "rgba(0,0,0,0.72)",
                                             padding: "3px 12px", borderRadius: "100px",
                                             backdropFilter: "blur(8px)",
-                                            border: "1px solid rgba(200,146,42,0.2)",
-                                            pointerEvents: "none",
+                                            border: "1px solid rgba(200,146,42,0.25)",
+                                            pointerEvents: "none", whiteSpace: "nowrap",
                                         }}
                                     >
                                         {c.flag} Ver cidades →
@@ -187,7 +233,7 @@ function MobileGrid({ onPick }) {
                         }}
                     >
                         <img
-                            src={c.thumb}
+                            src={`/${CARD_FILE[c.id]}`}
                             alt=""
                             style={{
                                 position: "absolute", inset: 0,
