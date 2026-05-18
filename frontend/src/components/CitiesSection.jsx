@@ -421,19 +421,10 @@ export default function CitiesSection() {
                         fontSize: isMobile ? "10px" : "11px",
                         fontWeight: 700, letterSpacing: "0.22em",
                         textTransform: "uppercase",
-                        color: "#C8922A", marginBottom: "12px",
+                        color: "#C8922A", marginBottom: "16px",
                     }}>
                         Explore o Corredor
                     </p>
-                    <h2 style={{
-                        fontFamily: '"Bebas Neue", sans-serif',
-                        fontSize: isMobile ? "clamp(2rem,10vw,2.6rem)" : "clamp(2.6rem,5vw,3.8rem)",
-                        color: "#F5EDD6",
-                        letterSpacing: "0.05em", lineHeight: 1,
-                        margin: "0 0 16px",
-                    }}>
-                        Um Corredor, Quatro Mundos
-                    </h2>
                     <motion.div
                         style={{
                             display: "inline-flex", alignItems: "center", gap: "8px",
