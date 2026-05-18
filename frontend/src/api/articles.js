@@ -7,4 +7,6 @@ export const articlesApi = {
     update: (id, data) => apiClient.put(`/articles/${id}`, data),
     delete: (id) => apiClient.delete(`/articles/${id}`),
     fetchWithAI: () => apiClient.post("/ai-news/fetch", {}, { timeout: 120000 }),
+    getLikes: (id) => apiClient.get(`/articles/${id}/likes`),
+    toggleLike: (id) => apiClient.post(`/articles/${id}/like`),
 };

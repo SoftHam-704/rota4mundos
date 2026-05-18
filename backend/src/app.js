@@ -19,6 +19,7 @@ import sponsorRoutes from "./modules/sponsors/sponsor.routes.js";
 import chatRoutes from "./modules/chat/chat.routes.js";
 import pageviewRoutes from "./modules/pageviews/pageview.routes.js";
 import aiNewsRoutes from "./modules/ai-news/ai-news.routes.js";
+import socialPostRoutes from "./modules/social-posts/social-post.routes.js";
 
 const app = express();
 
@@ -35,7 +36,7 @@ app.use(
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Fingerprint"],
     })
 );
 
@@ -78,6 +79,7 @@ app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/pageviews", pageviewRoutes);
 app.use("/api/ai-news", aiNewsRoutes);
+app.use("/api/social-posts", socialPostRoutes);
 
 // Serve arquivos estáticos de uploads em desenvolvimento
 if (env.NODE_ENV === "development") {

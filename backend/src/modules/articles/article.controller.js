@@ -50,7 +50,7 @@ export const listArticles = asyncHandler(async (req, res) => {
                 author: { select: { id: true, name: true } },
                 category: true,
                 tags: { include: { tag: true } },
-                _count: { select: { comments: true } },
+                _count: { select: { comments: true, likes: true } },
             },
         }),
         prisma.article.count({ where }),
@@ -98,6 +98,42 @@ export const updateArticle = asyncHandler(async (req, res) => {
 
     logger.info("Artigo atualizado", { articleId: id, userId: req.user.id });
     return ApiResponse.success(res, article, "Artigo atualizado com sucesso");
+});
+
+export const toggleLike = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const fingerprint = req.headers["x-fingerprint"];
+    if (!fingerprint || fingerprint.length < 8) return ApiResponse.error(res, "Fingerprint inválida", 400);
+
+    const article = await prisma.article.findUnique({ where: { id }, select: { id: true } });
+    if (!article) return ApiResponse.error(res, "Artigo não encontrado", 404);
+
+    const existing = await prisma.articleLike.findUnique({
+        where: { articleId_fingerprint: { articleId: id, fingerprint } },
+    });
+
+    if (existing) {
+        await prisma.articleLike.delete({ where: { id: existing.id } });
+    } else {
+        await prisma.articleLike.create({ data: { articleId: id, fingerprint } });
+    }
+
+    const count = await prisma.articleLike.count({ where: { articleId: id } });
+    return ApiResponse.success(res, { liked: !existing, count });
+});
+
+export const getLikes = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const fingerprint = req.headers["x-fingerprint"];
+
+    const [count, liked] = await Promise.all([
+        prisma.articleLike.count({ where: { articleId: id } }),
+        fingerprint ? prisma.articleLike.findUnique({
+            where: { articleId_fingerprint: { articleId: id, fingerprint } },
+        }) : Promise.resolve(null),
+    ]);
+
+    return ApiResponse.success(res, { count, liked: !!liked });
 });
 
 export const deleteArticle = asyncHandler(async (req, res) => {

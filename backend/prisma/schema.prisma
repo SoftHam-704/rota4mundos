@@ -142,6 +142,8 @@ model Article {
     category      Category?     @relation(fields: [categoryId], references: [id])
     tags          ArticleTag[]
     comments      Comment[]
+    likes         ArticleLike[]
+    socialPosts   SocialPost[]
 
     @@map("articles")
 }
@@ -212,6 +214,51 @@ model AuditLog {
     user      User?    @relation(fields: [userId], references: [id])
 
     @@map("audit_logs")
+}
+
+model ArticleLike {
+    id          String   @id @default(uuid())
+    articleId   String
+    fingerprint String
+    createdAt   DateTime @default(now())
+
+    article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+    @@unique([articleId, fingerprint])
+    @@map("article_likes")
+}
+
+enum SocialPlatform {
+    INSTAGRAM
+    YOUTUBE
+    FACEBOOK
+    LINKEDIN
+    TWITTER
+}
+
+enum SocialPostStatus {
+    DRAFT
+    APPROVED
+    SCHEDULED
+    PUBLISHED
+    REJECTED
+}
+
+model SocialPost {
+    id           String           @id @default(uuid())
+    articleId    String?
+    platform     SocialPlatform
+    caption      String           @db.Text
+    imageUrl     String?
+    status       SocialPostStatus @default(DRAFT)
+    scheduledFor DateTime?
+    publishedAt  DateTime?
+    createdAt    DateTime         @default(now())
+    updatedAt    DateTime         @updatedAt
+
+    article      Article?         @relation(fields: [articleId], references: [id], onDelete: SetNull)
+
+    @@map("social_posts")
 }
 
 model Media {

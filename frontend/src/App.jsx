@@ -35,6 +35,7 @@ import DashboardPage from "./pages/admin/DashboardPage.jsx";
 import AdminCitiesPage from "./pages/admin/AdminCitiesPage.jsx";
 import AdminArticlesPage from "./pages/admin/AdminArticlesPage.jsx";
 import AdminNewsletterPage from "./pages/admin/AdminNewsletterPage.jsx";
+import AdminPublicationsPage from "./pages/admin/AdminPublicationsPage.jsx";
 
 function App() {
     const { checkAuth } = useAuthStore();
@@ -81,6 +82,7 @@ function App() {
                 <Route path="cidades" element={<AdminCitiesPage />} />
                 <Route path="artigos" element={<AdminArticlesPage />} />
                 <Route path="newsletter" element={<AdminNewsletterPage />} />
+                <Route path="publicacoes" element={<AdminPublicationsPage />} />
             </Route>
         </Routes>
         </>

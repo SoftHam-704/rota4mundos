@@ -9,6 +9,7 @@ import {
     LogOut,
     Globe,
     ChevronRight,
+    Send,
 } from "lucide-react";
 
 const menuItems = [
@@ -16,6 +17,7 @@ const menuItems = [
     { to: "/admin/cidades", label: "Cidades", icon: Building2 },
     { to: "/admin/artigos", label: "Artigos", icon: FileText },
     { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
+    { to: "/admin/publicacoes", label: "Publicações", icon: Send },
 ];
 
 export default function AdminSidebar() {

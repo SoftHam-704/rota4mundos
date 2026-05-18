@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Search, Calendar, Eye, ArrowRight } from "lucide-react";
+import { Search, Calendar, Eye, ArrowRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { articlesApi } from "../../api/articles.js";
 import dayjs from "dayjs";
@@ -215,6 +215,12 @@ export default function ArticlesPage() {
                                                         <Eye style={{ width: "12px", height: "12px" }} />
                                                         {article.viewCount ?? 0}
                                                     </span>
+                                                    {(article._count?.likes ?? 0) > 0 && (
+                                                        <span style={{ display: "flex", alignItems: "center", gap: "4px", color: "#F43F5E" }}>
+                                                            <Heart style={{ width: "12px", height: "12px", fill: "#F43F5E" }} />
+                                                            {article._count.likes}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <ArrowRight style={{ width: "15px", height: "15px", color: color.dot, flexShrink: 0 }} />
                                             </div>
