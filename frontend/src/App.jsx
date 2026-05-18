@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import ChatWidget from "./components/ChatWidget.jsx";
+import LangWrapper from "./components/LangWrapper.jsx";
 import { useAuthStore } from "./stores/authStore.js";
 import { usePageView } from "./hooks/usePageView.js";
 
@@ -39,6 +40,30 @@ import AdminNewsletterPage from "./pages/admin/AdminNewsletterPage.jsx";
 import AdminPublicationsPage from "./pages/admin/AdminPublicationsPage.jsx";
 import AdminContributionsPage from "./pages/admin/AdminContributionsPage.jsx";
 
+// Rotas de cidades e páginas públicas (reutilizadas para PT e /:lang)
+const SHARED_ROUTES = [
+    { path: "cidades",                          el: <CitiesPage /> },
+    { path: "cidades/porto-murtinho",           el: <PortoMurtinhoPage /> },
+    { path: "cidades/campo-grande",             el: <CampoGrandePage /> },
+    { path: "cidades/bonito",                   el: <BonitoPage /> },
+    { path: "cidades/sidrolandia",              el: <SidrolandiaPage /> },
+    { path: "cidades/jardim",                   el: <JardimPage /> },
+    { path: "cidades/carmelo-peralta",          el: <CarmeloPeraltaPage /> },
+    { path: "cidades/mariscal-estigarribia",    el: <MariscalEstigarribiaPage /> },
+    { path: "cidades/filadelfia",               el: <FiladelfiePage /> },
+    { path: "cidades/salta",                    el: <SaltaPage /> },
+    { path: "cidades/jujuy",                    el: <JujuyPage /> },
+    { path: "cidades/tartagal",                 el: <TartagalPage /> },
+    { path: "cidades/antofagasta",              el: <AntofagastaPage /> },
+    { path: "cidades/iquique",                  el: <IquiquePage /> },
+    { path: "cidades/mejillones",               el: <MejillonesPage /> },
+    { path: "cidades/:slug",                    el: <CityDetailPage /> },
+    { path: "noticias",                         el: <ArticlesPage /> },
+    { path: "noticias/:slug",                   el: <ArticleDetailPage /> },
+    { path: "apoie",                            el: <ApoiePage /> },
+    { path: "colabore",                         el: <ColaborePage /> },
+];
+
 function App() {
     const { checkAuth } = useAuthStore();
     usePageView();
@@ -52,40 +77,33 @@ function App() {
         <ScrollToTop />
         <ChatWidget />
         <Routes>
-            {/* Rotas públicas */}
+            {/* PT — rotas canônicas sem prefixo */}
             <Route element={<PublicLayout />}>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/cidades" element={<CitiesPage />} />
-                <Route path="/cidades/porto-murtinho" element={<PortoMurtinhoPage />} />
-                <Route path="/cidades/campo-grande" element={<CampoGrandePage />} />
-                <Route path="/cidades/bonito" element={<BonitoPage />} />
-                <Route path="/cidades/sidrolandia" element={<SidrolandiaPage />} />
-                <Route path="/cidades/jardim" element={<JardimPage />} />
-                <Route path="/cidades/carmelo-peralta" element={<CarmeloPeraltaPage />} />
-                <Route path="/cidades/mariscal-estigarribia" element={<MariscalEstigarribiaPage />} />
-                <Route path="/cidades/filadelfia" element={<FiladelfiePage />} />
-                <Route path="/cidades/salta" element={<SaltaPage />} />
-                <Route path="/cidades/jujuy" element={<JujuyPage />} />
-                <Route path="/cidades/tartagal" element={<TartagalPage />} />
-                <Route path="/cidades/antofagasta" element={<AntofagastaPage />} />
-                <Route path="/cidades/iquique" element={<IquiquePage />} />
-                <Route path="/cidades/mejillones" element={<MejillonesPage />} />
-                <Route path="/cidades/:slug" element={<CityDetailPage />} />
-                <Route path="/noticias" element={<ArticlesPage />} />
-                <Route path="/noticias/:slug" element={<ArticleDetailPage />} />
-                <Route path="/login" element={<LoginPage />} />
+                {SHARED_ROUTES.map(r => (
+                    <Route key={r.path} path={r.path} element={r.el} />
+                ))}
+                <Route path="/login"    element={<LoginPage />} />
                 <Route path="/registro" element={<RegisterPage />} />
-                <Route path="/apoie" element={<ApoiePage />} />
-                <Route path="/colabore" element={<ColaborePage />} />
             </Route>
 
-            {/* Rotas administrativas */}
+            {/* ES / EN — mesmas páginas com prefixo /:lang */}
+            <Route path="/:lang" element={<LangWrapper />}>
+                <Route element={<PublicLayout />}>
+                    <Route index element={<HomePage />} />
+                    {SHARED_ROUTES.map(r => (
+                        <Route key={r.path} path={r.path} element={r.el} />
+                    ))}
+                </Route>
+            </Route>
+
+            {/* Admin */}
             <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
-                <Route path="cidades" element={<AdminCitiesPage />} />
-                <Route path="artigos" element={<AdminArticlesPage />} />
-                <Route path="newsletter" element={<AdminNewsletterPage />} />
-                <Route path="publicacoes" element={<AdminPublicationsPage />} />
+                <Route path="cidades"      element={<AdminCitiesPage />} />
+                <Route path="artigos"      element={<AdminArticlesPage />} />
+                <Route path="newsletter"   element={<AdminNewsletterPage />} />
+                <Route path="publicacoes"  element={<AdminPublicationsPage />} />
                 <Route path="colaboracoes" element={<AdminContributionsPage />} />
             </Route>
         </Routes>

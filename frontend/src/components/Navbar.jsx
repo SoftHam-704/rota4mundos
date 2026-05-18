@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { useAuthStore } from "../stores/authStore.js";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
@@ -11,11 +12,46 @@ const NAV_LINKS = [
     { to: "/apoie",    label: "Apoie" },
 ];
 
+const LANG_FLAGS = { pt: "🇧🇷", es: "🇪🇸", en: "🇬🇧" };
+
+function LangSwitcher({ current, onSwitch, style }) {
+    return (
+        <div style={{
+            display: "flex", alignItems: "center", gap: "2px",
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: "8px", padding: "3px",
+            ...style,
+        }}>
+            {["pt", "es", "en"].map(l => (
+                <button
+                    key={l}
+                    onClick={() => onSwitch(l)}
+                    style={{
+                        background: current === l ? "rgba(255,255,255,0.15)" : "transparent",
+                        border: "none", borderRadius: "5px",
+                        padding: "4px 7px",
+                        fontSize: "11px", fontWeight: current === l ? 700 : 400,
+                        fontFamily: "Inter, sans-serif",
+                        color: current === l ? "#fff" : "rgba(255,255,255,0.4)",
+                        cursor: "pointer", transition: "all 0.18s",
+                        letterSpacing: "0.04em",
+                    }}
+                >
+                    {LANG_FLAGS[l]}
+                </button>
+            ))}
+        </div>
+    );
+}
+
 export default function Navbar() {
     const { isAuthenticated, user, logout } = useAuthStore();
+    const { i18n } = useTranslation();
     const [isScrolled, setIsScrolled]     = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -23,19 +59,32 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // fecha menu ao navegar
     useEffect(() => { setIsMobileOpen(false); }, [location.pathname]);
 
-    // trava scroll do body quando menu aberto (UX mobile)
     useEffect(() => {
         document.body.style.overflow = isMobileOpen ? "hidden" : "";
         return () => { document.body.style.overflow = ""; };
     }, [isMobileOpen]);
 
-    const isActive = (path) =>
-        path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+    // Detecta lang atual pelo prefixo da URL
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    const urlLang   = ["es", "en"].includes(pathParts[0]) ? pathParts[0] : "pt";
 
-    const isHeroPage = location.pathname === "/";
+    // Troca de idioma: navega para a mesma rota com/sem prefixo
+    const switchLang = (newLang) => {
+        const hasPrefix = ["es", "en"].includes(pathParts[0]);
+        const base = hasPrefix ? "/" + pathParts.slice(1).join("/") : location.pathname;
+        const cleanBase = base || "/";
+        i18n.changeLanguage(newLang === "pt" ? "pt-BR" : newLang);
+        navigate(newLang === "pt" ? cleanBase : "/" + newLang + (cleanBase === "/" ? "" : cleanBase));
+    };
+
+    // isActive e isHeroPage ignoram o prefixo de idioma
+    const cleanPath = location.pathname.replace(/^\/(es|en)(\/|$)/, "/");
+    const isActive  = (path) =>
+        path === "/" ? cleanPath === "/" : cleanPath.startsWith(path);
+
+    const isHeroPage = cleanPath === "/";
     const opaque     = isScrolled || !isHeroPage || isMobileOpen;
 
     return (
@@ -106,6 +155,7 @@ export default function Navbar() {
                         })}
 
                         <div style={{ marginLeft: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                            <LangSwitcher current={urlLang} onSwitch={switchLang} />
                             {isAuthenticated ? (
                                 <>
                                     {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
@@ -201,6 +251,9 @@ export default function Navbar() {
                                 );
                             })}
 
+                            <div style={{ paddingTop: "4px" }}>
+                                <LangSwitcher current={urlLang} onSwitch={switchLang} style={{ width: "100%", justifyContent: "center", borderRadius: "10px", padding: "6px" }} />
+                            </div>
                             <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", marginTop: "10px", paddingTop: "12px" }}>
                                 {isAuthenticated ? (
                                     <button onClick={logout} style={{
