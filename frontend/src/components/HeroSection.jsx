@@ -370,7 +370,7 @@ export default function HeroSection() {
 
                 <motion.div style={{ y: contentY, opacity, position: "relative", zIndex: 20, width: "100%" }}>
                     <div className="container-rota" style={{ paddingTop: "clamp(96px, 16vh, 150px)", paddingBottom: "32px" }}>
-                        <div className="hero-grid" style={{ minHeight: "calc(100svh - 140px)" }}>
+                        <div className="hero-grid" style={{ minHeight: isMobile ? "auto" : "calc(100svh - 140px)" }}>
 
                             {/* Coluna esquerda */}
                             <div>
