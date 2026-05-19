@@ -21,12 +21,10 @@ export const toggleSiteLike = asyncHandler(async (req, res) => {
 
     const existing = await prisma.siteLike.findUnique({ where: { fingerprint } });
 
-    if (existing) {
-        await prisma.siteLike.delete({ where: { fingerprint } });
-    } else {
+    if (!existing) {
         await prisma.siteLike.create({ data: { fingerprint } });
     }
 
     const count = await prisma.siteLike.count();
-    return ApiResponse.success(res, { liked: !existing, count });
+    return ApiResponse.success(res, { liked: true, count });
 });
