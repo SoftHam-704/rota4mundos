@@ -7,7 +7,9 @@
         "invest": "Invista",
         "admin": "Admin",
         "login": "Entrar",
-        "logout": "Sair"
+        "logout": "Sair",
+        "support": "Apoie",
+        "supportMobile": "Apoie o projeto"
     },
     "hero": {
         "badge": "Rota Bioceânica · 4 Países · 3.500 km",
@@ -58,6 +60,7 @@
         "exploreHintMobile": "Toque em um país para explorar",
         "scrollHint": "↓ role para ver o livro completo",
         "viewCities": "Ver cidades",
+        "citiesLabel": "cidades",
         "population": "População",
         "economy": "Economia",
         "countries": {
@@ -77,6 +80,36 @@
     "footer": {
         "rights": "Todos os direitos reservados.",
         "contact": "Contato",
-        "partners": "Parceiros"
+        "partners": "Parceiros",
+        "description": "O corredor que conecta o Atlântico ao Pacífico — integrando Brasil, Paraguai, Argentina e Chile num único destino.",
+        "destinations": "Destinos",
+        "newsletter": "Newsletter",
+        "subscribe": "Inscrever-se",
+        "emailPlaceholder": "seu@email.com",
+        "viewAll": "Ver todas →"
+    },
+    "colabo": {
+        "overline": "Colabore com o portal",
+        "titleMain": "Você faz parte",
+        "titleHighlight": "desta história",
+        "description": "Jornalistas locais, historiadores, fotógrafos e contadores de história — envie artigos, fotos antigas ou contos e veja sua voz chegar aos quatro países da rota.",
+        "cta": "Quero colaborar",
+        "items": ["Artigos & Reportagens", "Fotos Históricas", "Contos & Depoimentos"],
+        "more": "+ depoimentos e muito mais"
+    },
+    "apoie": {
+        "overline": "Faça parte",
+        "titlePart1": "A ROTA É FEITA",
+        "titlePart2": "DE ASFALTO.",
+        "titlePart3": "ESTE PORTAL É",
+        "titlePart4": "FEITO DE PESSOAS.",
+        "description": "O maior corredor de integração da América do Sul já tem data. A janela de 2026 está aberta — falta o seu nome nele.",
+        "cta": "Ver todas as formas de participar",
+        "ctaMobile": "Ver formas de participar",
+        "cards": [
+            { "label": "Apoiador",           "title": "Acredite na Causa",   "desc": "Pessoas que acreditam na integração da América do Sul e querem fazer parte dessa história.",                                   "cta": "Quero apoiar",            "badge": "" },
+            { "label": "Patrocinador",        "title": "Conecte sua Marca",   "desc": "Hotéis, empresas de logística e operadores que querem ser protagonistas na narrativa da rota.",                              "cta": "Falar sobre patrocínio",  "badge": "Mais procurado" },
+            { "label": "Carta de Intenções",  "title": "Seja Referência",     "desc": "Prefeituras, secretarias, câmaras de comércio e entidades que querem protagonismo no corredor.",                            "cta": "Manifesto interesse",     "badge": "" }
+        ]
     }
 }

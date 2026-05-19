@@ -1,14 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PenLine, Camera, BookOpen, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const ITEMS = [
-    { icon: PenLine,   label: "Artigos & Reportagens" },
-    { icon: Camera,    label: "Fotos Históricas" },
-    { icon: BookOpen,  label: "Contos & Depoimentos" },
-];
+const ITEM_ICONS = [PenLine, Camera, BookOpen];
 
 export default function ColaboraSection() {
+    const { t } = useTranslation();
+    const items = t("colabo.items", { returnObjects: true });
     return (
         <section style={{
             background: "linear-gradient(180deg, #080704 0%, #061220 50%, #080704 100%)",
@@ -40,7 +39,7 @@ export default function ColaboraSection() {
                             color: "#C8922A", textTransform: "uppercase",
                             fontFamily: "Inter, sans-serif", marginBottom: "14px",
                         }}>
-                            Colabore com o portal
+                            {t("colabo.overline")}
                         </p>
                         <h2 style={{
                             fontFamily: '"Bebas Neue", sans-serif',
@@ -48,8 +47,8 @@ export default function ColaboraSection() {
                             color: "#F5EDD6", letterSpacing: "0.04em",
                             lineHeight: 0.95, margin: "0 0 20px",
                         }}>
-                            Você faz parte<br />
-                            <span style={{ color: "#C8922A" }}>desta história</span>
+                            {t("colabo.titleMain")}<br />
+                            <span style={{ color: "#C8922A" }}>{t("colabo.titleHighlight")}</span>
                         </h2>
                         <p style={{
                             fontFamily: '"Lora", Georgia, serif',
@@ -57,9 +56,7 @@ export default function ColaboraSection() {
                             fontStyle: "italic", color: "rgba(245,237,214,0.55)",
                             lineHeight: 1.75, maxWidth: "420px", marginBottom: "32px",
                         }}>
-                            Jornalistas locais, historiadores, fotógrafos e contadores de história
-                            — envie artigos, fotos antigas ou contos e veja sua voz chegar
-                            aos quatro países da rota.
+                            {t("colabo.description")}
                         </p>
 
                         <Link to="/colabore" style={{
@@ -75,7 +72,7 @@ export default function ColaboraSection() {
                             onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(200,146,42,0.4)"; }}
                             onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(200,146,42,0.3)"; }}
                         >
-                            Quero colaborar <ArrowRight size={15} />
+                            {t("colabo.cta")} <ArrowRight size={15} />
                         </Link>
                     </motion.div>
 
@@ -87,11 +84,11 @@ export default function ColaboraSection() {
                         transition={{ duration: 0.7, delay: 0.1 }}
                         style={{ display: "flex", flexDirection: "column", gap: "12px" }}
                     >
-                        {ITEMS.map((item, i) => {
-                            const Icon = item.icon;
+                        {items.map((label, i) => {
+                            const Icon = ITEM_ICONS[i];
                             return (
                                 <motion.div
-                                    key={item.label}
+                                    key={label}
                                     initial={{ opacity: 0, y: 16 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
@@ -117,7 +114,7 @@ export default function ColaboraSection() {
                                         fontSize: "15px", color: "rgba(245,237,214,0.8)",
                                         fontStyle: "italic",
                                     }}>
-                                        {item.label}
+                                        {label}
                                     </span>
                                 </motion.div>
                             );
@@ -128,7 +125,7 @@ export default function ColaboraSection() {
                             fontFamily: "Inter, sans-serif", textAlign: "right",
                             marginTop: "4px", fontStyle: "italic",
                         }}>
-                            + depoimentos e muito mais
+                            {t("colabo.more")}
                         </p>
                     </motion.div>
                 </div>

@@ -7,7 +7,9 @@
         "invest": "Invest",
         "admin": "Admin",
         "login": "Login",
-        "logout": "Logout"
+        "logout": "Logout",
+        "support": "Support",
+        "supportMobile": "Support the project"
     },
     "hero": {
         "badge": "Bioceanic Route · 4 Countries · 3,500 km",
@@ -58,6 +60,7 @@
         "exploreHintMobile": "Tap a country to explore",
         "scrollHint": "↓ scroll to see the full book",
         "viewCities": "See cities",
+        "citiesLabel": "cities",
         "population": "Population",
         "economy": "Economy",
         "countries": {
@@ -77,6 +80,36 @@
     "footer": {
         "rights": "All rights reserved.",
         "contact": "Contact",
-        "partners": "Partners"
+        "partners": "Partners",
+        "description": "The corridor connecting the Atlantic to the Pacific — integrating Brazil, Paraguay, Argentina and Chile into a single destination.",
+        "destinations": "Destinations",
+        "newsletter": "Newsletter",
+        "subscribe": "Subscribe",
+        "emailPlaceholder": "your@email.com",
+        "viewAll": "See all →"
+    },
+    "colabo": {
+        "overline": "Collaborate with the portal",
+        "titleMain": "You are part",
+        "titleHighlight": "of this story",
+        "description": "Local journalists, historians, photographers and storytellers — send articles, old photos or stories and see your voice reach the four countries of the route.",
+        "cta": "I want to collaborate",
+        "items": ["Articles & Reports", "Historic Photos", "Stories & Testimonials"],
+        "more": "+ testimonials and much more"
+    },
+    "apoie": {
+        "overline": "Be part of it",
+        "titlePart1": "THE ROUTE IS MADE",
+        "titlePart2": "OF ASPHALT.",
+        "titlePart3": "THIS PORTAL IS",
+        "titlePart4": "MADE OF PEOPLE.",
+        "description": "The greatest integration corridor in South America already has a date. The 2026 window is open — your name is missing from it.",
+        "cta": "See all ways to participate",
+        "ctaMobile": "See ways to participate",
+        "cards": [
+            { "label": "Supporter",           "title": "Believe in the Cause",  "desc": "People who believe in South American integration and want to be part of this story.",                                       "cta": "I want to support",       "badge": "" },
+            { "label": "Sponsor",              "title": "Connect Your Brand",    "desc": "Hotels, logistics companies and operators who want to be protagonists in the route's narrative.",                         "cta": "Talk about sponsorship",  "badge": "Most popular" },
+            { "label": "Letter of Intent",     "title": "Be a Reference",        "desc": "Municipalities, secretariats, chambers of commerce and entities that want a leading role in the corridor.",             "cta": "I express interest",      "badge": "" }
+        ]
     }
 }

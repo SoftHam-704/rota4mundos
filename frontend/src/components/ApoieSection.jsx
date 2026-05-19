@@ -2,23 +2,12 @@ import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Heart, Building2, Landmark } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const CARDS = [
-    {
-        tipo: "INDIVIDUAL",  label: "Apoiador",          title: "Acredite na Causa",
-        desc: "Pessoas que acreditam na integração da América do Sul e querem fazer parte dessa história.",
-        cta:  "Quero apoiar", icon: Heart, accent: "#2A9D8F", rgb: "42,157,143", badge: null,
-    },
-    {
-        tipo: "EMPRESARIAL", label: "Patrocinador",      title: "Conecte sua Marca",
-        desc: "Hotéis, empresas de logística e operadores que querem ser protagonistas na narrativa da rota.",
-        cta:  "Falar sobre patrocínio", icon: Building2, accent: "#F4A261", rgb: "244,162,97", badge: "Mais procurado",
-    },
-    {
-        tipo: "INSTITUCIONAL", label: "Carta de Intenções", title: "Seja Referência",
-        desc: "Prefeituras, secretarias, câmaras de comércio e entidades que querem protagonismo no corredor.",
-        cta:  "Manifesto interesse", icon: Landmark, accent: "#818cf8", rgb: "129,140,248", badge: null,
-    },
+const CARD_META = [
+    { tipo: "INDIVIDUAL",   icon: Heart,    accent: "#2A9D8F", rgb: "42,157,143" },
+    { tipo: "EMPRESARIAL",  icon: Building2, accent: "#F4A261", rgb: "244,162,97" },
+    { tipo: "INSTITUCIONAL", icon: Landmark, accent: "#818cf8", rgb: "129,140,248" },
 ];
 
 /* ── helper media query ─────────────────────────────────────── */
@@ -160,6 +149,9 @@ function ApoieCard({ card, index, isMobile }) {
 
 export default function ApoieSection() {
     const isMobile = useMediaQuery("(max-width: 767px)");
+    const { t } = useTranslation();
+    const cardsData = t("apoie.cards", { returnObjects: true });
+    const cards = CARD_META.map((meta, i) => ({ ...meta, ...cardsData[i] }));
 
     return (
         <section
@@ -205,7 +197,7 @@ export default function ApoieSection() {
                         borderRadius: "100px",
                         border: "1px solid rgba(244,162,97,0.2)",
                     }}>
-                        Faça parte
+                        {t("apoie.overline")}
                     </span>
 
                     <h2 style={{
@@ -215,9 +207,9 @@ export default function ApoieSection() {
                         letterSpacing: "0.04em",
                         marginBottom: "16px",
                     }}>
-                        A ROTA É FEITA<br />
-                        DE ASFALTO.<br />
-                        <span style={{ color: "#2A9D8F" }}>ESTE PORTAL É<br />FEITO DE PESSOAS.</span>
+                        {t("apoie.titlePart1")}<br />
+                        {t("apoie.titlePart2")}<br />
+                        <span style={{ color: "#2A9D8F" }}>{t("apoie.titlePart3")}<br />{t("apoie.titlePart4")}</span>
                     </h2>
 
                     <p style={{
@@ -228,12 +220,12 @@ export default function ApoieSection() {
                         maxWidth: "480px", margin: "0 auto",
                         padding: "0 8px",
                     }}>
-                        O maior corredor de integração da América do Sul já tem data. A janela de 2026 está aberta — falta o seu nome nele.
+                        {t("apoie.description")}
                     </p>
                 </motion.div>
 
                 <div className="apoie-cards-grid">
-                    {CARDS.map((card, i) => (
+                    {cards.map((card, i) => (
                         <ApoieCard key={card.tipo} card={card} index={i} isMobile={isMobile} />
                     ))}
                 </div>
@@ -264,7 +256,7 @@ export default function ApoieSection() {
                         }}
                         className="apoie-ver-todas"
                     >
-                        {isMobile ? "Ver formas de participar" : "Ver todas as formas de participar"} <ArrowRight size={14} />
+                        {isMobile ? t("apoie.ctaMobile") : t("apoie.cta")} <ArrowRight size={14} />
                     </Link>
                 </motion.div>
             </div>

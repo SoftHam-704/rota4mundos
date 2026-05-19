@@ -92,6 +92,7 @@ function useMediaQuery(query) {
 
 /* ── desktop: sticky image map (original) ───────────────────── */
 function DesktopMap({ onPick, lang }) {
+    const { t } = useTranslation();
     const [hoveredId, setHoveredId] = useState(null);
     const scrollRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -149,7 +150,7 @@ function DesktopMap({ onPick, lang }) {
                                             pointerEvents: "none", whiteSpace: "nowrap",
                                         }}
                                     >
-                                        {c.flag} Ver cidades →
+                                        {c.flag} {t("cities.viewCities")} →
                                     </motion.span>
                                 )}
                             </div>
@@ -170,7 +171,7 @@ function DesktopMap({ onPick, lang }) {
                                 letterSpacing: "0.15em", textAlign: "center", whiteSpace: "nowrap",
                             }}
                         >
-                            ↓ role para ver o livro completo
+                            {t("cities.scrollHint")}
                         </motion.div>
                     </motion.div>
                 </motion.div>
@@ -181,6 +182,7 @@ function DesktopMap({ onPick, lang }) {
 
 /* ── mobile: grid de cards de país ──────────────────────────── */
 function MobileGrid({ onPick, lang }) {
+    const { t } = useTranslation();
     return (
         <div className="container-rota" style={{ paddingTop: "8px", paddingBottom: "8px" }}>
             <div className="cities-mobile-grid">
@@ -238,7 +240,7 @@ function MobileGrid({ onPick, lang }) {
                                     marginBottom: "4px",
                                     textShadow: "0 2px 8px rgba(0,0,0,0.6)",
                                 }}>
-                                    {c.cities.length} cidades
+                                    {c.cities.length} {t("cities.citiesLabel")}
                                 </p>
                                 <h3 style={{
                                     margin: 0,
@@ -259,7 +261,7 @@ function MobileGrid({ onPick, lang }) {
                                     fontFamily: "Inter, sans-serif",
                                     letterSpacing: "0.1em", textTransform: "uppercase",
                                 }}>
-                                    Ver cidades <ArrowRight size={11} />
+                                    {t("cities.viewCities")} <ArrowRight size={11} />
                                 </span>
                             </div>
                         </div>
@@ -365,7 +367,7 @@ function CountryModal({ country, isMobile, lang, onClose }) {
 export default function CitiesSection() {
     const [activeId, setActiveId] = useState(null);
     const isMobile  = useMediaQuery("(max-width: 767px)");
-    const { i18n }  = useTranslation();
+    const { t, i18n } = useTranslation();
     const lang      = i18n.language.startsWith("es") ? "es" : i18n.language.startsWith("en") ? "en" : "pt";
     const country   = COUNTRIES.find(c => c.id === activeId);
 
@@ -391,7 +393,7 @@ export default function CitiesSection() {
                         textTransform: "uppercase",
                         color: "#C8922A", marginBottom: "16px",
                     }}>
-                        Explore o Corredor
+                        {t("cities.explore")}
                     </p>
                     <motion.div
                         style={{
@@ -411,7 +413,7 @@ export default function CitiesSection() {
                             color: "rgba(200,146,42,0.9)",
                             letterSpacing: "0.05em",
                         }}>
-                            {isMobile ? "Toque em um país para explorar" : "Clique em um país para explorar as cidades"}
+                            {isMobile ? t("cities.exploreHintMobile") : t("cities.exploreHint")}
                         </span>
                     </motion.div>
                 </motion.div>

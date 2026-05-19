@@ -6,10 +6,10 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
-    { to: "/",         label: "Home" },
-    { to: "/cidades",  label: "Destinos" },
-    { to: "/noticias", label: "Notícias" },
-    { to: "/apoie",    label: "Apoie" },
+    { to: "/",         key: "nav.home" },
+    { to: "/cidades",  key: "nav.cities" },
+    { to: "/noticias", key: "nav.news" },
+    { to: "/apoie",    key: "nav.support" },
 ];
 
 const LANG_FLAGS = { pt: "🇧🇷", es: "🇪🇸", en: "🇬🇧" };
@@ -47,7 +47,7 @@ function LangSwitcher({ current, onSwitch, style }) {
 
 export default function Navbar() {
     const { isAuthenticated, user, logout } = useAuthStore();
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isScrolled, setIsScrolled]     = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const location = useLocation();
@@ -146,9 +146,9 @@ export default function Navbar() {
                                         }
                                     }}
                                 >
-                                    {link.to === "/apoie"
-                                        ? <span style={{ color: "#F4A261" }}>Apoie ✦</span>
-                                        : link.label
+                                    {link.key === "nav.support"
+                                        ? <span style={{ color: "#F4A261" }}>{t(link.key)} ✦</span>
+                                        : t(link.key)
                                     }
                                 </Link>
                             );
@@ -178,7 +178,7 @@ export default function Navbar() {
                                         background: "transparent", border: "none",
                                         cursor: "pointer",
                                     }}>
-                                        <LogOut size={14} /> Sair
+                                        <LogOut size={14} /> {t("nav.logout")}
                                     </button>
                                 </>
                             ) : (
@@ -190,7 +190,7 @@ export default function Navbar() {
                                     color: "#061B33", textDecoration: "none",
                                     background: "linear-gradient(135deg, #F4A261, #E9C46A)",
                                 }}>
-                                    <User size={13} /> Entrar
+                                    <User size={13} /> {t("nav.login")}
                                 </Link>
                             )}
                         </div>
@@ -243,9 +243,9 @@ export default function Navbar() {
                                             display: "block",
                                         }}
                                     >
-                                        {link.to === "/apoie"
-                                            ? <span style={{ color: "#F4A261" }}>✦ Apoie o projeto</span>
-                                            : link.label
+                                        {link.key === "nav.support"
+                                            ? <span style={{ color: "#F4A261" }}>✦ {t("nav.supportMobile")}</span>
+                                            : t(link.key)
                                         }
                                     </Link>
                                 );
@@ -265,7 +265,7 @@ export default function Navbar() {
                                         background: "none", border: "none",
                                         cursor: "pointer", textAlign: "left",
                                     }}>
-                                        <LogOut size={16} /> Sair
+                                        <LogOut size={16} /> {t("nav.logout")}
                                     </button>
                                 ) : (
                                     <Link to="/login" onClick={() => setIsMobileOpen(false)} style={{
@@ -276,7 +276,7 @@ export default function Navbar() {
                                         color: "#061B33", textDecoration: "none",
                                         background: "linear-gradient(135deg, #F4A261, #E9C46A)",
                                     }}>
-                                        <User size={16} /> Entrar
+                                        <User size={16} /> {t("nav.login")}
                                     </Link>
                                 )}
                             </div>

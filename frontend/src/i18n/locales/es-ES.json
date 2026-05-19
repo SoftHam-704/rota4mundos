@@ -7,7 +7,9 @@
         "invest": "Invierta",
         "admin": "Admin",
         "login": "Ingresar",
-        "logout": "Salir"
+        "logout": "Salir",
+        "support": "Apoye",
+        "supportMobile": "Apoye el proyecto"
     },
     "hero": {
         "badge": "Ruta Bioceánica · 4 Países · 3.500 km",
@@ -58,6 +60,7 @@
         "exploreHintMobile": "Toque un país para explorar",
         "scrollHint": "↓ deslice para ver el libro completo",
         "viewCities": "Ver ciudades",
+        "citiesLabel": "ciudades",
         "population": "Población",
         "economy": "Economía",
         "countries": {
@@ -77,6 +80,36 @@
     "footer": {
         "rights": "Todos los derechos reservados.",
         "contact": "Contacto",
-        "partners": "Socios"
+        "partners": "Socios",
+        "description": "El corredor que conecta el Atlántico con el Pacífico — integrando Brasil, Paraguay, Argentina y Chile en un único destino.",
+        "destinations": "Destinos",
+        "newsletter": "Boletín",
+        "subscribe": "Suscribirse",
+        "emailPlaceholder": "su@email.com",
+        "viewAll": "Ver todos →"
+    },
+    "colabo": {
+        "overline": "Colabora con el portal",
+        "titleMain": "Tú eres parte",
+        "titleHighlight": "de esta historia",
+        "description": "Periodistas locales, historiadores, fotógrafos y narradores — envía artículos, fotos antiguas o cuentos y verás tu voz llegar a los cuatro países de la ruta.",
+        "cta": "Quiero colaborar",
+        "items": ["Artículos y Reportajes", "Fotos Históricas", "Cuentos y Testimonios"],
+        "more": "+ testimonios y mucho más"
+    },
+    "apoie": {
+        "overline": "Sé parte",
+        "titlePart1": "LA RUTA ESTÁ HECHA",
+        "titlePart2": "DE ASFALTO.",
+        "titlePart3": "ESTE PORTAL ESTÁ",
+        "titlePart4": "HECHO DE PERSONAS.",
+        "description": "El mayor corredor de integración de América del Sur ya tiene fecha. La ventana de 2026 está abierta — falta tu nombre en ella.",
+        "cta": "Ver todas las formas de participar",
+        "ctaMobile": "Ver formas de participar",
+        "cards": [
+            { "label": "Partidario",          "title": "Cree en la Causa",    "desc": "Personas que creen en la integración de América del Sur y quieren ser parte de esta historia.",                              "cta": "Quiero apoyar",           "badge": "" },
+            { "label": "Patrocinador",         "title": "Conecta tu Marca",    "desc": "Hoteles, empresas de logística y operadores que quieren ser protagonistas en la narrativa de la ruta.",                    "cta": "Hablar de patrocinio",    "badge": "Más solicitado" },
+            { "label": "Carta de Intención",   "title": "Sé Referencia",       "desc": "Alcaldías, secretarías, cámaras de comercio y entidades que quieren protagonismo en el corredor.",                        "cta": "Manifiesto interés",      "badge": "" }
+        ]
     }
 }

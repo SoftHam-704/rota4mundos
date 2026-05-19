@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
     Globe, Mail, MapPin, ArrowUpRight,
     Instagram, Facebook, Youtube, Linkedin,
@@ -31,9 +32,9 @@ const NAV_PORTAL = [
 ];
 
 const SOCIALS = [
-    { icon: Instagram, label: "Instagram", href: "#" },
+    { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/rota4mundos" },
+    { icon: Youtube,   label: "YouTube",   href: "https://www.youtube.com/@Rota4Mundos" },
     { icon: Facebook,  label: "Facebook",  href: "#" },
-    { icon: Youtube,   label: "YouTube",   href: "#" },
     { icon: Linkedin,  label: "LinkedIn",  href: "#" },
 ];
 
@@ -85,6 +86,7 @@ function RouteLineSVG() {
 }
 
 export default function Footer() {
+    const { t } = useTranslation();
     const year = new Date().getFullYear();
 
     return (
@@ -137,7 +139,7 @@ export default function Footer() {
                         </Link>
 
                         <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.38)", lineHeight: 1.75, fontFamily: "Inter, sans-serif", marginBottom: "24px", maxWidth: "240px" }}>
-                            O corredor que conecta o Atlântico ao Pacífico — integrando Brasil, Paraguai, Argentina e Chile num único destino.
+                            {t("footer.description")}
                         </p>
 
                         <RouteLineSVG />
@@ -166,7 +168,7 @@ export default function Footer() {
                     {/* ── Destinos ── */}
                     <div>
                         <h4 style={{ fontSize: "10px", fontWeight: 700, color: "#F4A261", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "20px" }}>
-                            Destinos
+                            {t("footer.destinations")}
                         </h4>
                         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "11px" }}>
                             {NAV_DESTINOS.map(link => (
@@ -214,7 +216,7 @@ export default function Footer() {
                     {/* ── Contato + Newsletter ── */}
                     <div>
                         <h4 style={{ fontSize: "10px", fontWeight: 700, color: "#818cf8", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "20px" }}>
-                            Contato
+                            {t("footer.contact")}
                         </h4>
                         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px", marginBottom: "28px" }}>
                             <li style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
@@ -232,12 +234,12 @@ export default function Footer() {
                         </ul>
 
                         <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>
-                            Newsletter
+                            {t("footer.newsletter")}
                         </p>
                         <form onSubmit={e => e.preventDefault()} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <input
                                 type="email"
-                                placeholder="seu@email.com"
+                                placeholder={t("footer.emailPlaceholder")}
                                 style={{
                                     width: "100%", padding: "9px 14px",
                                     borderRadius: "10px",
@@ -263,7 +265,7 @@ export default function Footer() {
                             onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
                             onMouseLeave={e => e.currentTarget.style.opacity = "1"}
                             >
-                                Inscrever-se
+                                {t("footer.subscribe")}
                             </button>
                         </form>
                     </div>
@@ -281,7 +283,7 @@ export default function Footer() {
                     flexWrap: "wrap", gap: "12px",
                 }}>
                     <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", fontFamily: "Inter, sans-serif" }}>
-                        © {year} Portal Rota Bioceânica 4 Mundos · Todos os direitos reservados
+                        © {year} Portal Rota Bioceânica 4 Mundos · {t("footer.rights")}
                     </p>
 
                     {/* dev credit */}
