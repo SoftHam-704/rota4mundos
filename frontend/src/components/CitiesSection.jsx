@@ -91,7 +91,7 @@ function useMediaQuery(query) {
 }
 
 /* ── desktop: sticky image map (original) ───────────────────── */
-function DesktopMap({ onPick }) {
+function DesktopMap({ onPick, lang }) {
     const [hoveredId, setHoveredId] = useState(null);
     const scrollRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -109,7 +109,7 @@ function DesktopMap({ onPick }) {
                 display: "flex", alignItems: "flex-start",
             }}>
                 <motion.div style={{ position: "relative", width: "100%", userSelect: "none", lineHeight: 0, y: imageY }}>
-                    <img src="/Quarto_paises.png" alt="Um Corredor, Quatro Mundos"
+                    <img src={lang === "es" ? "/es/quatro_paises_es.png" : "/Quarto_paises.png"} alt="Um Corredor, Quatro Mundos"
                         style={{ width: "100%", height: "auto", display: "block" }}
                         draggable={false}
                     />
@@ -420,7 +420,7 @@ export default function CitiesSection() {
             {/* desktop: sticky map | mobile: grid */}
             {isMobile
                 ? <MobileGrid onPick={setActiveId} lang={lang} />
-                : <DesktopMap onPick={setActiveId} />
+                : <DesktopMap onPick={setActiveId} lang={lang} />
             }
 
             {/* atalhos de bandeira — só desktop, no mobile o grid já cumpre */}

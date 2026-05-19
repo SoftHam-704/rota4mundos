@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import CityHero from "../../components/CityHero.jsx";
+import { useIsMobile } from "../../hooks/useMediaQuery.js";
+import { useInfographic } from "../../hooks/useInfographic.js";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Fish, Trees, Camera, Clock, Phone, Mail,
@@ -148,6 +150,7 @@ function SectionTitle({ children, light = false, className = "" }) {
 /* ─── infográfico ────────────────────────────────────────────── */
 
 function InfograficoSection() {
+    const src = useInfographic("sidrolandia");
     const [open, setOpen] = useState(false);
     return (
         <>
@@ -162,7 +165,7 @@ function InfograficoSection() {
                         onClick={() => setOpen(true)}
                     >
                         <img
-                            src="/infografico-sidrolandia.png"
+                            src={src}
                             alt="Infográfico editorial Sidrolândia"
                             className="w-full h-auto"
                         />
@@ -197,7 +200,7 @@ function InfograficoSection() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }}
                             transition={{ duration: 0.25 }}
-                            src="/infografico-sidrolandia.png"
+                            src={src}
                             alt="Infográfico editorial Sidrolândia"
                             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
@@ -212,6 +215,7 @@ function InfograficoSection() {
 /* ─── page ───────────────────────────────────────────────────── */
 
 export default function SidrolandiaPage() {
+    const isMobile = useIsMobile();
     return (
         <div className="min-h-screen">
 
@@ -242,7 +246,7 @@ export default function SidrolandiaPage() {
                 <div style={{ position: "absolute", top: "-120px", right: "-120px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(200,146,42,0.18) 0%, transparent 70%)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(74,124,89,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: isMobile ? "0 16px" : "0 24px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "32px" : "56px", alignItems: "center" }}>
                     <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(200,146,42,0.15)", border: "1px solid rgba(200,146,42,0.4)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>
                             <span style={{ fontSize: "18px" }}>🪶</span>

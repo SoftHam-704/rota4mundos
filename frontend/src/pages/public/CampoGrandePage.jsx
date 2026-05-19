@@ -8,6 +8,7 @@ import {
     Building2, GraduationCap, Plane, ZoomIn, X,
 } from "lucide-react";
 import CityHero from "../../components/CityHero.jsx";
+import { useInfographic } from "../../hooks/useInfographic.js";
 
 /* ─── data ──────────────────────────────────────────────────── */
 
@@ -281,6 +282,7 @@ function STitle({ children, light = false, className = "" }) {
 
 /* ─── infográfico lightbox ───────────────────────────────────── */
 function InfograficoSection() {
+    const src = useInfographic("campo-grande");
     const [open, setOpen] = useState(false);
     return (
         <>
@@ -295,7 +297,7 @@ function InfograficoSection() {
                         onClick={() => setOpen(true)}
                     >
                         <img
-                            src="/infografico-campo-grande.png"
+                            src={src}
                             alt="Infográfico editorial Campo Grande"
                             className="w-full h-auto"
                         />
@@ -330,7 +332,7 @@ function InfograficoSection() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }}
                             transition={{ duration: 0.25 }}
-                            src="/infografico-campo-grande.png"
+                            src={src}
                             alt="Infográfico editorial Campo Grande"
                             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}

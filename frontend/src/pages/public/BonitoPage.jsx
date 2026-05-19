@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import CityHero from "../../components/CityHero.jsx";
+import { useIsMobile } from "../../hooks/useMediaQuery.js";
+import { useInfographic } from "../../hooks/useInfographic.js";
 import {
     MapPin, ArrowRight, ArrowLeft, Clock, Users, Droplets,
     Mountain, Fish, Leaf, Star, Camera, Compass, Waves, ZoomIn, X,
@@ -191,6 +193,7 @@ const practicalInfo = [
 // ─── infográfico lightbox ─────────────────────────────────────────────────────
 function InfograficoSection() {
     const [open, setOpen] = useState(false);
+    const src = useInfographic("bonito");
     return (
         <>
             <section className="bg-primary-950 py-16">
@@ -204,7 +207,7 @@ function InfograficoSection() {
                         onClick={() => setOpen(true)}
                     >
                         <img
-                            src="/infografico-bonito.png"
+                            src={src}
                             alt="Infográfico editorial Bonito"
                             className="w-full h-auto"
                         />
@@ -239,7 +242,7 @@ function InfograficoSection() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }}
                             transition={{ duration: 0.25 }}
-                            src="/infografico-bonito.png"
+                            src={src}
                             alt="Infográfico editorial Bonito"
                             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
@@ -254,6 +257,7 @@ function InfograficoSection() {
 // ─── componente ───────────────────────────────────────────────────────────────
 
 export default function BonitoPage() {
+    const isMobile = useIsMobile();
     const heroRef = useRef(null);
     useInView(heroRef, { once: true });
 
@@ -287,7 +291,7 @@ export default function BonitoPage() {
                 <div style={{ position: "absolute", top: "-100px", left: "50%", transform: "translateX(-50%)", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(34,211,238,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: "-60px", right: "-60px", width: "350px", height: "350px", borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: isMobile ? "0 16px" : "0 24px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "32px" : "56px", alignItems: "center" }}>
                     {/* ── LEFT ── */}
                     <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(34,211,238,0.12)", border: "1px solid rgba(34,211,238,0.35)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>

@@ -3,6 +3,8 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import CityHero from "../../components/CityHero.jsx";
+import { useIsMobile } from "../../hooks/useMediaQuery.js";
+import { useInfographic } from "../../hooks/useInfographic.js";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Ruler, Calendar,
     Flame, Music, Fish, Trees, Camera, Clock, Phone, Mail,
@@ -192,6 +194,7 @@ function SectionTitle({ children, light = false, className = "" }) {
 /* ─── page ───────────────────────────────────────────────────── */
 
 function InfograficoSection() {
+    const src = useInfographic("porto-murtinho");
     const [open, setOpen] = useState(false);
 
     return (
@@ -207,7 +210,7 @@ function InfograficoSection() {
                         onClick={() => setOpen(true)}
                     >
                         <img
-                            src="/infografico-porto-murtinho.png"
+                            src={src}
                             alt="Infográfico editorial Porto Murtinho"
                             className="w-full h-auto"
                         />
@@ -246,7 +249,7 @@ function InfograficoSection() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }}
                             transition={{ duration: 0.25 }}
-                            src="/infografico-porto-murtinho.png"
+                            src={src}
                             alt="Infográfico editorial Porto Murtinho"
                             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
@@ -259,6 +262,7 @@ function InfograficoSection() {
 }
 
 export default function PortoMurtinhoPage() {
+    const isMobile = useIsMobile();
     const heroRef = useRef(null);
 
     return (
@@ -272,7 +276,7 @@ export default function PortoMurtinhoPage() {
                 name={{ first: "Porto", second: "Murtinho" }}
                 tagline="A ultima cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos."
                 scene="ponte"
-                image="/cities/porto_murtinho.png"
+                image="/cities/porto_murtinho.jpg"
                 accentColor="#F4A261"
                 stats={[
                     { label: "Habitantes (Censo 2022)", value: 12859 },
@@ -291,7 +295,7 @@ export default function PortoMurtinhoPage() {
                 <div style={{ position: "absolute", top: "-80px", right: "-80px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(244,162,97,0.14) 0%, transparent 70%)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: "-60px", left: "-60px", width: "380px", height: "380px", borderRadius: "50%", background: "radial-gradient(circle, rgba(234,140,60,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }}>
+                <div style={{ position: "relative", zIndex: 2, maxWidth: "80rem", margin: "0 auto", padding: isMobile ? "0 16px" : "0 24px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "32px" : "56px", alignItems: "center" }}>
                     {/* ── LEFT ── */}
                     <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(244,162,97,0.13)", border: "1px solid rgba(244,162,97,0.35)", borderRadius: "99px", padding: "6px 16px", marginBottom: "20px" }}>
