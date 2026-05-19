@@ -10,17 +10,40 @@
         "logout": "Salir"
     },
     "hero": {
-        "title": "El Puente entre el Atlántico y el Pacífico",
-        "subtitle": "Ruta Bioceánica — 4 Países, Una Historia",
-        "description": "Desde la frontera pantanera de Mato Grosso do Sul hasta las bahías chilenas del Pacífico, la Ruta Bioceánica atraviesa pueblos indígenas, herencias menonitas, folclore andino y paisajes de rara belleza en más de 3.500 km de historia e identidad viva.",
-        "ctaPrimary": "Explorar las Ciudades",
-        "ctaSecondary": "Conozca la Ruta",
+        "badge": "Ruta Bioceánica · 4 Países · 3.500 km",
+        "titleLine1": "EL PUENTE ENTRE",
+        "words": ["DOS OCÉANOS", "UNA HISTORIA", "UN FUTURO"],
+        "description": "Del Pantanal al Pacífico — la mayor integración continental de América del Sur, uniendo culturas, pueblos y mercados en 3.500 km de historia viva.",
+        "ctaPrimary": "Explorar Ciudades",
+        "ctaSecondary": "Conoce la Ruta",
+        "podcast": {
+            "playing": "Reproduciendo...",
+            "idle": "Escuchar el Podcast"
+        },
         "stats": {
-            "distance": "3.500 km",
-            "countries": "4 Países",
-            "cities": "12 Ciudades",
-            "time": "UNESCO"
-        }
+            "distance": "extensión total",
+            "countries": "países integrados",
+            "cities": "ciudades en la ruta",
+            "likes": "me gustas"
+        },
+        "like": {
+            "liked": "¡Te gustó!",
+            "cta": "Me gusta la Ruta"
+        },
+        "instagram": {
+            "title": "Ahora sigue la ruta en Instagram",
+            "sub": "@rota4mundos · novedades de 4 países",
+            "follow": "Seguir"
+        },
+        "cards": {
+            "countries": "Los 4 países de la ruta",
+            "route": "Trazado de la ruta — Atlántico → Pacífico",
+            "unescoTitle": "Reconocimiento UNESCO",
+            "unescoDesc": "Patrimonio cultural y natural reconocido internacionalmente a lo largo del corredor"
+        },
+        "scroll": "descubrir",
+        "atlantic": "← Atlántico",
+        "pacific": "Pacífico →"
     },
     "cities": {
         "title": "Ciudades de la Ruta",
@@ -30,7 +53,11 @@
         "sectionDescription": "Del Pantanal al Pacífico — Brasil, Paraguay, Argentina y Chile. Cada parada de la ruta lleva una historia que el mundo aún no conoce.",
         "routeIndicator": "Atlántico → Pacífico",
         "viewAll": "Ver todas las ciudades de la ruta",
-        "explore": "Explorar",
+        "explore": "Explorar el Corredor",
+        "exploreHint": "Haga clic en un país para explorar las ciudades",
+        "exploreHintMobile": "Toque un país para explorar",
+        "scrollHint": "↓ deslice para ver el libro completo",
+        "viewCities": "Ver ciudades",
         "population": "Población",
         "economy": "Economía",
         "countries": {

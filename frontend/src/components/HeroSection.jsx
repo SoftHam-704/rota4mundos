@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon, Heart, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CountUp from "react-countup";
 import RotaRings from "./RotaRings.jsx";
 import { siteApi } from "../api/site.js";
@@ -71,6 +72,7 @@ function useSiteLike() {
 
 /* ─── Player de podcast (compartilhado entre inline + flutuante) ── */
 function PodcastPlayer({ floating = false, onClose }) {
+    const { t } = useTranslation();
     const audioRef = useRef(null);
     const [playing, setPlaying]   = useState(false);
     const [progress, setProgress] = useState(0);
@@ -134,7 +136,7 @@ function PodcastPlayer({ floating = false, onClose }) {
                         fontFamily: "Inter, sans-serif",
                         whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                     }}>
-                        {playing ? "Reproduzindo..." : "Ouça o Podcast"}
+                        {playing ? t("hero.podcast.playing") : t("hero.podcast.idle")}
                     </span>
                     {duration > 0 && (
                         <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", fontFamily: "Inter, sans-serif", flexShrink: 0, marginLeft: "auto" }}>
@@ -277,6 +279,7 @@ function AtmosphereCanvas({ isMobile }) {
 
 /* ─── Mapa SVG da rota ──────────────────────────────────────── */
 function RouteMap() {
+    const { t } = useTranslation();
     const cities = [
         { x: 48,  y: 62, label: "Campo Grande",    sub: "🇧🇷 Brasil",    color: "#22c55e", above: true  },
         { x: 160, y: 72, label: "Porto Murtinho",  sub: "🇧🇷 Brasil",    color: "#4ade80", above: false },
@@ -321,8 +324,8 @@ function RouteMap() {
                 ))}
             </svg>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "6px", padding: "0 4px" }}>
-                <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", fontFamily: "Inter, sans-serif", textTransform: "uppercase" }}>← Atlântico</span>
-                <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", fontFamily: "Inter, sans-serif", textTransform: "uppercase" }}>Pacífico →</span>
+                <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", fontFamily: "Inter, sans-serif", textTransform: "uppercase" }}>{t("hero.atlantic")}</span>
+                <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", fontFamily: "Inter, sans-serif", textTransform: "uppercase" }}>{t("hero.pacific")}</span>
             </div>
         </div>
     );
@@ -342,6 +345,7 @@ function SunGlow() {
 
 /* ─── Like button (desktop — coluna na stats bar) ──────────── */
 function SiteLikeButton({ siteLike }) {
+    const { t } = useTranslation();
     return (
         <button
             onClick={siteLike.toggle}
@@ -388,7 +392,7 @@ function SiteLikeButton({ siteLike }) {
                 fontFamily: "Inter, sans-serif",
                 letterSpacing: "0.06em",
             }}>
-                curtidas
+                {t("hero.stats.likes")}
             </div>
         </button>
     );
@@ -424,10 +428,11 @@ export default function HeroSection() {
     const contentY = useTransform(scrollY, [0, 700], [0, isMobile ? -25 : -55]);
     const opacity  = useTransform(scrollY, [0, 450], [1, 0]);
 
+    const { t } = useTranslation();
     const siteLike = useSiteLike();
 
     const [wordIdx, setWordIdx] = useState(0);
-    const words = ["DOIS OCEANOS", "UMA HISTÓRIA", "UM FUTURO"];
+    const words = t("hero.words", { returnObjects: true });
     useEffect(() => {
         const iv = setInterval(() => setWordIdx(i => (i + 1) % words.length), 3400);
         return () => clearInterval(iv);
@@ -509,7 +514,7 @@ export default function HeroSection() {
                                         color: "#F4A261", letterSpacing: "0.18em",
                                         textTransform: "uppercase", fontFamily: "Inter, sans-serif",
                                     }}>
-                                        Rota Bioceânica · 4 Países · 3.500 km
+                                        {t("hero.badge")}
                                     </span>
                                 </motion.div>
 
@@ -521,7 +526,7 @@ export default function HeroSection() {
                                         color: "#F8FAFC", lineHeight: 0.92,
                                         letterSpacing: "0.03em", margin: 0,
                                     }}>
-                                        A PONTE ENTRE
+                                        {t("hero.titleLine1")}
                                     </h1>
                                 </motion.div>
 
@@ -567,7 +572,7 @@ export default function HeroSection() {
                                         marginBottom: "clamp(20px, 3vh, 36px)",
                                     }}
                                 >
-                                    Do Pantanal ao Pacífico — a maior integração continental da América do Sul, unindo culturas, povos e mercados em 3.500 km de história viva.
+                                    {t("hero.description")}
                                 </motion.p>
 
                                 {/* CTAs */}
@@ -583,13 +588,13 @@ export default function HeroSection() {
                                         fontSize: "clamp(12px, 3vw, 13px)",
                                         padding: "clamp(11px, 2.4vw, 13px) clamp(20px, 5vw, 28px)",
                                     }}>
-                                        Explorar Cidades <ArrowRight size={14} />
+                                        {t("hero.ctaPrimary")} <ArrowRight size={14} />
                                     </Link>
                                     <Link to="/noticias" className="btn-ghost" style={{
                                         fontSize: "clamp(12px, 3vw, 13px)",
                                         padding: "clamp(11px, 2.4vw, 13px) clamp(20px, 5vw, 28px)",
                                     }}>
-                                        Conheça a Rota
+                                        {t("hero.ctaSecondary")}
                                     </Link>
                                 </motion.div>
 
@@ -616,9 +621,9 @@ export default function HeroSection() {
                                     {/* 3 stats numéricos */}
                                     <div style={{ display: "flex", gap: 0, marginBottom: isMobile ? "16px" : 0 }}>
                                         {[
-                                            { value: 3500, suffix: "km", label: "extensão total",    color: "#F4A261", delay: 1200 },
-                                            { value: 4,    suffix: "",   label: "países integrados", color: "#2dd4bf", delay: 1350 },
-                                            { value: 12,   suffix: "",   label: "cidades na rota",   color: "#60a5fa", delay: 1500 },
+                                            { value: 3500, suffix: "km", label: t("hero.stats.distance"),  color: "#F4A261", delay: 1200 },
+                                            { value: 4,    suffix: "",   label: t("hero.stats.countries"), color: "#2dd4bf", delay: 1350 },
+                                            { value: 12,   suffix: "",   label: t("hero.stats.cities"),    color: "#60a5fa", delay: 1500 },
                                         ].map((s, i) => (
                                             <div key={i} style={{
                                                 flex: 1,
@@ -688,8 +693,8 @@ export default function HeroSection() {
                                                     transition: "color 0.2s",
                                                 }}>
                                                     {siteLike.liked
-                                                        ? (siteLike.count > 1 ? `${siteLike.count.toLocaleString("pt-BR")} curtidas` : "Curtido!")
-                                                        : "Curtir a Rota"}
+                                                        ? (siteLike.count > 1 ? `${siteLike.count.toLocaleString("pt-BR")} ${t("hero.stats.likes")}` : t("hero.like.liked"))
+                                                        : t("hero.like.cta")}
                                                 </span>
                                             </button>
                                         </div>
@@ -732,13 +737,13 @@ export default function HeroSection() {
                                                     color: "#fff", fontFamily: "Inter, sans-serif",
                                                     margin: 0, lineHeight: 1.3,
                                                 }}>
-                                                    Agora siga a rota no Instagram
+                                                    {t("hero.instagram.title")}
                                                 </p>
                                                 <p style={{
                                                     fontSize: "11px", color: "rgba(255,255,255,0.5)",
                                                     fontFamily: "Inter, sans-serif", margin: "2px 0 0",
                                                 }}>
-                                                    @rota4mundos · novidades de 4 países
+                                                    {t("hero.instagram.sub")}
                                                 </p>
                                             </div>
 
@@ -756,7 +761,7 @@ export default function HeroSection() {
                                                     textDecoration: "none", whiteSpace: "nowrap",
                                                 }}
                                             >
-                                                Seguir
+                                                {t("hero.instagram.follow")}
                                             </a>
 
                                             {/* Fechar */}
@@ -784,7 +789,7 @@ export default function HeroSection() {
                                         style={{ marginTop: "24px", padding: "20px 16px", textAlign: "center" }}
                                     >
                                         <p style={{ fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "12px" }}>
-                                            Os 4 países da rota
+                                            {t("hero.cards.countries")}
                                         </p>
                                         <RotaRings />
                                     </motion.div>
@@ -800,14 +805,14 @@ export default function HeroSection() {
                             >
                                 <div className="glass-card-amber" style={{ padding: "28px 24px", textAlign: "center", boxShadow: "0 0 40px rgba(244,162,97,0.08), inset 0 1px 0 rgba(244,162,97,0.15)" }}>
                                     <p style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "16px" }}>
-                                        Os 4 países da rota
+                                        {t("hero.cards.countries")}
                                     </p>
                                     <RotaRings />
                                 </div>
 
                                 <div className="glass-card" style={{ padding: "24px 20px" }}>
                                     <p style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", marginBottom: "14px" }}>
-                                        Traçado da rota — Atlântico → Pacífico
+                                        {t("hero.cards.route")}
                                     </p>
                                     <RouteMap />
                                 </div>
@@ -815,8 +820,8 @@ export default function HeroSection() {
                                 <div style={{ background: "linear-gradient(135deg, rgba(244,162,97,0.12), rgba(233,196,106,0.06))", border: "1px solid rgba(244,162,97,0.2)", borderRadius: "16px", padding: "20px 22px", display: "flex", alignItems: "center", gap: "16px" }}>
                                     <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "rgba(244,162,97,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "20px" }}>🏆</div>
                                     <div>
-                                        <div style={{ fontSize: "12px", fontWeight: 700, color: "#F4A261", fontFamily: "Inter, sans-serif", marginBottom: "3px" }}>Reconhecimento UNESCO</div>
-                                        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", lineHeight: 1.5 }}>Patrimônio cultural e natural reconhecido internacionalmente ao longo do corredor</div>
+                                        <div style={{ fontSize: "12px", fontWeight: 700, color: "#F4A261", fontFamily: "Inter, sans-serif", marginBottom: "3px" }}>{t("hero.cards.unescoTitle")}</div>
+                                        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontFamily: "Inter, sans-serif", lineHeight: 1.5 }}>{t("hero.cards.unescoDesc")}</div>
                                     </div>
                                 </div>
                             </motion.div>}
@@ -829,7 +834,7 @@ export default function HeroSection() {
                     style={{ position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)", zIndex: 22, display: "flex", flexDirection: "column", alignItems: "center", gap: "5px", cursor: "pointer" }}
                     onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
                 >
-                    <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.22)", letterSpacing: "0.25em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>descobrir</span>
+                    <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.22)", letterSpacing: "0.25em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>{t("hero.scroll")}</span>
                     <motion.div animate={{ y: [0, 7, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}>
                         <ChevronDown size={20} style={{ color: "rgba(244,162,97,0.5)" }} />
                     </motion.div>

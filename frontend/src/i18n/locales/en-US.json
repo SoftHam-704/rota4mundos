@@ -10,17 +10,40 @@
         "logout": "Logout"
     },
     "hero": {
-        "title": "The Bridge between the Atlantic and Pacific",
-        "subtitle": "Bioceanic Route — 4 Countries, One Story",
-        "description": "From the Pantanal border of Mato Grosso do Sul to the Chilean bays of the Pacific, the Bioceanic Route crosses indigenous peoples, Mennonite heritage, Andean folklore and landscapes of rare beauty across more than 3,500 km of living history and identity.",
-        "ctaPrimary": "Explore the Cities",
+        "badge": "Bioceanic Route · 4 Countries · 3,500 km",
+        "titleLine1": "THE BRIDGE BETWEEN",
+        "words": ["TWO OCEANS", "ONE STORY", "ONE FUTURE"],
+        "description": "From the Pantanal to the Pacific — the greatest continental integration in South America, uniting cultures, peoples and markets across 3,500 km of living history.",
+        "ctaPrimary": "Explore Cities",
         "ctaSecondary": "Discover the Route",
+        "podcast": {
+            "playing": "Playing...",
+            "idle": "Listen to the Podcast"
+        },
         "stats": {
-            "distance": "3,500 km",
-            "countries": "4 Countries",
-            "cities": "12 Cities",
-            "time": "UNESCO"
-        }
+            "distance": "total extension",
+            "countries": "integrated countries",
+            "cities": "cities on the route",
+            "likes": "likes"
+        },
+        "like": {
+            "liked": "Liked!",
+            "cta": "Like the Route"
+        },
+        "instagram": {
+            "title": "Now follow the route on Instagram",
+            "sub": "@rota4mundos · news from 4 countries",
+            "follow": "Follow"
+        },
+        "cards": {
+            "countries": "The 4 countries of the route",
+            "route": "Route map — Atlantic → Pacific",
+            "unescoTitle": "UNESCO Recognition",
+            "unescoDesc": "Cultural and natural heritage internationally recognized along the corridor"
+        },
+        "scroll": "discover",
+        "atlantic": "← Atlantic",
+        "pacific": "Pacific →"
     },
     "cities": {
         "title": "Route Cities",
@@ -30,7 +53,11 @@
         "sectionDescription": "From the Pantanal to the Pacific — Brazil, Paraguay, Argentina and Chile. Each stop on the route carries a story the world doesn't know yet.",
         "routeIndicator": "Atlantic → Pacific",
         "viewAll": "See all route cities",
-        "explore": "Explore",
+        "explore": "Explore the Corridor",
+        "exploreHint": "Click on a country to explore the cities",
+        "exploreHintMobile": "Tap a country to explore",
+        "scrollHint": "↓ scroll to see the full book",
+        "viewCities": "See cities",
         "population": "Population",
         "economy": "Economy",
         "countries": {

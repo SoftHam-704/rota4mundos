@@ -1,7 +1,7 @@
 {
     "nav": {
         "home": "Início",
-        "cities": "Cidades",
+        "cities": "Destinos",
         "news": "Notícias",
         "about": "Sobre",
         "invest": "Invista",
@@ -10,17 +10,40 @@
         "logout": "Sair"
     },
     "hero": {
-        "title": "A Ponte entre o Atlântico e o Pacífico",
-        "subtitle": "Rota Bioceânica — 4 Países, Uma História",
-        "description": "Da fronteira pantaneira de Mato Grosso do Sul às baías chilenas do Pacífico, a Rota Bioceânica atravessa povos indígenas, heranças mennonitas, folclore andino e paisagens de rara beleza em mais de 3.500 km de história e identidade viva.",
-        "ctaPrimary": "Explorar as Cidades",
+        "badge": "Rota Bioceânica · 4 Países · 3.500 km",
+        "titleLine1": "A PONTE ENTRE",
+        "words": ["DOIS OCEANOS", "UMA HISTÓRIA", "UM FUTURO"],
+        "description": "Do Pantanal ao Pacífico — a maior integração continental da América do Sul, unindo culturas, povos e mercados em 3.500 km de história viva.",
+        "ctaPrimary": "Explorar Cidades",
         "ctaSecondary": "Conheça a Rota",
+        "podcast": {
+            "playing": "Reproduzindo...",
+            "idle": "Ouça o Podcast"
+        },
         "stats": {
-            "distance": "3.500 km",
-            "countries": "4 Países",
-            "cities": "12 Cidades",
-            "time": "UNESCO"
-        }
+            "distance": "extensão total",
+            "countries": "países integrados",
+            "cities": "cidades na rota",
+            "likes": "curtidas"
+        },
+        "like": {
+            "liked": "Curtido!",
+            "cta": "Curtir a Rota"
+        },
+        "instagram": {
+            "title": "Agora siga a rota no Instagram",
+            "sub": "@rota4mundos · novidades de 4 países",
+            "follow": "Seguir"
+        },
+        "cards": {
+            "countries": "Os 4 países da rota",
+            "route": "Traçado da rota — Atlântico → Pacífico",
+            "unescoTitle": "Reconhecimento UNESCO",
+            "unescoDesc": "Patrimônio cultural e natural reconhecido internacionalmente ao longo do corredor"
+        },
+        "scroll": "descobrir",
+        "atlantic": "← Atlântico",
+        "pacific": "Pacífico →"
     },
     "cities": {
         "title": "Cidades da Rota",
@@ -30,7 +53,11 @@
         "sectionDescription": "Do Pantanal ao Pacífico — Brasil, Paraguai, Argentina e Chile. Cada parada da rota carrega uma história que o mundo ainda não conhece.",
         "routeIndicator": "Atlântico → Pacífico",
         "viewAll": "Ver todas as cidades da rota",
-        "explore": "Explorar",
+        "explore": "Explorar Corredor",
+        "exploreHint": "Clique em um país para explorar as cidades",
+        "exploreHintMobile": "Toque em um país para explorar",
+        "scrollHint": "↓ role para ver o livro completo",
+        "viewCities": "Ver cidades",
         "population": "População",
         "economy": "Economia",
         "countries": {
