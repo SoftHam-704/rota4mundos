@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const CARD_BASE = {
-    brasil:    "card_brasil",
-    paraguai:  "card_paraguay",
-    argentina: "card_argentina",
-    chile:     "card_chile",
+    brasil:    "cards/card_brasil",
+    paraguai:  "cards/card_paraguay",
+    argentina: "cards/card_argentina",
+    chile:     "cards/card_chile",
 };
 
 function CardImage({ id, lang, style }) {
@@ -110,7 +110,7 @@ function DesktopMap({ onPick, lang }) {
                 display: "flex", alignItems: "flex-start",
             }}>
                 <motion.div style={{ position: "relative", width: "100%", userSelect: "none", lineHeight: 0, y: imageY }}>
-                    <img src={lang === "es" ? "/es/quatro_paises_es.png" : "/Quarto_paises.png"} alt="Um Corredor, Quatro Mundos"
+                    <img src={lang === "es" ? "/quatro_paises_es.png" : "/Quarto_paises.png"} alt="Um Corredor, Quatro Mundos"
                         style={{ width: "100%", height: "auto", display: "block" }}
                         draggable={false}
                     />
