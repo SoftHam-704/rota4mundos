@@ -12,7 +12,7 @@ export const getSiteLikes = asyncHandler(async (req, res) => {
             : Promise.resolve(null),
     ]);
 
-    return ApiResponse.success(res, { count, liked: !!liked });
+    return ApiResponse.success(res, { count: count + 29, liked: !!liked });
 });
 
 export const toggleSiteLike = asyncHandler(async (req, res) => {
