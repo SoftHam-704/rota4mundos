@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import CityHero from "../../components/CityHero.jsx";
+import { useInfographic } from "../../hooks/useInfographic.js";
 import {
     ArrowLeft, ArrowRight, MapPin, Users, Calendar,
     Flame, Music, Camera, Compass,
@@ -149,6 +150,7 @@ function SectionTitle({ children, light = false, className = "" }) {
 
 function InfograficoSection() {
     const [open, setOpen] = useState(false);
+    const src = useInfographic("salta");
     return (
         <>
             <section className="bg-primary-950 py-16">
@@ -162,7 +164,7 @@ function InfograficoSection() {
                         onClick={() => setOpen(true)}
                     >
                         <img
-                            src="/infografico-salta.png"
+                            src={src}
                             alt="Infográfico editorial Salta"
                             className="w-full h-auto"
                         />
@@ -197,7 +199,7 @@ function InfograficoSection() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }}
                             transition={{ duration: 0.25 }}
-                            src="/infografico-salta.png"
+                            src={src}
                             alt="Infográfico editorial Salta"
                             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
                             onClick={(e) => e.stopPropagation()}

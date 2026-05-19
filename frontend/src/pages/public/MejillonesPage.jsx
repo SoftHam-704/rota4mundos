@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import CityHero from "../../components/CityHero.jsx";
+import { useIsMobile } from "../../hooks/useMediaQuery.js";
+import { useInfographic } from "../../hooks/useInfographic.js";
 
 const AC = "#0891b2";
 const ACDIM = "rgba(8,145,178,0.15)";
@@ -201,7 +203,9 @@ function PortSVG() {
 
 /* ── main page ──────────────────────────────────────────── */
 export default function MejillonesPage() {
+    const isMobile = useIsMobile();
     const [lightbox, setLightbox] = useState(false);
+    const src = useInfographic("mejillones");
 
     return (
         <div style={{ background: "#001e3c", minHeight: "100vh", color: "#fff", fontFamily: "Inter, sans-serif" }}>
@@ -246,7 +250,7 @@ export default function MejillonesPage() {
                         onClick={() => setLightbox(true)}
                         style={{ position: "relative", maxWidth: "700px", margin: "0 auto", cursor: "zoom-in", borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(8,145,178,0.2)" }}
                     >
-                        <img src="/infografico-mejillones.png" alt="Infográfico Mejillones" style={{ width: "100%", display: "block" }} loading="lazy" />
+                        <img src={src} alt="Infográfico Mejillones" style={{ width: "100%", display: "block" }} loading="lazy" />
                         <div style={{ position: "absolute", inset: 0, background: "rgba(0,20,40,0.35)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.3s" }}
                             onMouseEnter={e => e.currentTarget.style.opacity = 1}
                             onMouseLeave={e => e.currentTarget.style.opacity = 0}>
@@ -267,7 +271,7 @@ export default function MejillonesPage() {
                         <motion.img
                             initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.85, opacity: 0 }} transition={{ duration: 0.35 }}
-                            src="/infografico-mejillones.png" alt="Infográfico Mejillones"
+                            src={src} alt="Infográfico Mejillones"
                             style={{ maxWidth: "95vw", maxHeight: "92vh", borderRadius: "16px", objectFit: "contain" }}
                             onClick={e => e.stopPropagation()}
                         />
@@ -336,7 +340,7 @@ export default function MejillonesPage() {
             {/* ── SPOTLIGHT: O RITMO DO PORTO ────────────────────────── */}
             <section style={{ padding: "80px 0", background: "linear-gradient(135deg, #001e3c 0%, #003566 50%, #024e87 100%)" }}>
                 <div className="container-rota">
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "32px" : "60px", alignItems: "center" }}>
                         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                             <span style={{ fontSize: "10px", fontWeight: 700, color: AC, letterSpacing: "0.2em", textTransform: "uppercase", display: "block", marginBottom: "14px" }}>IDENTIDADE PORTUÁRIA</span>
                             <h2 style={{ fontFamily: '"Bebas Neue",sans-serif', fontSize: "clamp(2.2rem, 5vw, 3.5rem)", color: "#fff", letterSpacing: "0.04em", lineHeight: 1, marginBottom: "20px" }}>
