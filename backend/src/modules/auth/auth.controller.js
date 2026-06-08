@@ -41,12 +41,13 @@ export const register = asyncHandler(async (req, res) => {
     // Hash da senha com salt round 12
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Cria o usuário
+    // Cria o usuário com isActive: false — aguarda aprovação do admin
     const user = await prisma.user.create({
         data: {
             name,
             email,
             passwordHash,
+            isActive: false,
         },
         select: {
             id: true,
@@ -57,15 +58,12 @@ export const register = asyncHandler(async (req, res) => {
         },
     });
 
-    // Gera token JWT
-    const token = generateToken(user);
-
-    logger.info("Novo usuário registrado", { userId: user.id, email: user.email });
+    logger.info("Novo colaborador registrado — aguardando aprovação", { userId: user.id, email: user.email });
 
     return ApiResponse.success(
         res,
-        { user, token },
-        "Usuário registrado com sucesso",
+        { user },
+        "Cadastro realizado! Aguarde a aprovação para acessar sua conta.",
         201
     );
 });
@@ -82,8 +80,12 @@ export const login = asyncHandler(async (req, res) => {
         where: { email },
     });
 
-    if (!user || !user.isActive) {
+    if (!user) {
         return ApiResponse.error(res, "Email ou senha incorretos", 401);
+    }
+
+    if (!user.isActive) {
+        return ApiResponse.error(res, "Conta aguardando aprovação. Você será notificado quando tiver acesso.", 403);
     }
 
     // Verifica a senha

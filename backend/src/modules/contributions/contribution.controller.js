@@ -30,6 +30,15 @@ export const listContributions = asyncHandler(async (req, res) => {
     return ApiResponse.success(res, contributions);
 });
 
+export const myContributions = asyncHandler(async (req, res) => {
+    const contributions = await prisma.contribution.findMany({
+        where: { email: req.user.email },
+        orderBy: { createdAt: "desc" },
+        select: { id: true, type: true, title: true, city: true, status: true, notes: true, createdAt: true },
+    });
+    return ApiResponse.success(res, contributions);
+});
+
 export const updateContribution = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { status, notes } = req.body;
