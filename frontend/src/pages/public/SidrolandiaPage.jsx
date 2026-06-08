@@ -227,7 +227,7 @@ export default function SidrolandiaPage() {
                 name={{ first: "Sidrolândia", second: "" }}
                 tagline="Onde o agronegócio encontra o povo Terena, o cerrado e a logística que move um continente."
                 scene="pantanal"
-                image="/cities/sidrolandia.png"
+                image="/cities/sidrolandia.jpg"
                 accentColor="#C8922A"
                 stats={[
                     { label: "Habitantes (est. 2022)", value: 51000, suffix: " hab." },
@@ -242,7 +242,7 @@ export default function SidrolandiaPage() {
 
             {/* ── POVO TERENA — destaque ───────────────────────── */}
             <section style={{ background: "linear-gradient(135deg, #1a0f02 0%, #2d1a05 50%, #1a0f02 100%)", position: "relative", overflow: "hidden", padding: "80px 0" }}>
-                <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/cities/sidrolandia.png')", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.08 }} />
+                <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/cities/sidrolandia.jpg')", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.08 }} />
                 <div style={{ position: "absolute", top: "-120px", right: "-120px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(200,146,42,0.18) 0%, transparent 70%)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(74,124,89,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
 
@@ -291,7 +291,7 @@ export default function SidrolandiaPage() {
                     <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15 }} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                         <div style={{ borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(200,146,42,0.3)", boxShadow: "0 24px 60px rgba(0,0,0,0.6)", position: "relative" }}>
                             <img
-                                src="/cities/sidrolandia.png"
+                                src="/cities/sidrolandia.jpg"
                                 alt="Sidrolândia — cerrado e tradição Terena"
                                 style={{ width: "100%", height: "340px", objectFit: "cover", display: "block" }}
                                 onError={e => { e.target.style.background = "linear-gradient(135deg, #2d1a05, #4a7c59)"; e.target.style.display = "none"; }}

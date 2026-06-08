@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PenLine, Camera, BookOpen, ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 const ITEM_ICONS = [PenLine, Camera, BookOpen];
 
 export default function ColaboraSection() {
-    const { t } = useTranslation();
-    const items = t("colabo.items", { returnObjects: true });
+    const { t } = useLanguage();
+    const items = t("colabo.items");
     return (
         <section style={{
             background: "linear-gradient(180deg, #080704 0%, #061220 50%, #080704 100%)",

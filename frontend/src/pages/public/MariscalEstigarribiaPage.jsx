@@ -225,7 +225,7 @@ export default function MariscalEstigarribiaPage() {
                 name={{ first: "Mariscal", second: "Estigarribia" }}
                 tagline="Novo polo logistico do Chaco — cruzamento estrategico entre a rota bioceanica e a Transchaco."
                 scene="chaco"
-                image="/cities/mariscal_estigarribia.png"
+                image="/cities/mariscal_estigarribia.jpg"
                 accentColor="#a78bfa"
                 stats={[
                     { label: "Habitantes (estimativa)", value: 8000 },

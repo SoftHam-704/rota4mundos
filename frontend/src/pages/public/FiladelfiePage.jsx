@@ -225,7 +225,7 @@ export default function FiladelfiePage() {
                 name={{ first: "Filadelfia", second: "" }}
                 tagline="Colonia mennonita que transformou o deserto do Chaco em polo agroindustrial."
                 scene="chaco"
-                image="/cities/filadelfia.png"
+                image="/cities/filadelfia.jpg"
                 accentColor="#84cc16"
                 stats={[
                     { label: "Habitantes (estimativa)", value: 14000 },

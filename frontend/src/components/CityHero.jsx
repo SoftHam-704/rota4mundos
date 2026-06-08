@@ -149,7 +149,7 @@ function Particles({ kind, accent, isMobile }) {
  *  name         — { first: "Campo", second: "Grande" }
  *  tagline      — string
  *  scene        — "pantanal" | "rio-cristalino" | "ponte" | "chaco" | "andes" | "pacifico"
- *  image        — "/cities/campo_grande.png"
+ *  image        — "/cities/campo_grande.jpg"
  *  accentColor  — override do accent da cena (opcional)
  *  stats        — [{ label, value, prefix?, suffix? }, ...]
  */

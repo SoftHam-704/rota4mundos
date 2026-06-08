@@ -360,11 +360,11 @@ export default function CampoGrandePage() {
                 name={{ first: "Campo", second: "Grande" }}
                 tagline="A Capital Morena — porta do Pantanal e hub da Rota Bioceânica."
                 scene="pantanal"
-                image="/cities/campo_grande.png"
+                image="/cities/campo_grande.jpg"
                 accentColor="#F4A261"
                 stats={[
-                    { label: "Habitantes (Censo 2022)", value: 898, suffix: " mil" },
-                    { label: "Ano de fundação", value: 1872 },
+                    { label: "Habitantes (Censo 2022)", value: 916, suffix: " mil" },
+                    { label: "Elevação a município", value: 1899 },
                     { label: "Território (km²)", value: 8082 },
                     { label: "Km até Porto Murtinho", value: 439 },
                 ]}

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 import toast from "react-hot-toast";
 
 export default function NewsletterSection() {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
 

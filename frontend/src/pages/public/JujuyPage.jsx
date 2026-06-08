@@ -225,7 +225,7 @@ export default function JujuyPage() {
                 name={{ first: "Jujuy", second: "" }}
                 tagline="Quebrada de Humahuaca UNESCO — 10.000 anos de historia continua nos canions andinos mais coloridos do mundo."
                 scene="andes"
-                image="/cities/jujuy.png"
+                image="/cities/jujuy.jpg"
                 accentColor="#f43f5e"
                 stats={[
                     { label: "Habitantes", value: 320000 },

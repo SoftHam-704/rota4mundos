@@ -31,15 +31,9 @@ export const useAuthStore = create((set, get) => ({
     register: async (data) => {
         set({ isLoading: true });
         try {
-            const response = await authApi.register(data);
-            sessionStorage.setItem("auth_token", response.data.data.token);
-            set({
-                user: response.data.data.user,
-                token: response.data.data.token,
-                isAuthenticated: true,
-                isLoading: false,
-            });
-            return { success: true };
+            await authApi.register(data);
+            set({ isLoading: false });
+            return { success: true, pending: true };
         } catch (error) {
             set({ isLoading: false });
             return {

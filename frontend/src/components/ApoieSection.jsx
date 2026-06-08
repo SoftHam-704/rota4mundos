@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Heart, Building2, Landmark } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 const CARD_META = [
     { tipo: "INDIVIDUAL",   icon: Heart,    accent: "#2A9D8F", rgb: "42,157,143" },
@@ -149,8 +149,8 @@ function ApoieCard({ card, index, isMobile }) {
 
 export default function ApoieSection() {
     const isMobile = useMediaQuery("(max-width: 767px)");
-    const { t } = useTranslation();
-    const cardsData = t("apoie.cards", { returnObjects: true });
+    const { t } = useLanguage();
+    const cardsData = t("apoie.cards");
     const cards = CARD_META.map((meta, i) => ({ ...meta, ...cardsData[i] }));
 
     return (

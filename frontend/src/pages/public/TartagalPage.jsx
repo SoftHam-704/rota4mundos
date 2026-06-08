@@ -225,7 +225,7 @@ export default function TartagalPage() {
                 name={{ first: "Tartagal", second: "" }}
                 tagline="Cinco povos originarios, floresta das Yungas e o carnaval multicultural mais vivo do norte argentino."
                 scene="andes"
-                image="/cities/tartagal.png"
+                image="/cities/tartagal.jpg"
                 accentColor="#10b981"
                 stats={[
                     { label: "Habitantes", value: 70000 },

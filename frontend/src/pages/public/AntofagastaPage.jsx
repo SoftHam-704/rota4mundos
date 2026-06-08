@@ -225,7 +225,7 @@ export default function AntofagastaPage() {
                 name={{ first: "Antofagasta", second: "" }}
                 tagline="Onde o Atacama beija o Pacifico — capital do cobre, dos observatorios e da maior vista continental do oceano."
                 scene="pacifico"
-                image="/cities/antofagasta.png"
+                image="/cities/antofagasta.jpg"
                 accentColor="#38bdf8"
                 stats={[
                     { label: "Habitantes", value: 500000 },

@@ -225,7 +225,7 @@ export default function IquiquePage() {
                 name={{ first: "Iquique", second: "" }}
                 tagline="Porto historico, duna urbana de 400 metros e a memoria salitreira que moldou o Chile moderno."
                 scene="pacifico"
-                image="/cities/iquique.png"
+                image="/cities/iquique.jpg"
                 accentColor="#fb923c"
                 stats={[
                     { label: "Habitantes", value: 235000 },

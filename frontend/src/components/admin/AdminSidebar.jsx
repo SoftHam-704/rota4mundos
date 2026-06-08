@@ -11,15 +11,17 @@ import {
     ChevronRight,
     Send,
     Feather,
+    Users,
 } from "lucide-react";
 
 const menuItems = [
-    { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/admin/cidades", label: "Cidades", icon: Building2 },
-    { to: "/admin/artigos", label: "Artigos", icon: FileText },
-    { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
-    { to: "/admin/publicacoes", label: "Publicações", icon: Send },
+    { to: "/admin",              label: "Dashboard",    icon: LayoutDashboard },
+    { to: "/admin/cidades",      label: "Cidades",      icon: Building2 },
+    { to: "/admin/artigos",      label: "Artigos",      icon: FileText },
+    { to: "/admin/newsletter",   label: "Newsletter",   icon: Mail },
+    { to: "/admin/publicacoes",  label: "Publicações",  icon: Send },
     { to: "/admin/colaboracoes", label: "Colaborações", icon: Feather },
+    { to: "/admin/usuarios",     label: "Colaboradores",icon: Users },
 ];
 
 export default function AdminSidebar() {

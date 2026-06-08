@@ -225,7 +225,7 @@ export default function CarmeloPeraltaPage() {
                 name={{ first: "Carmelo", second: "Peralta" }}
                 tagline="Primeira cidade paraguaia — do outro lado da ponte bioceânica, o Chaco começa aqui."
                 scene="chaco"
-                image="/cities/carmelo_peralta.png"
+                image="/cities/carmelo_peralta.jpg"
                 accentColor="#818cf8"
                 stats={[
                     { label: "Habitantes (Censo 2022)", value: 18926 },

@@ -1,11 +1,41 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, Play, Pause, Headphones, X as XIcon, Heart, Instagram } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { ArrowRight, ChevronDown, Play, Pause, Headphones, Heart } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 import CountUp from "react-countup";
 import RotaRings from "./RotaRings.jsx";
 import { siteApi } from "../api/site.js";
+
+function useSiteLike() {
+    const [liked, setLiked]   = useState(false);
+    const [count, setCount]   = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [burst, setBurst]   = useState(false);
+
+    useEffect(() => {
+        siteApi.getLikes()
+            .then(res => { const d = res.data?.data; setLiked(d?.liked ?? false); setCount(d?.count ?? 0); })
+            .catch(() => {});
+    }, []);
+
+    const toggle = async () => {
+        if (loading) return;
+        setLoading(true);
+        const prev = { liked, count };
+        const next = !liked;
+        setLiked(next); setCount(c => next ? c + 1 : Math.max(0, c - 1));
+        if (next) { setBurst(true); setTimeout(() => setBurst(false), 600); }
+        try {
+            const res = await siteApi.toggleLike();
+            const d = res.data?.data;
+            setLiked(d?.liked ?? next); setCount(d?.count ?? prev.count);
+        } catch { setLiked(prev.liked); setCount(prev.count); }
+        finally { setLoading(false); }
+    };
+
+    return { liked, count, loading, burst, toggle };
+}
 
 /* ── helper: media query reativo ───────────────────────────── */
 function useMediaQuery(query) {
@@ -22,57 +52,10 @@ function useMediaQuery(query) {
     return matches;
 }
 
-/* ─── Hook: likes do site ───────────────────────────────────────── */
-function useSiteLike() {
-    const [liked, setLiked]           = useState(false);
-    const [count, setCount]           = useState(0);
-    const [loading, setLoading]       = useState(false);
-    const [burst, setBurst]           = useState(false);
-    const [showFollow, setShowFollow] = useState(false);
-
-    useEffect(() => {
-        siteApi.getLikes()
-            .then(res => {
-                const d = res.data?.data;
-                setLiked(d?.liked ?? false);
-                setCount(d?.count ?? 0);
-            })
-            .catch(() => {});
-    }, []);
-
-    const toggle = async () => {
-        if (loading) return;
-        setLoading(true);
-        const prev = { liked, count };
-        const nextLiked = !liked;
-        setLiked(nextLiked);
-        setCount(c => nextLiked ? c + 1 : Math.max(0, c - 1));
-        if (nextLiked) {
-            setBurst(true);
-            setTimeout(() => setShowFollow(true), 700);
-        }
-        try {
-            const res = await siteApi.toggleLike();
-            const d = res.data?.data;
-            setLiked(d?.liked ?? nextLiked);
-            setCount(d?.count ?? prev.count);
-        } catch {
-            setLiked(prev.liked);
-            setCount(prev.count);
-        } finally {
-            setLoading(false);
-            setTimeout(() => setBurst(false), 600);
-        }
-    };
-
-    const dismissFollow = () => setShowFollow(false);
-
-    return { liked, count, loading, burst, toggle, showFollow, dismissFollow };
-}
 
 /* ─── Player de podcast (compartilhado entre inline + flutuante) ── */
 function PodcastPlayer({ floating = false, onClose }) {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const audioRef = useRef(null);
     const [playing, setPlaying]   = useState(false);
     const [progress, setProgress] = useState(0);
@@ -279,7 +262,7 @@ function AtmosphereCanvas({ isMobile }) {
 
 /* ─── Mapa SVG da rota ──────────────────────────────────────── */
 function RouteMap() {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const cities = [
         { x: 48,  y: 62, label: "Campo Grande",    sub: "🇧🇷 Brasil",    color: "#22c55e", above: true  },
         { x: 160, y: 72, label: "Porto Murtinho",  sub: "🇧🇷 Brasil",    color: "#4ade80", above: false },
@@ -343,60 +326,6 @@ function SunGlow() {
     );
 }
 
-/* ─── Like button (desktop — coluna na stats bar) ──────────── */
-function SiteLikeButton({ siteLike }) {
-    const { t } = useTranslation();
-    return (
-        <button
-            onClick={siteLike.toggle}
-            disabled={siteLike.loading}
-            title={siteLike.liked ? "Descurtir" : "Curtir este projeto"}
-            style={{
-                display: "flex", flexDirection: "column",
-                alignItems: "center", gap: "4px",
-                background: "none", border: "none",
-                cursor: siteLike.loading ? "default" : "pointer",
-                padding: "0", outline: "none",
-            }}
-        >
-            <motion.div
-                animate={siteLike.burst
-                    ? { scale: [1, 1.5, 1.15, 1], rotate: [0, -10, 10, 0] }
-                    : { scale: 1, rotate: 0 }
-                }
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                style={{ lineHeight: 1 }}
-            >
-                <Heart style={{
-                    width: "clamp(22px, 5.5vw, 28px)",
-                    height: "clamp(22px, 5.5vw, 28px)",
-                    fill: siteLike.liked ? "#F43F5E" : "none",
-                    stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.45)",
-                    strokeWidth: 1.8,
-                    transition: "fill 0.2s, stroke 0.2s",
-                    filter: siteLike.liked ? "drop-shadow(0 0 8px rgba(244,63,94,0.6))" : "none",
-                }} />
-            </motion.div>
-            <div style={{
-                fontFamily: '"Bebas Neue", sans-serif',
-                fontSize: "clamp(1.1rem, 4.5vw, 1.6rem)",
-                color: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.55)",
-                lineHeight: 1, letterSpacing: "0.04em",
-                transition: "color 0.2s",
-            }}>
-                {siteLike.count > 0 ? siteLike.count.toLocaleString("pt-BR") : "—"}
-            </div>
-            <div style={{
-                fontSize: "clamp(9px, 2.4vw, 10px)",
-                color: "rgba(255,255,255,0.4)",
-                fontFamily: "Inter, sans-serif",
-                letterSpacing: "0.06em",
-            }}>
-                {t("hero.stats.likes")}
-            </div>
-        </button>
-    );
-}
 
 /* ─── Stat com CountUp ──────────────────────────────────────── */
 function StatCard({ value, suffix, label, color, delay }) {
@@ -417,6 +346,79 @@ function StatCard({ value, suffix, label, color, delay }) {
     );
 }
 
+/* ─── Seletor de idioma (Hero) ──────────────────────────────── */
+const LANGS = [
+    { code: "pt", flag: "🇧🇷", label: "PT" },
+    { code: "es", flag: "🇪🇸", label: "ES" },
+    { code: "en", flag: "🇬🇧", label: "EN" },
+];
+
+function HeroLangSwitcher() {
+    const location  = useLocation();
+    const navigate  = useNavigate();
+    const { setLanguage } = useLanguage();
+
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    const urlLang   = ["es", "en"].includes(pathParts[0]) ? pathParts[0] : "pt";
+
+    const switchLang = (newLang) => {
+        const hasPrefix = ["es", "en"].includes(pathParts[0]);
+        const base      = hasPrefix ? "/" + pathParts.slice(1).join("/") : location.pathname;
+        const cleanBase = base || "/";
+        setLanguage(newLang === "pt" ? "pt-BR" : newLang === "es" ? "es-ES" : "en-US");
+        navigate(newLang === "pt" ? cleanBase : "/" + newLang + (cleanBase === "/" ? "" : cleanBase));
+    };
+
+    return (
+        <div style={{
+            display: "inline-flex",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.13)",
+            borderRadius: "50px",
+            backdropFilter: "blur(18px)",
+            padding: "4px",
+            gap: "3px",
+        }}>
+            {LANGS.map(l => {
+                const active = urlLang === l.code;
+                return (
+                    <button
+                        key={l.code}
+                        onClick={() => switchLang(l.code)}
+                        style={{
+                            display: "flex", alignItems: "center", gap: "7px",
+                            padding: "7px 15px",
+                            borderRadius: "50px",
+                            background: active ? "rgba(244,162,97,0.22)" : "transparent",
+                            border: active
+                                ? "1px solid rgba(244,162,97,0.45)"
+                                : "1px solid transparent",
+                            cursor: "pointer",
+                            outline: "none",
+                            transition: "all 0.2s",
+                            boxShadow: active ? "0 0 16px rgba(244,162,97,0.18), inset 0 1px 0 rgba(244,162,97,0.15)" : "none",
+                        }}
+                        onMouseEnter={e => { if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                        onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}
+                    >
+                        <span style={{ fontSize: "16px", lineHeight: 1, display: "block" }}>{l.flag}</span>
+                        <span style={{
+                            fontSize: "11px",
+                            fontWeight: active ? 700 : 500,
+                            color: active ? "#F4A261" : "rgba(255,255,255,0.55)",
+                            fontFamily: "Inter, sans-serif",
+                            letterSpacing: "0.1em",
+                            transition: "color 0.2s",
+                        }}>
+                            {l.label}
+                        </span>
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
 /* ─── HERO ──────────────────────────────────────────────────── */
 export default function HeroSection() {
     const sectionRef = useRef(null);
@@ -428,11 +430,11 @@ export default function HeroSection() {
     const contentY = useTransform(scrollY, [0, 700], [0, isMobile ? -25 : -55]);
     const opacity  = useTransform(scrollY, [0, 450], [1, 0]);
 
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const siteLike = useSiteLike();
 
     const [wordIdx, setWordIdx] = useState(0);
-    const words = t("hero.words", { returnObjects: true });
+    const words = t("hero.words");
     useEffect(() => {
         const iv = setInterval(() => setWordIdx(i => (i + 1) % words.length), 3400);
         return () => clearInterval(iv);
@@ -444,8 +446,7 @@ export default function HeroSection() {
     useEffect(() => {
         if (!isMobile) return;
         const onScroll = () => {
-            const y = window.scrollY;
-            setFloatingVisible(y > window.innerHeight * 0.4 && y < window.innerHeight * 6);
+            if (window.scrollY > window.innerHeight * 0.4) setFloatingVisible(true);
         };
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
@@ -457,7 +458,7 @@ export default function HeroSection() {
                 position: "relative", width: "100%", height: "100svh",
                 minHeight: isMobile ? "560px" : "600px",
                 overflow: "hidden", background: "#020d1a",
-                display: "flex", alignItems: "center",
+                display: "flex", alignItems: isMobile ? "flex-start" : "center",
             }}>
                 {/* No mobile: foto da ponte (1MB) em vez do vídeo (16.8MB) */}
                 {isMobile ? (
@@ -490,11 +491,22 @@ export default function HeroSection() {
                 <AtmosphereCanvas isMobile={isMobile} />
 
                 <motion.div style={{ y: contentY, opacity, position: "relative", zIndex: 20, width: "100%" }}>
-                    <div className="container-rota" style={{ paddingTop: "clamp(96px, 16vh, 150px)", paddingBottom: "32px" }}>
+                    <div className="container-rota" style={{ paddingTop: isMobile ? "88px" : "clamp(96px, 16vh, 150px)", paddingBottom: "32px" }}>
                         <div className="hero-grid" style={{ minHeight: isMobile ? "auto" : "calc(100svh - 140px)" }}>
 
                             {/* Coluna esquerda */}
                             <div>
+                                {/* Seletor de idioma — desktop only (acima do badge) */}
+                                {!isMobile && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.1 }}
+                                        style={{ marginBottom: "clamp(14px, 2.5vh, 24px)" }}
+                                    >
+                                        <HeroLangSwitcher />
+                                    </motion.div>
+                                )}
+
                                 {/* Badge */}
                                 <motion.div
                                     initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
@@ -590,13 +602,72 @@ export default function HeroSection() {
                                     }}>
                                         {t("hero.ctaPrimary")} <ArrowRight size={14} />
                                     </Link>
-                                    <Link to="/noticias" className="btn-ghost" style={{
-                                        fontSize: "clamp(12px, 3vw, 13px)",
-                                        padding: "clamp(11px, 2.4vw, 13px) clamp(20px, 5vw, 28px)",
-                                    }}>
-                                        {t("hero.ctaSecondary")}
-                                    </Link>
+
+                                    {/* Botão curtir — substitui "Conheça a Rota" */}
+                                    <motion.button
+                                        onClick={siteLike.toggle}
+                                        disabled={siteLike.loading}
+                                        whileHover={{ scale: 1.03 }}
+                                        whileTap={{ scale: 0.97 }}
+                                        style={{
+                                            display: "inline-flex", alignItems: "center", gap: "10px",
+                                            fontSize: "clamp(12px, 3vw, 13px)",
+                                            padding: "clamp(11px, 2.4vw, 13px) clamp(20px, 5vw, 28px)",
+                                            borderRadius: "12px",
+                                            border: siteLike.liked
+                                                ? "1px solid rgba(244,63,94,0.55)"
+                                                : "1px solid rgba(255,255,255,0.18)",
+                                            background: siteLike.liked
+                                                ? "linear-gradient(135deg, rgba(244,63,94,0.22), rgba(244,63,94,0.08))"
+                                                : "rgba(255,255,255,0.07)",
+                                            backdropFilter: "blur(16px)",
+                                            color: siteLike.liked ? "#F87171" : "rgba(255,255,255,0.8)",
+                                            fontFamily: "Inter, sans-serif",
+                                            fontWeight: 600,
+                                            letterSpacing: "0.03em",
+                                            cursor: siteLike.loading ? "default" : "pointer",
+                                            outline: "none",
+                                            transition: "border-color 0.25s, background 0.25s, color 0.25s, box-shadow 0.25s",
+                                            boxShadow: siteLike.liked
+                                                ? "0 0 22px rgba(244,63,94,0.25), inset 0 1px 0 rgba(244,63,94,0.15)"
+                                                : "inset 0 1px 0 rgba(255,255,255,0.07)",
+                                        }}
+                                    >
+                                        <motion.span
+                                            animate={siteLike.burst
+                                                ? { scale: [1, 1.55, 1.15, 1], rotate: [0, -14, 14, 0] }
+                                                : { scale: 1, rotate: 0 }
+                                            }
+                                            transition={{ duration: 0.5, ease: "easeOut" }}
+                                            style={{ display: "flex", alignItems: "center" }}
+                                        >
+                                            <Heart style={{
+                                                width: "15px", height: "15px",
+                                                fill: siteLike.liked ? "#F43F5E" : "none",
+                                                stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.7)",
+                                                strokeWidth: 2,
+                                                transition: "all 0.25s",
+                                                filter: siteLike.liked ? "drop-shadow(0 0 6px rgba(244,63,94,0.8))" : "none",
+                                            }} />
+                                        </motion.span>
+                                        <span>
+                                            {siteLike.liked
+                                                ? `${siteLike.count.toLocaleString("pt-BR")} ${t("hero.stats.likes")}`
+                                                : t("hero.like.cta")}
+                                        </span>
+                                    </motion.button>
                                 </motion.div>
+
+                                {/* Seletor de idioma — mobile only (após CTAs) */}
+                                {isMobile && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.9 }}
+                                        style={{ marginBottom: "clamp(16px, 3vh, 28px)", marginTop: "4px" }}
+                                    >
+                                        <HeroLangSwitcher />
+                                    </motion.div>
+                                )}
 
                                 {/* Podcast player — inline só no desktop. No mobile vai pro flutuante. */}
                                 {!isMobile && (
@@ -635,150 +706,10 @@ export default function HeroSection() {
                                             </div>
                                         ))}
 
-                                        {/* No desktop: curtir como 4º item na mesma linha */}
-                                        {!isMobile && (
-                                            <div style={{
-                                                flex: 1,
-                                                paddingLeft: "clamp(10px, 3vw, 20px)",
-                                                borderLeft: "1px solid rgba(255,255,255,0.08)",
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                            }}>
-                                                <SiteLikeButton siteLike={siteLike} />
-                                            </div>
-                                        )}
                                     </div>
 
-                                    {/* No mobile: curtir em linha própria, como pill centralizado */}
-                                    {isMobile && (
-                                        <div style={{ display: "flex", justifyContent: "center" }}>
-                                            <button
-                                                onClick={siteLike.toggle}
-                                                disabled={siteLike.loading}
-                                                style={{
-                                                    display: "inline-flex", alignItems: "center", gap: "8px",
-                                                    padding: "10px 22px", borderRadius: "50px",
-                                                    border: siteLike.liked
-                                                        ? "1px solid rgba(244,63,94,0.5)"
-                                                        : "1px solid rgba(255,255,255,0.15)",
-                                                    background: siteLike.liked
-                                                        ? "rgba(244,63,94,0.12)"
-                                                        : "rgba(255,255,255,0.05)",
-                                                    backdropFilter: "blur(8px)",
-                                                    cursor: siteLike.loading ? "default" : "pointer",
-                                                    outline: "none",
-                                                    transition: "all 0.2s",
-                                                }}
-                                            >
-                                                <motion.div
-                                                    animate={siteLike.burst
-                                                        ? { scale: [1, 1.6, 1.2, 1], rotate: [0, -12, 12, 0] }
-                                                        : { scale: 1, rotate: 0 }
-                                                    }
-                                                    transition={{ duration: 0.5, ease: "easeOut" }}
-                                                    style={{ display: "flex", alignItems: "center" }}
-                                                >
-                                                    <Heart style={{
-                                                        width: "18px", height: "18px",
-                                                        fill: siteLike.liked ? "#F43F5E" : "none",
-                                                        stroke: siteLike.liked ? "#F43F5E" : "rgba(255,255,255,0.6)",
-                                                        strokeWidth: 1.8,
-                                                        transition: "all 0.2s",
-                                                        filter: siteLike.liked ? "drop-shadow(0 0 6px rgba(244,63,94,0.7))" : "none",
-                                                    }} />
-                                                </motion.div>
-                                                <span style={{
-                                                    fontSize: "13px", fontWeight: 600,
-                                                    fontFamily: "Inter, sans-serif",
-                                                    color: siteLike.liked ? "#F87171" : "rgba(255,255,255,0.7)",
-                                                    transition: "color 0.2s",
-                                                }}>
-                                                    {siteLike.liked
-                                                        ? (siteLike.count > 1 ? `${siteLike.count.toLocaleString("pt-BR")} ${t("hero.stats.likes")}` : t("hero.like.liked"))
-                                                        : t("hero.like.cta")}
-                                                </span>
-                                            </button>
-                                        </div>
-                                    )}
                                 </motion.div>
 
-                                {/* Banner "Siga no Instagram" — aparece só após curtir */}
-                                <AnimatePresence>
-                                    {siteLike.showFollow && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 14, scale: 0.97 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                            style={{
-                                                marginTop: "16px",
-                                                display: "flex", alignItems: "center",
-                                                gap: "12px",
-                                                padding: "12px 16px",
-                                                borderRadius: "14px",
-                                                background: "linear-gradient(135deg, rgba(131,58,180,0.18), rgba(253,29,29,0.12), rgba(252,176,69,0.14))",
-                                                border: "1px solid rgba(253,29,29,0.25)",
-                                                backdropFilter: "blur(12px)",
-                                                maxWidth: "420px",
-                                            }}
-                                        >
-                                            {/* Ícone Instagram */}
-                                            <div style={{
-                                                width: "36px", height: "36px", borderRadius: "10px", flexShrink: 0,
-                                                background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                            }}>
-                                                <Instagram size={18} style={{ color: "#fff" }} />
-                                            </div>
-
-                                            {/* Texto */}
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <p style={{
-                                                    fontSize: "13px", fontWeight: 700,
-                                                    color: "#fff", fontFamily: "Inter, sans-serif",
-                                                    margin: 0, lineHeight: 1.3,
-                                                }}>
-                                                    {t("hero.instagram.title")}
-                                                </p>
-                                                <p style={{
-                                                    fontSize: "11px", color: "rgba(255,255,255,0.5)",
-                                                    fontFamily: "Inter, sans-serif", margin: "2px 0 0",
-                                                }}>
-                                                    {t("hero.instagram.sub")}
-                                                </p>
-                                            </div>
-
-                                            {/* Botão seguir */}
-                                            <a
-                                                href="https://www.instagram.com/rota4mundos"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{
-                                                    flexShrink: 0,
-                                                    padding: "6px 14px", borderRadius: "50px",
-                                                    background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-                                                    color: "#fff", fontSize: "11px", fontWeight: 700,
-                                                    fontFamily: "Inter, sans-serif",
-                                                    textDecoration: "none", whiteSpace: "nowrap",
-                                                }}
-                                            >
-                                                {t("hero.instagram.follow")}
-                                            </a>
-
-                                            {/* Fechar */}
-                                            <button
-                                                onClick={siteLike.dismissFollow}
-                                                style={{
-                                                    flexShrink: 0, background: "none", border: "none",
-                                                    cursor: "pointer", padding: "2px",
-                                                    color: "rgba(255,255,255,0.35)",
-                                                    display: "flex", alignItems: "center",
-                                                }}
-                                            >
-                                                <XIcon size={14} />
-                                            </button>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
 
                                 {/* RotaRings no mobile — SVG puro, sem download */}
                                 {isMobile && (

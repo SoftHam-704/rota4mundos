@@ -225,7 +225,7 @@ export default function SaltaPage() {
                 name={{ first: "Salta", second: "La Linda" }}
                 tagline="A alma folclorica dos Andes argentinos — colonial, vibrante e portao para as nuvens."
                 scene="andes"
-                image="/cities/salta.png"
+                image="/cities/salta.jpg"
                 accentColor="#f97316"
                 stats={[
                     { label: "Habitantes", value: 620000 },

@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Building2, Landmark, ArrowRight, CheckCircle, Loader2, Globe, MapPin, Users, TrendingUp, Zap } from "lucide-react";
 import { sponsorApi } from "../../api/sponsors.js";
+import { useIsMobile } from "../../hooks/useMediaQuery.js";
 
 const TYPES = [
     {
@@ -74,6 +75,7 @@ const OPPS = [
 ];
 
 export default function ApoiePage() {
+    const isMobile = useIsMobile();
     const [searchParams] = useSearchParams();
     const [type, setType]     = useState(searchParams.get("tipo") || "EMPRESARIAL");
     const [form, setForm]     = useState({ name: "", email: "", organization: "", message: "" });
@@ -284,7 +286,7 @@ export default function ApoiePage() {
                     </motion.div>
 
                     {/* grid principal — benefícios + form */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "24px" : "40px", alignItems: "start" }}>
 
                         {/* ── ESQUERDA — benefícios ── */}
                         <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>

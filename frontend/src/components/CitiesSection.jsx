@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { X, ArrowRight, MousePointer2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 
 const CARD_BASE = {
     brasil:    "cards/card_brasil",
@@ -31,12 +31,12 @@ const COUNTRIES = [
         id: "brasil", flag: "🇧🇷", name: "Brasil",
         accent: "#2A9D8F", accentRgb: "42,157,143",
         zone: { top: "19%", left: "13%", width: "36%", height: "36%" },
-        thumb: "/cities/campo_grande.png",
+        thumb: "/cities/campo_grande.jpg",
         cities: [
-            { n: "01", name: "Campo Grande",   tagline: "A Capital Morena do Cerrado",       href: "/cidades/campo-grande",   image: "/cities/campo_grande.png" },
+            { n: "01", name: "Campo Grande",   tagline: "A Capital Morena do Cerrado",       href: "/cidades/campo-grande",   image: "/cities/campo_grande.jpg" },
             { n: "02", name: "Sidrolândia",    tagline: "O Coração Produtivo do MS",         href: "/cidades/sidrolandia",    image: "/cities/sidrolandia.jpg" },
             { n: "03", name: "Jardim",         tagline: "Portal da Serra da Bodoquena",      href: "/cidades/jardim",         image: "/cities/jardim.jpg" },
-            { n: "04", name: "Bonito",         tagline: "O Aquário Natural do Mundo",        href: "/cidades/bonito",         image: "/cities/bonito.png" },
+            { n: "04", name: "Bonito",         tagline: "O Aquário Natural do Mundo",        href: "/cidades/bonito",         image: "/cities/bonito.jpg" },
             { n: "05", name: "Porto Murtinho", tagline: "A Guardiã do Rio Paraguai",         href: "/cidades/porto-murtinho", image: "/cities/porto_murtinho.jpg" },
         ],
     },
@@ -44,11 +44,11 @@ const COUNTRIES = [
         id: "paraguai", flag: "🇵🇾", name: "Paraguai",
         accent: "#a78bfa", accentRgb: "167,139,250",
         zone: { top: "19%", left: "51%", width: "36%", height: "36%" },
-        thumb: "/cities/carmelo_peralta.png",
+        thumb: "/cities/carmelo_peralta.jpg",
         cities: [
-            { n: "06", name: "Carmelo Peralta",       tagline: "A Travessia Histórica",     href: "/cidades/carmelo-peralta",       image: "/cities/carmelo_peralta.png" },
-            { n: "07", name: "Mariscal Estigarribia", tagline: "O Polo Logístico do Chaco", href: "/cidades/mariscal-estigarribia", image: "/cities/mariscal_estigarribia.png" },
-            { n: "08", name: "Filadelfia",            tagline: "A Alma Europeia do Chaco",  href: "/cidades/filadelfia",            image: "/cities/filadelfia.png" },
+            { n: "06", name: "Carmelo Peralta",       tagline: "A Travessia Histórica",     href: "/cidades/carmelo-peralta",       image: "/cities/carmelo_peralta.jpg" },
+            { n: "07", name: "Mariscal Estigarribia", tagline: "O Polo Logístico do Chaco", href: "/cidades/mariscal-estigarribia", image: "/cities/mariscal_estigarribia.jpg" },
+            { n: "08", name: "Filadelfia",            tagline: "A Alma Europeia do Chaco",  href: "/cidades/filadelfia",            image: "/cities/filadelfia.jpg" },
         ],
     },
     {
@@ -69,8 +69,8 @@ const COUNTRIES = [
         thumb: "/cities/antofagasta.jpg",
         cities: [
             { n: "12", name: "Antofagasta", tagline: "Onde o Atacama Beija o Pacífico", href: "/cidades/antofagasta", image: "/cities/antofagasta.jpg" },
-            { n: "13", name: "Iquique",     tagline: "Porto Histórico e Zona Franca",   href: "/cidades/iquique",     image: "/cities/iquique.png" },
-            { n: "14", name: "Mejillones",  tagline: "O Porto Autêntico do Pacífico",   href: "/cidades/mejillones",  image: "/cities/mejillones.png" },
+            { n: "13", name: "Iquique",     tagline: "Porto Histórico e Zona Franca",   href: "/cidades/iquique",     image: "/cities/iquique.jpg" },
+            { n: "14", name: "Mejillones",  tagline: "O Porto Autêntico do Pacífico",   href: "/cidades/mejillones",  image: "/cities/mejillones.jpg" },
         ],
     },
 ];
@@ -92,7 +92,7 @@ function useMediaQuery(query) {
 
 /* ── desktop: sticky image map (original) ───────────────────── */
 function DesktopMap({ onPick, lang }) {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const [hoveredId, setHoveredId] = useState(null);
     const scrollRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -110,9 +110,11 @@ function DesktopMap({ onPick, lang }) {
                 display: "flex", alignItems: "flex-start",
             }}>
                 <motion.div style={{ position: "relative", width: "100%", userSelect: "none", lineHeight: 0, y: imageY }}>
-                    <img src={lang === "es" ? "/quatro_paises_es.png" : "/Quarto_paises.png"} alt="Um Corredor, Quatro Mundos"
+                    <img src={lang === "es" ? "/quatro_paises_es.webp" : lang === "en" ? "/quatro_paises_en.webp" : "/Quarto_paises.webp"} alt="Um Corredor, Quatro Mundos"
                         style={{ width: "100%", height: "auto", display: "block" }}
                         draggable={false}
+                        loading="lazy"
+                        decoding="async"
                     />
 
                     {COUNTRIES.map((c) => {
@@ -182,7 +184,7 @@ function DesktopMap({ onPick, lang }) {
 
 /* ── mobile: grid de cards de país ──────────────────────────── */
 function MobileGrid({ onPick, lang }) {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     return (
         <div className="container-rota" style={{ paddingTop: "8px", paddingBottom: "8px" }}>
             <div className="cities-mobile-grid">
@@ -274,7 +276,8 @@ function MobileGrid({ onPick, lang }) {
 
 /* ── modal pergaminho — UI mobile-friendly ──────────────────── */
 function CountryModal({ country, isMobile, lang, onClose }) {
-    const { i18n: _i18n } = useTranslation(); // garante re-render ao trocar idioma
+    const { language: _language } = useLanguage(); // garante re-render ao trocar idioma
+    const langPrefix = lang === "pt" ? "" : `/${lang}`;
     return (
         <>
             <motion.div
@@ -350,7 +353,7 @@ function CountryModal({ country, isMobile, lang, onClose }) {
                             style={{ flex: 1 }}
                         >
                             <Link
-                                to={city.href}
+                                to={`${langPrefix}${city.href}`}
                                 onClick={onClose}
                                 style={{ display: "block", width: "100%", height: "100%", borderRadius: "6px", transition: "background 0.2s" }}
                                 className="scroll-row"
@@ -367,8 +370,10 @@ function CountryModal({ country, isMobile, lang, onClose }) {
 export default function CitiesSection() {
     const [activeId, setActiveId] = useState(null);
     const isMobile  = useMediaQuery("(max-width: 767px)");
-    const { t, i18n } = useTranslation();
-    const lang      = i18n.language.startsWith("es") ? "es" : i18n.language.startsWith("en") ? "en" : "pt";
+    const { t, language } = useLanguage();
+    const { pathname } = useLocation();
+    const lang      = language.startsWith("es") ? "es" : language.startsWith("en") ? "en" : "pt";
+    const langPrefix = lang === "pt" ? "" : `/${lang}`;
     const country   = COUNTRIES.find(c => c.id === activeId);
 
     return (

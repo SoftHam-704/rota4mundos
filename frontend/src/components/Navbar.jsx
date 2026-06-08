@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, LogOut, User, PenLine } from "lucide-react";
 import { useAuthStore } from "../stores/authStore.js";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import ColaboradorModal from "./ColaboradorModal.jsx";
 
 const NAV_LINKS = [
     { to: "/",         key: "nav.home" },
@@ -12,46 +13,13 @@ const NAV_LINKS = [
     { to: "/apoie",    key: "nav.support" },
 ];
 
-const LANG_FLAGS = { pt: "🇧🇷", es: "🇪🇸", en: "🇬🇧" };
-
-function LangSwitcher({ current, onSwitch, style }) {
-    return (
-        <div style={{
-            display: "flex", alignItems: "center", gap: "2px",
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: "8px", padding: "3px",
-            ...style,
-        }}>
-            {["pt", "es", "en"].map(l => (
-                <button
-                    key={l}
-                    onClick={() => onSwitch(l)}
-                    style={{
-                        background: current === l ? "rgba(255,255,255,0.15)" : "transparent",
-                        border: "none", borderRadius: "5px",
-                        padding: "4px 7px",
-                        fontSize: "11px", fontWeight: current === l ? 700 : 400,
-                        fontFamily: "Inter, sans-serif",
-                        color: current === l ? "#fff" : "rgba(255,255,255,0.4)",
-                        cursor: "pointer", transition: "all 0.18s",
-                        letterSpacing: "0.04em",
-                    }}
-                >
-                    {LANG_FLAGS[l]}
-                </button>
-            ))}
-        </div>
-    );
-}
-
 export default function Navbar() {
     const { isAuthenticated, user, logout } = useAuthStore();
-    const { t, i18n } = useTranslation();
-    const [isScrolled, setIsScrolled]     = useState(false);
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const { t } = useLanguage();
+    const [isScrolled, setIsScrolled]       = useState(false);
+    const [isMobileOpen, setIsMobileOpen]   = useState(false);
+    const [showColabModal, setShowColabModal] = useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const onScroll = () => setIsScrolled(window.scrollY > 50);
@@ -66,22 +34,12 @@ export default function Navbar() {
         return () => { document.body.style.overflow = ""; };
     }, [isMobileOpen]);
 
-    // Detecta lang atual pelo prefixo da URL
-    const pathParts = location.pathname.split("/").filter(Boolean);
-    const urlLang   = ["es", "en"].includes(pathParts[0]) ? pathParts[0] : "pt";
-
-    // Troca de idioma: navega para a mesma rota com/sem prefixo
-    const switchLang = (newLang) => {
-        const hasPrefix = ["es", "en"].includes(pathParts[0]);
-        const base = hasPrefix ? "/" + pathParts.slice(1).join("/") : location.pathname;
-        const cleanBase = base || "/";
-        i18n.changeLanguage(newLang === "pt" ? "pt-BR" : newLang);
-        navigate(newLang === "pt" ? cleanBase : "/" + newLang + (cleanBase === "/" ? "" : cleanBase));
-    };
-
     // isActive e isHeroPage ignoram o prefixo de idioma
-    const cleanPath = location.pathname.replace(/^\/(es|en)(\/|$)/, "/");
-    const isActive  = (path) =>
+    const pathParts  = location.pathname.split("/").filter(Boolean);
+    const urlLang    = ["es", "en"].includes(pathParts[0]) ? pathParts[0] : "pt";
+    const langPrefix = urlLang === "pt" ? "" : `/${urlLang}`;
+    const cleanPath  = location.pathname.replace(/^\/(es|en)(\/|$)/, "/");
+    const isActive   = (path) =>
         path === "/" ? cleanPath === "/" : cleanPath.startsWith(path);
 
     const isHeroPage = cleanPath === "/";
@@ -105,7 +63,7 @@ export default function Navbar() {
                 <div className="nav-bar">
 
                     {/* ── Logo ── */}
-                    <Link to="/" className="nav-logo">
+                    <Link to={langPrefix || "/"} className="nav-logo">
                         <img src="/logo-icon.png" alt="Rota 4 Mundos" />
                         <div style={{ lineHeight: 1.1 }}>
                             <span className="nav-logo-title">Rota 4 Mundos</span>
@@ -120,7 +78,7 @@ export default function Navbar() {
                             return (
                                 <Link
                                     key={link.to}
-                                    to={link.to}
+                                    to={`${langPrefix}${link.to}`}
                                     style={{
                                         padding: "7px 14px",
                                         borderRadius: "8px",
@@ -155,7 +113,6 @@ export default function Navbar() {
                         })}
 
                         <div style={{ marginLeft: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
-                            <LangSwitcher current={urlLang} onSwitch={switchLang} />
                             {isAuthenticated ? (
                                 <>
                                     {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
@@ -167,6 +124,18 @@ export default function Navbar() {
                                             border: "1px solid rgba(42,157,143,0.3)",
                                         }}>
                                             Admin
+                                        </Link>
+                                    )}
+                                    {user?.role === "LEITOR" && (
+                                        <Link to="/minha-conta" style={{
+                                            display: "flex", alignItems: "center", gap: "6px",
+                                            padding: "7px 14px", borderRadius: "8px",
+                                            fontSize: "13px", fontWeight: 600,
+                                            fontFamily: "Inter, sans-serif",
+                                            color: "#F4A261", textDecoration: "none",
+                                            border: "1px solid rgba(244,162,97,0.3)",
+                                        }}>
+                                            <PenLine size={13} /> Minha Conta
                                         </Link>
                                     )}
                                     <button onClick={logout} style={{
@@ -182,16 +151,20 @@ export default function Navbar() {
                                     </button>
                                 </>
                             ) : (
-                                <Link to="/login" style={{
-                                    display: "flex", alignItems: "center", gap: "6px",
-                                    padding: "8px 18px", borderRadius: "10px",
-                                    fontSize: "13px", fontWeight: 700,
-                                    fontFamily: "Inter, sans-serif",
-                                    color: "#061B33", textDecoration: "none",
-                                    background: "linear-gradient(135deg, #F4A261, #E9C46A)",
-                                }}>
-                                    <User size={13} /> {t("nav.login")}
-                                </Link>
+                                <button
+                                    onClick={() => setShowColabModal(true)}
+                                    style={{
+                                        display: "flex", alignItems: "center", gap: "6px",
+                                        padding: "8px 18px", borderRadius: "10px",
+                                        fontSize: "13px", fontWeight: 700,
+                                        fontFamily: "Inter, sans-serif",
+                                        color: "#061B33",
+                                        background: "linear-gradient(135deg, #F4A261, #E9C46A)",
+                                        border: "none", cursor: "pointer",
+                                    }}
+                                >
+                                    <PenLine size={13} /> Colaborar
+                                </button>
                             )}
                         </div>
                     </div>
@@ -229,7 +202,7 @@ export default function Navbar() {
                                 return (
                                     <Link
                                         key={link.to}
-                                        to={link.to}
+                                        to={`${langPrefix}${link.to}`}
                                         onClick={() => setIsMobileOpen(false)}
                                         style={{
                                             padding: "14px 16px",
@@ -251,39 +224,56 @@ export default function Navbar() {
                                 );
                             })}
 
-                            <div style={{ paddingTop: "4px" }}>
-                                <LangSwitcher current={urlLang} onSwitch={switchLang} style={{ width: "100%", justifyContent: "center", borderRadius: "10px", padding: "6px" }} />
-                            </div>
-                            <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", marginTop: "10px", paddingTop: "12px" }}>
+                            <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", marginTop: "10px", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
                                 {isAuthenticated ? (
-                                    <button onClick={logout} style={{
-                                        display: "flex", alignItems: "center", gap: "8px",
-                                        width: "100%",
-                                        padding: "14px 16px", borderRadius: "10px",
-                                        fontSize: "15px", color: "rgba(255,255,255,0.65)",
-                                        fontFamily: "Inter, sans-serif",
-                                        background: "none", border: "none",
-                                        cursor: "pointer", textAlign: "left",
-                                    }}>
-                                        <LogOut size={16} /> {t("nav.logout")}
-                                    </button>
+                                    <>
+                                        {user?.role === "LEITOR" && (
+                                            <Link to="/minha-conta" onClick={() => setIsMobileOpen(false)} style={{
+                                                display: "flex", alignItems: "center", gap: "8px",
+                                                padding: "14px 16px", borderRadius: "10px",
+                                                fontSize: "15px", fontWeight: 600,
+                                                fontFamily: "Inter, sans-serif",
+                                                color: "#F4A261", textDecoration: "none",
+                                                background: "rgba(244,162,97,0.08)",
+                                                border: "1px solid rgba(244,162,97,0.2)",
+                                            }}>
+                                                <PenLine size={16} /> Minha Conta
+                                            </Link>
+                                        )}
+                                        <button onClick={logout} style={{
+                                            display: "flex", alignItems: "center", gap: "8px",
+                                            width: "100%", padding: "14px 16px", borderRadius: "10px",
+                                            fontSize: "15px", color: "rgba(255,255,255,0.65)",
+                                            fontFamily: "Inter, sans-serif",
+                                            background: "none", border: "none",
+                                            cursor: "pointer", textAlign: "left",
+                                        }}>
+                                            <LogOut size={16} /> {t("nav.logout")}
+                                        </button>
+                                    </>
                                 ) : (
-                                    <Link to="/login" onClick={() => setIsMobileOpen(false)} style={{
-                                        display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                                        padding: "14px", borderRadius: "12px",
-                                        fontSize: "15px", fontWeight: 700,
-                                        fontFamily: "Inter, sans-serif",
-                                        color: "#061B33", textDecoration: "none",
-                                        background: "linear-gradient(135deg, #F4A261, #E9C46A)",
-                                    }}>
-                                        <User size={16} /> {t("nav.login")}
-                                    </Link>
+                                    <button
+                                        onClick={() => { setIsMobileOpen(false); setShowColabModal(true); }}
+                                        style={{
+                                            display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                                            width: "100%", padding: "14px", borderRadius: "12px",
+                                            fontSize: "15px", fontWeight: 700,
+                                            fontFamily: "Inter, sans-serif",
+                                            color: "#061B33",
+                                            background: "linear-gradient(135deg, #F4A261, #E9C46A)",
+                                            border: "none", cursor: "pointer",
+                                        }}
+                                    >
+                                        <PenLine size={16} /> Colaborar
+                                    </button>
                                 )}
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {showColabModal && <ColaboradorModal onClose={() => setShowColabModal(false)} />}
 
             <style>{`
                 .nav-bar {

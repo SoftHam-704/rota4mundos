@@ -218,7 +218,7 @@ export default function MejillonesPage() {
                 name={{ first: "Mejillones", second: "" }}
                 tagline="O encerramento simbolico da travessia continental — porto artesanal, camanchaca e o por do sol mais emocionante do Pacifico."
                 scene="pacifico"
-                image="/cities/mejillones.png"
+                image="/cities/mejillones.jpg"
                 accentColor="#0891b2"
                 stats={[
                     { label: "Habitantes (estimativa)", value: 12000 },
@@ -372,7 +372,7 @@ export default function MejillonesPage() {
 
                         <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
                             style={{ position: "relative", aspectRatio: "4/5", borderRadius: "24px", overflow: "hidden", border: "1px solid rgba(8,145,178,0.2)" }}>
-                            <img src="/cities/mejillones.png" alt="Porto de Mejillones"
+                            <img src="/cities/mejillones.jpg" alt="Porto de Mejillones"
                                 style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
                             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,20,40,0.65) 0%, transparent 50%)" }} />
                             <div style={{ position: "absolute", bottom: "24px", left: "24px", right: "24px" }}>

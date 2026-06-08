@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from "../contexts/LanguageContext.jsx";
 import {
     Globe, Mail, MapPin, ArrowUpRight,
     Instagram, Facebook, Youtube, Linkedin,
@@ -34,7 +34,7 @@ const NAV_PORTAL = [
 const SOCIALS = [
     { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/rota4mundos" },
     { icon: Youtube,   label: "YouTube",   href: "https://www.youtube.com/@Rota4Mundos" },
-    { icon: Facebook,  label: "Facebook",  href: "#" },
+    { icon: Facebook,  label: "Facebook",  href: "https://www.facebook.com/share/1D4vYFgbpv/" },
     { icon: Linkedin,  label: "LinkedIn",  href: "#" },
 ];
 
@@ -86,7 +86,7 @@ function RouteLineSVG() {
 }
 
 export default function Footer() {
-    const { t } = useTranslation();
+    const { t } = useLanguage();
     const year = new Date().getFullYear();
 
     return (

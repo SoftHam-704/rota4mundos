@@ -272,7 +272,7 @@ export default function BonitoPage() {
                 name={{ first: "Bonito", second: "" }}
                 tagline="Rios cristalinos de 40 metros de visibilidade — onde a lei de 1997 protege o que o turismo poderia ter destruido."
                 scene="rio-cristalino"
-                image="/cities/bonito.png"
+                image="/cities/bonito.jpg"
                 accentColor="#22d3ee"
                 stats={[
                     { label: "Metros de visibilidade", value: 40, suffix: " m" },

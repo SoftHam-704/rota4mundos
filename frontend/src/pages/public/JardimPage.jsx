@@ -226,7 +226,7 @@ export default function JardimPage() {
                 name={{ first: "Jardim", second: "" }}
                 tagline="Serra da Bodoquena, lagoas azul-esmeralda e a porta natural entre o Cerrado e o Pantanal."
                 scene="pantanal"
-                image="/cities/jardim.png"
+                image="/cities/jardim.jpg"
                 accentColor="#86efac"
                 stats={[
                     { label: "Habitantes (Censo 2022)", value: 27245 },
