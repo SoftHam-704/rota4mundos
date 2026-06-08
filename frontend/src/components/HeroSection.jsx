@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, Play, Pause, Headphones, Heart } from "lucide-react";
+import { ArrowRight, ChevronDown, Play, Pause, Headphones, Heart, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext.jsx";
 import CountUp from "react-countup";
@@ -152,7 +152,7 @@ function PodcastPlayer({ floating = false, onClose }) {
                         cursor: "pointer", flexShrink: 0,
                     }}
                 >
-                    <XIcon size={12} />
+                    <X size={12} />
                 </button>
             )}
         </div>
