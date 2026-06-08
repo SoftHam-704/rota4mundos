@@ -11,17 +11,16 @@ const CARD_BASE = {
     chile:     "cards/card_chile",
 };
 
-function CardImage({ id, lang, style }) {
-    const base    = CARD_BASE[id];
-    const primary = lang !== "pt" ? `/${base}_${lang}.jpg` : `/${base}.jpg`;
-    const fallback = `/${base}.jpg`;
+function CardImage({ id, style, loading = "lazy" }) {
+    const base = CARD_BASE[id];
     return (
         <img
-            src={primary}
-            onError={e => { if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback; }}
+            src={`/${base}.webp`}
             alt=""
             style={style}
             draggable={false}
+            loading={loading}
+            decoding="async"
         />
     );
 }
@@ -194,8 +193,7 @@ function MobileGrid({ onPick, lang }) {
                         type="button"
                         onClick={() => onPick(c.id)}
                         initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-40px" }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: i * 0.08 }}
                         style={{
                             position: "relative",
@@ -208,12 +206,11 @@ function MobileGrid({ onPick, lang }) {
                             WebkitTapHighlightColor: "transparent",
                         }}
                     >
-                        <CardImage id={c.id} lang={lang} style={{
+                        <CardImage id={c.id} loading={i === 0 ? "eager" : "lazy"} style={{
                             position: "absolute", inset: 0,
                             width: "100%", height: "100%",
                             objectFit: "cover",
                             filter: "brightness(0.55) saturate(1.1)",
-                            loading: "lazy",
                         }} />
                         <div style={{
                             position: "absolute", inset: 0,
@@ -316,7 +313,7 @@ function CountryModal({ country, isMobile, lang, onClose }) {
                     userSelect: "none",
                 }}
             >
-                <CardImage id={country.id} lang={lang} style={{
+                <CardImage id={country.id} loading="eager" style={{
                     position: "absolute", inset: 0, width: "100%", height: "100%",
                     objectFit: "cover", objectPosition: "center",
                 }} />
