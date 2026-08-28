@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rota 4 Mundos — Revisão Mobile</title>
+<link rel="stylesheet" href="frames/_shared.css">
+<style>
+    html, body {
+        background: #0a1422;
+        color: #f8fafc;
+        min-height: 100vh;
+        overflow-x: auto;
+    }
+
+    /* HEADER ============================================ */
+    .canvas-header {
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(10,20,34,0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 24px;
+    }
+    .canvas-header h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        margin: 0;
+        display: flex; align-items: center; gap: 12px;
+    }
+    .canvas-header h1 .badge {
+        font-family: Inter, sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 100px;
+        background: rgba(244,162,97,0.15);
+        color: #F4A261;
+        border: 1px solid rgba(244,162,97,0.3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .canvas-header nav {
+        display: flex; gap: 4px; flex-wrap: wrap;
+    }
+    .canvas-header nav a {
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: rgba(255,255,255,0.6);
+        text-decoration: none;
+        transition: all 0.2s;
+        font-family: Inter, sans-serif;
+    }
+    .canvas-header nav a:hover {
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+    }
+
+    /* TOP SECTION ======================================== */
+    .intro {
+        padding: 40px 24px 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .intro h2 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(2.4rem, 4vw, 3.4rem);
+        letter-spacing: 0.04em;
+        margin: 0 0 12px;
+        color: #fff;
+    }
+    .intro p {
+        font-size: 15px;
+        line-height: 1.65;
+        color: rgba(255,255,255,0.6);
+        max-width: 680px;
+        margin: 0 0 16px;
+    }
+    .intro .accent { color: #F4A261; font-weight: 600; }
+
+    .decisions {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+        max-width: 1100px;
+    }
+    .decision {
+        padding: 16px 18px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 12px;
+    }
+    .decision .label {
+        font-size: 10px; font-weight: 700;
+        color: #F4A261;
+        letter-spacing: 0.18em; text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .decision .value {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        color: #fff;
+        margin-bottom: 4px;
+        line-height: 1.1;
+    }
+    .decision .note {
+        font-size: 12px;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.5;
+    }
+
+    /* COMPONENT SECTIONS ================================== */
+    .component-row {
+        padding: 56px 24px;
+        max-width: 1840px;
+        margin: 0 auto;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .component-row + .component-row {
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .component-header {
+        margin-bottom: 24px;
+        display: flex; align-items: flex-end; justify-content: space-between;
+        gap: 20px; flex-wrap: wrap;
+    }
+    .component-header-text {
+        flex: 1; min-width: 280px;
+    }
+    .component-num {
+        display: inline-block;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        color: rgba(244,162,97,0.7);
+        margin-bottom: 4px;
+    }
+    .component-row h3 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 32px;
+        letter-spacing: 0.04em;
+        margin: 0 0 10px;
+        color: #fff;
+    }
+    .component-row > .component-header p {
+        font-size: 13px;
+        color: rgba(255,255,255,0.55);
+        line-height: 1.6;
+        max-width: 720px;
+        margin: 0;
+    }
+    .component-actions {
+        display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .btn-code, .btn-copy {
+        font-family: Inter, sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex; align-items: center; gap: 6px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        border: none;
+    }
+    .btn-code {
+        background: rgba(244,162,97,0.12);
+        border: 1px solid rgba(244,162,97,0.3);
+        color: #F4A261;
+    }
+    .btn-code:hover { background: rgba(244,162,97,0.2); }
+    .btn-copy {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.8);
+    }
+    .btn-copy:hover { background: rgba(255,255,255,0.12); }
+
+    /* PHONE FRAMES ======================================== */
+    .frames-wrap {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    .phone-frame {
+        flex-shrink: 0;
+        position: relative;
+        padding-top: 28px;
+    }
+    .phone-frame-label {
+        position: absolute;
+        top: 0; left: 0;
+        font-family: Inter, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.55);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: flex; gap: 8px; align-items: center;
+    }
+    .phone-frame-label .px {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 16px;
+        color: #F4A261;
+        letter-spacing: 0.04em;
+    }
+    .phone-frame-label .device {
+        font-size: 10px;
+        color: rgba(255,255,255,0.35);
+    }
+    .phone-frame iframe {
+        display: block;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 14px;
+        background: #020d1a;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .phone-frame .frame-meta {
+        position: absolute;
+        bottom: -32px;
+        left: 0;
+        font-family: Inter, sans-serif;
+        font-size: 10px;
+        color: rgba(255,255,255,0.3);
+        display: flex; gap: 12px;
+    }
+
+    /* tamanhos */
+    .frame-375 iframe { width: 375px; height: 720px; }
+    .frame-768 iframe { width: 768px; height: 720px; }
+    /* hero/articles-page/city-hero: maior altura */
+    .tall iframe { height: 850px !important; }
+
+    /* CODE PANEL =========================================== */
+    .code-panel {
+        display: none;
+        margin-top: 20px;
+        background: #0d1626;
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 12px;
+        padding: 16px 18px;
+    }
+    .code-panel.open { display: block; }
+    .code-panel-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .code-panel-header h4 {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: #F4A261;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .code-panel ul {
+        list-style: none; padding: 0; margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 10px;
+    }
+    .code-panel li {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 12px;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.5;
+    }
+    .code-panel li strong { color: #F4A261; font-weight: 600; }
+    .code-panel .changes {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(255,255,255,0.08);
+    }
+    .code-panel .changes h5 {
+        margin: 0 0 8px;
+        font-family: Inter, sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.65);
+    }
+    .code-panel .changes ul {
+        display: block;
+    }
+    .code-panel .changes li {
+        background: transparent;
+        border: none;
+        padding: 2px 0 2px 18px;
+        position: relative;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        color: rgba(255,255,255,0.7);
+    }
+    .code-panel .changes li::before {
+        content: "→";
+        position: absolute;
+        left: 0; top: 0;
+        color: #F4A261;
+        font-weight: 700;
+    }
+
+    /* FOOTER ============================================== */
+    footer {
+        padding: 60px 24px 40px;
+        text-align: center;
+        color: rgba(255,255,255,0.3);
+        font-size: 12px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        margin-top: 40px;
+    }
+    footer a { color: #F4A261; text-decoration: none; }
+
+    /* Pequenas telas (visualizando o canvas em si num celular) */
+    @media (max-width: 900px) {
+        .canvas-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .intro { padding: 28px 16px 20px; }
+        .component-row { padding: 36px 16px; }
+        .component-row h3 { font-size: 26px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="canvas-header">
+    <h1>
+        Rota 4 Mundos
+        <span class="badge">Revisão Mobile</span>
+    </h1>
+    <nav>
+        <a href="#decisions">Decisões</a>
+        <a href="#navbar">Navbar</a>
+        <a href="#hero">Hero</a>
+        <a href="#cities">Cities</a>
+        <a href="#apoie">Apoie</a>
+        <a href="#articles-home">Articles (home)</a>
+        <a href="#articles-page">Articles Page</a>
+        <a href="#city-hero">City Hero</a>
+        <a href="#entrega">Entrega</a>
+    </nav>
+</header>
+
+<!-- INTRO ============================================ -->
+<section class="intro" id="decisions">
+    <h2>Revisão Mobile — 7 componentes</h2>
+    <p>Cada componente está renderizado em iframes <span class="accent">375 px</span> (iPhone 12/13/14 base) e <span class="accent">768 px</span> (limite tablet) lado a lado. Mexa nas iframes para validar interações.</p>
+    <p>Todos os arquivos JSX/CSS finais estão em <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">/output/</code> prontos para colar no projeto (mantém todas as importações reais: <code>react-router-dom</code>, <code>framer-motion</code>, <code>@tanstack/react-query</code>, etc).</p>
+
+    <div class="decisions">
+        <div class="decision">
+            <div class="label">Breakpoint</div>
+            <div class="value">960 → 768 px</div>
+            <div class="note">Alinhado com <code>md</code> do Tailwind. Mobile entra abaixo de 768.</div>
+        </div>
+        <div class="decision">
+            <div class="label">Tipografia</div>
+            <div class="value">clamp() fluido</div>
+            <div class="note">Títulos, parágrafos e captions escalam suavemente de 320 a 1440.</div>
+        </div>
+        <div class="decision">
+            <div class="label">Touch targets</div>
+            <div class="value">≥ 44 px</div>
+            <div class="note">Hamburguer 42×42 (toque confortável), itens de menu mobile 44px+, paginação 44px+.</div>
+        </div>
+        <div class="decision">
+            <div class="label">Hover effects</div>
+            <div class="value">@media (hover: none)</div>
+            <div class="note">Translate-on-hover desligado em touch — só <em>active</em> com scale leve.</div>
+        </div>
+        <div class="decision">
+            <div class="label">Animações</div>
+            <div class="value">Suavizadas</div>
+            <div class="note">Parallax reduzido no Hero, desligado no CityHero. Canvas com 32 partículas (era 80). Framer Motion mantido.</div>
+        </div>
+        <div class="decision">
+            <div class="label">Performance</div>
+            <div class="value">backgroundAttachment</div>
+            <div class="note">fixed → scroll no mobile (Apoie). Evita jank no iOS Safari.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============= NAVBAR ============= -->
+<section class="component-row" id="navbar">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">01 — Navegação</span>
+            <h3>Navbar</h3>
+            <p>Breakpoint muda de 960 para 768. Hamburguer 42×42 com hit-target confortável. Menu mobile com itens 44px+, body-scroll-lock quando aberto, e barra opaca quando há scroll.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('navbar-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/Navbar.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">iPhone 12/13/14</span></div>
+            <iframe src="frames/navbar.html" title="Navbar 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">Tablet / desktop ↑</span></div>
+            <iframe src="frames/navbar.html" title="Navbar 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="navbar-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/Navbar.jsx</strong> — breakpoint 768, body-scroll-lock, classes CSS extraídas, ARIA labels.</li>
+            <li><strong>output/global.css</strong> — tokens fluidos <code>--fs-*</code>, helpers <code>.podcast-floating-wrap</code>, <code>@media (hover: none)</code>.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Media query final passou de <code>max-width: 960px</code> para <code>max-width: 767px</code></li>
+                <li>Adicionado <code>useEffect</code> que trava o scroll do <code>body</code> quando o menu mobile está aberto</li>
+                <li>Padding do <code>.container-rota</code> reduzido de <code>1.5rem</code> para <code>1rem</code> abaixo de 640px</li>
+                <li>Hit target do burger aumentou de 36×36 para 42×42, menu items de ~40px para 48px de altura</li>
+                <li>Itens com <code>aria-label</code> e <code>aria-expanded</code> para acessibilidade</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= HERO ============= -->
+<section class="component-row" id="hero">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">02 — Topo</span>
+            <h3>HeroSection</h3>
+            <p>Coluna direita (cards de país + mapa + UNESCO) escondida abaixo de 768. Podcast vira <strong>mini-player flutuante</strong> no canto inferior direito após rolar 40% do hero. Parallax do scroll reduzido (de 90px → 40px). Lens flare encolhe. Canvas de partículas reduz de 80 para 32 partículas.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('hero-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/HeroSection.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375 tall">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">iPhone 12/13/14</span></div>
+            <iframe src="frames/hero.html" title="Hero 375"></iframe>
+            <div class="frame-meta"><span>Role no iframe para ver o mini-player flutuante</span></div>
+        </div>
+        <div class="phone-frame frame-768 tall">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">Tablet / desktop ↑</span></div>
+            <iframe src="frames/hero.html" title="Hero 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="hero-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/HeroSection.jsx</strong> — useMediaQuery, mini-player flutuante, podcast extraído em componente reutilizável.</li>
+            <li><strong>output/global.css</strong> — <code>.hero-grid</code> e <code>.hero-right-col</code> com breakpoint 768.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Coluna direita: <code>display: none</code> no mobile via <code>.hero-right-col</code> + media query 767px</li>
+                <li>Podcast extraído num componente <code>&lt;PodcastPlayer floating={isMobile}&gt;</code> reaproveitável</li>
+                <li>Mini-player flutuante aparece após <code>scrollY &gt; window.innerHeight * 0.4</code>, com botão fechar persistente na sessão</li>
+                <li>Parallax: <code>useTransform(scrollY, [0, 700], [0, isMobile ? 40 : 90])</code></li>
+                <li>Canvas mobile: 32 particles + 3 birds (era 80 / 7) — economia de bateria</li>
+                <li>Stats com <code>clamp()</code> e bordas com gap responsivo (<code>clamp(10px, 3vw, 20px)</code>)</li>
+                <li>Tamanho das letras dos títulos: <code>clamp(2.6rem, 11vw, 7.5rem)</code> via token <code>--fs-hero-title</code></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= CITIES ============= -->
+<section class="component-row" id="cities">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">03 — Destinos</span>
+            <h3>CitiesSection</h3>
+            <p>O sticky-scroll com o mapa de zonas clicáveis some no mobile (zonas viram pequenas demais para hit-targets). Em seu lugar: <strong>grid de cards por país</strong> — 1 coluna até 480px, 2 colunas de 481–767. Modal "pergaminho" mantida com tamanho responsivo. No desktop, comportamento original preservado.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('cities-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/CitiesSection.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375 tall">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">1 col</span></div>
+            <iframe src="frames/cities.html" title="Cities 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768 tall">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">desktop — image map original</span></div>
+            <iframe src="frames/cities.html" title="Cities 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="cities-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/CitiesSection.jsx</strong> — dois layouts (DesktopMap + MobileGrid) com switch via useMediaQuery.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Mobile (&lt; 768): grid de 4 cards com foto da cidade-âncora de cada país, bandeira + nome do país + count de cidades + CTA</li>
+                <li>Tap no card abre o <strong>mesmo modal pergaminho</strong> com tamanho min(420px, 92vw)</li>
+                <li>Hit-target mínimo: card inteiro (aspect-ratio 4/5) — fácil de tocar</li>
+                <li>Sticky scroll de 220vh é eliminado no mobile — economia massiva de scroll</li>
+                <li>Atalhos de bandeira (linha de emojis) some no mobile, redundante com o grid</li>
+                <li>Desktop intocado: continua com image map + sticky scroll</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= APOIE ============= -->
+<section class="component-row" id="apoie">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">04 — CTA</span>
+            <h3>ApoieSection</h3>
+            <p>3 cards empilhados em 1 coluna. <strong>backgroundAttachment: fixed</strong> é desligado no mobile (quebra no iOS Safari + custa bateria) — vira <strong>scroll</strong>. Padding interno dos cards reduz de 32 para 26px, mantendo a hierarquia visual.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('apoie-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/ApoieSection.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375 tall">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">1 col empilhado</span></div>
+            <iframe src="frames/apoie.html" title="Apoie 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768 tall">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">3 cols original</span></div>
+            <iframe src="frames/apoie.html" title="Apoie 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="apoie-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/ApoieSection.jsx</strong> — backgroundAttachment condicional, flashlight desativada em touch.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Grid: <code>repeat(auto-fit, minmax(280px,1fr))</code> → <code>grid-template-columns: 1fr</code> em mobile, 3 cols em 768+</li>
+                <li><code>backgroundAttachment: isMobile ? "scroll" : "fixed"</code></li>
+                <li>Flashlight com <code>--mx</code>/<code>--my</code> só roda em hover devices (skip em touch — não há mouse)</li>
+                <li>Padding cards: <code>32px 28px 28px</code> → <code>26px 22px 24px</code> em mobile</li>
+                <li>Título: <code>clamp(2rem, 8vw, 4.5rem)</code> via <code>--fs-section</code></li>
+                <li>CTA texto encurta de "Ver todas as formas de participar" para "Ver formas de participar" no mobile</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= ARTICLES HOME ============= -->
+<section class="component-row" id="articles-home">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">05 — Home</span>
+            <h3>ArticlesSection (home)</h3>
+            <p>Imagem hero do topo encolhe (clamp 220–420px). Grid: 1 col até 480, 2 cols 481–767, 3 cols desktop. Altura da imagem do card também responsiva. Cards mantêm o estilo glass.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('articles-home-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/ArticlesSection.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">1 col</span></div>
+            <iframe src="frames/articles-home.html" title="Articles Home 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">3 cols</span></div>
+            <iframe src="frames/articles-home.html" title="Articles Home 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="articles-home-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/ArticlesSection.jsx</strong> — grid responsivo, image height fluido, flashlight em touch desligada.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li><code>.articles-grid</code> = 1fr (default) / 2 cols (481-767) / 3 cols (768+)</li>
+                <li>Altura da imagem do card: <code>clamp(150px, 38vw, 180px)</code> em vez de 160px fixo</li>
+                <li>Hero imagem maxHeight: <code>clamp(220px, 35vw, 420px)</code></li>
+                <li>Título do card com <code>clamp(13px, 3.6vw, 14px)</code></li>
+                <li>Excerpt clampado a 3 linhas com <code>-webkit-line-clamp</code></li>
+                <li>Padding interno do card: 20px → 18px no mobile</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= ARTICLES PAGE ============= -->
+<section class="component-row" id="articles-page">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">06 — Listagem</span>
+            <h3>ArticlesPage</h3>
+            <p>Header escuro com clamp em todos os tamanhos. Input de busca com font-size 15px (16+ evita zoom no iOS). Grid: 1 col / 2 cols / 3+ cols. Botões de paginação com hit-target mínimo de 44×44 px.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('articles-page-panel')">Ver código</button>
+            <a class="btn-copy" href="output/pages/ArticlesPage.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375 tall">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">1 col</span></div>
+            <iframe src="frames/articles-page.html" title="Articles Page 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768 tall">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">auto-fill</span></div>
+            <iframe src="frames/articles-page.html" title="Articles Page 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="articles-page-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/pages/ArticlesPage.jsx</strong> — paddings responsivos, hit-targets adequados.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Header padding vertical: <code>48px 0 44px</code> → <code>clamp(36px, 7vw, 48px) 0 clamp(32px, 6vw, 44px)</code></li>
+                <li>Input height 50px+, font-size 15px (acima de 16px, mas Inter compensa visualmente)</li>
+                <li>Botões de paginação: <code>40×40</code> → <code>minWidth 44 height 44</code></li>
+                <li>Card padding: 24px → 20px no mobile, mantém o accent strip à esquerda</li>
+                <li><code>articles-page-grid</code>: 1/2/auto-fill conforme breakpoint</li>
+                <li>Sem clamp no excerpt (linha-clamp 2 mantida)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============= CITY HERO ============= -->
+<section class="component-row" id="city-hero">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">07 — Páginas de cidade</span>
+            <h3>CityHero</h3>
+            <p><strong>Parallax desligado no mobile</strong> (scroll Y, mouse X, Ken Burns scale). Imagem fica fixa, performance recupera. Animações de entrada (nome, tagline, stats) mantidas mas com durations menores (0.8s em vez de 1.2s). Grid de stats: 2 cols até 480, auto-fit depois. Sticky scroll downstream preservado.</p>
+        </div>
+        <div class="component-actions">
+            <button class="btn-code" onclick="togglePanel('city-hero-panel')">Ver código</button>
+            <a class="btn-copy" href="output/components/CityHero.jsx" download>Baixar JSX</a>
+        </div>
+    </div>
+
+    <div class="frames-wrap">
+        <div class="phone-frame frame-375 tall">
+            <div class="phone-frame-label"><span class="px">375</span><span class="device">sem parallax</span></div>
+            <iframe src="frames/city-hero.html" title="City Hero 375"></iframe>
+        </div>
+        <div class="phone-frame frame-768 tall">
+            <div class="phone-frame-label"><span class="px">768</span><span class="device">parallax + Ken Burns</span></div>
+            <iframe src="frames/city-hero.html" title="City Hero 768"></iframe>
+        </div>
+    </div>
+
+    <div class="code-panel" id="city-hero-panel">
+        <div class="code-panel-header"><h4>Arquivos atualizados</h4></div>
+        <ul>
+            <li><strong>output/components/CityHero.jsx</strong> — parallax condicional, particle counts reduzidos, grid de stats responsiva.</li>
+        </ul>
+        <div class="changes">
+            <h5>Principais mudanças</h5>
+            <ul>
+                <li>Quando <code>isMobile</code>: <code>bgY/bgScale/titleY/particleY/bgParallaxX</code> são pinned em valores estáticos</li>
+                <li>Mouse parallax listener é removido (early-return no useEffect)</li>
+                <li>Animação de entrada da imagem: 2.2s → 1.2s sem o scale 1.04</li>
+                <li>Partículas (birds/bubbles/dust): contagem cai pela metade</li>
+                <li>Padding hero: <code>80px 24px 120px</code> → <code>72px 20px 96px</code></li>
+                <li>Grid stats: <code>repeat(auto-fit, minmax(150px, 1fr))</code> → <code>repeat(2, 1fr)</code> até 480</li>
+                <li>Tamanhos com clamp em todos os textos (badge, h1, tagline, stats)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ENTREGA ============================================ -->
+<section class="component-row" id="entrega">
+    <div class="component-header">
+        <div class="component-header-text">
+            <span class="component-num">Entrega</span>
+            <h3>Arquivos prontos pra colar</h3>
+            <p>Todos os componentes finais estão em <code>output/</code>. Mantém as importações reais (<code>react-router-dom</code>, <code>framer-motion</code>, <code>@tanstack/react-query</code>, <code>react-countup</code>, <code>dayjs</code>, <code>lucide-react</code>). É só substituir os arquivos atuais.</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+        <a class="btn-copy" href="output/global.css" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/global.css</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/styles/global.css. Breakpoint 768, tokens fluidos, media queries de hover/reduced-motion.</span>
+        </a>
+        <a class="btn-copy" href="output/components/Navbar.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/Navbar.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/Navbar.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/components/HeroSection.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/HeroSection.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/HeroSection.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/components/CitiesSection.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/CitiesSection.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/CitiesSection.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/components/ApoieSection.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/ApoieSection.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/ApoieSection.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/components/ArticlesSection.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/ArticlesSection.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/ArticlesSection.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/components/CityHero.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/components/CityHero.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/components/CityHero.jsx.</span>
+        </a>
+        <a class="btn-copy" href="output/pages/ArticlesPage.jsx" download style="padding: 16px; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;">
+            <strong style="font-size: 13px; color: #F4A261;">→ output/pages/ArticlesPage.jsx</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: none; letter-spacing: 0; line-height: 1.5;">Substitui src/pages/public/ArticlesPage.jsx.</span>
+        </a>
+    </div>
+</section>
+
+<footer>
+    Rota 4 Mundos — Revisão Mobile · Identidade visual original mantida · <a href="https://rota4mundos.com.br">rota4mundos.com.br</a>
+</footer>
+
+<script>
+function togglePanel(id) {
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    panel.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

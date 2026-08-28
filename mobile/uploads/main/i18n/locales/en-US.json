@@ -1,0 +1,55 @@
+{
+    "nav": {
+        "home": "Home",
+        "cities": "Cities",
+        "news": "News",
+        "about": "About",
+        "invest": "Invest",
+        "admin": "Admin",
+        "login": "Login",
+        "logout": "Logout"
+    },
+    "hero": {
+        "title": "The Bridge between the Atlantic and Pacific",
+        "subtitle": "Bioceanic Route — 4 Countries, One Story",
+        "description": "From the Pantanal border of Mato Grosso do Sul to the Chilean bays of the Pacific, the Bioceanic Route crosses indigenous peoples, Mennonite heritage, Andean folklore and landscapes of rare beauty across more than 3,500 km of living history and identity.",
+        "ctaPrimary": "Explore the Cities",
+        "ctaSecondary": "Discover the Route",
+        "stats": {
+            "distance": "3,500 km",
+            "countries": "4 Countries",
+            "cities": "12 Cities",
+            "time": "UNESCO"
+        }
+    },
+    "cities": {
+        "title": "Route Cities",
+        "subtitle": "Strategic development points",
+        "sectionTitle": "CITIES THAT",
+        "sectionTitleHighlight": "TELL STORIES",
+        "sectionDescription": "From the Pantanal to the Pacific — Brazil, Paraguay, Argentina and Chile. Each stop on the route carries a story the world doesn't know yet.",
+        "routeIndicator": "Atlantic → Pacific",
+        "viewAll": "See all route cities",
+        "explore": "Explore",
+        "population": "Population",
+        "economy": "Economy",
+        "countries": {
+            "brazil": "Brazil",
+            "paraguay": "Paraguay",
+            "argentina": "Argentina",
+            "chile": "Chile"
+        }
+    },
+    "newsletter": {
+        "title": "Stay Updated",
+        "description": "Receive the latest news about investments and opportunities on the Bioceanic Route.",
+        "placeholder": "Your best email",
+        "button": "Subscribe",
+        "success": "Subscription successful!"
+    },
+    "footer": {
+        "rights": "All rights reserved.",
+        "contact": "Contact",
+        "partners": "Partners"
+    }
+}

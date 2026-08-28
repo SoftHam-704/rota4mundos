@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apoie — Mobile</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+    body {
+        background: #020d1a;
+        min-height: 100vh;
+    }
+
+    .apoie-section {
+        position: relative; overflow: hidden;
+        padding: 64px 0;
+        background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&h=1080&fit=crop&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+    }
+    @media (min-width: 768px) {
+        .apoie-section {
+            padding: 100px 0 90px;
+            background-attachment: fixed;
+        }
+    }
+
+    .apoie-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(2,13,26,0.82) 0%, rgba(2,13,26,0.7) 50%, rgba(2,13,26,0.9) 100%);
+        pointer-events: none;
+    }
+    .apoie-fade-top, .apoie-fade-bottom {
+        position: absolute; left: 0; right: 0; height: 100px;
+        pointer-events: none;
+    }
+    .apoie-fade-top { top: 0; background: linear-gradient(to bottom, #020d1a, transparent); }
+    .apoie-fade-bottom { bottom: 0; background: linear-gradient(to top, #020d1a, transparent); }
+
+    .apoie-inner { position: relative; }
+
+    .apoie-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 0 8px;
+    }
+    @media (min-width: 768px) {
+        .apoie-header { margin-bottom: 60px; }
+    }
+    .apoie-eyebrow {
+        display: inline-block;
+        font-size: 10px; font-weight: 700;
+        color: #F4A261;
+        letter-spacing: 0.22em; text-transform: uppercase;
+        margin-bottom: 16px;
+        background: rgba(244,162,97,0.1);
+        padding: 5px 14px;
+        border-radius: 100px;
+        border: 1px solid rgba(244,162,97,0.2);
+    }
+    .apoie-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: var(--fs-section);
+        color: #fff;
+        line-height: 0.95;
+        letter-spacing: 0.04em;
+        margin: 0 0 16px;
+    }
+    .apoie-title span { color: #2A9D8F; }
+    .apoie-subtitle {
+        font-size: clamp(13px, 3.4vw, 15px);
+        color: rgba(255,255,255,0.5);
+        line-height: 1.7;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .apoie-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-items: stretch;
+        padding: 0 16px;
+    }
+    @media (min-width: 768px) {
+        .apoie-cards-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 0 24px;
+        }
+    }
+
+    .apoie-card {
+        position: relative;
+        display: flex; flex-direction: column;
+        text-decoration: none;
+        height: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.04);
+        backdrop-filter: blur(18px);
+        padding: 26px 22px 24px;
+        transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        opacity: 0; transform: translateY(20px);
+        animation: fade-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    @media (min-width: 768px) { .apoie-card { padding: 32px 28px 28px; } }
+    .apoie-card:nth-child(1) { animation-delay: 0.05s; }
+    .apoie-card:nth-child(2) { animation-delay: 0.15s; }
+    .apoie-card:nth-child(3) { animation-delay: 0.25s; }
+
+    .apoie-card-badge {
+        position: absolute; top: 14px; right: 14px;
+        font-size: 9px; font-weight: 700;
+        padding: 3px 10px; border-radius: 100px;
+        letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .apoie-card-icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+    }
+    .apoie-card-label {
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        margin-bottom: 8px; display: block;
+    }
+    .apoie-card-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(1.4rem, 5.5vw, 1.7rem);
+        color: #fff;
+        letter-spacing: 0.04em;
+        line-height: 1.05;
+        margin: 0 0 12px;
+    }
+    .apoie-card-desc {
+        font-size: clamp(12px, 3vw, 13px);
+        color: rgba(255,255,255,0.48);
+        line-height: 1.65;
+        flex: 1; margin: 0 0 20px;
+    }
+    .apoie-card-cta {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .apoie-card-stripe {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    }
+
+    .apoie-cta-wrap {
+        display: flex; justify-content: center;
+        margin-top: 32px;
+        padding: 0 16px;
+    }
+    @media (min-width: 768px) { .apoie-cta-wrap { margin-top: 48px; } }
+
+    .apoie-ver-todas {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 13px 28px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #F4A261, #E9C46A);
+        color: #061B33;
+        font-size: 11px; font-weight: 800;
+        letter-spacing: 0.1em; text-transform: uppercase;
+        text-decoration: none;
+        box-shadow: 0 8px 30px rgba(244,162,97,0.3);
+        text-align: center;
+    }
+    @media (min-width: 768px) {
+        .apoie-ver-todas { padding: 14px 36px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+const IconHeart = ({color}) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>;
+const IconBuilding = ({color}) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></svg>;
+const IconLandmark = ({color}) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>;
+const IconArrow = ({size=12}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
+
+const CARDS = [
+    { Icon: IconHeart,    label: "Apoiador",            title: "Acredite na Causa",
+      desc: "Pessoas que acreditam na integração da América do Sul e querem fazer parte dessa história.",
+      cta: "Quero apoiar", accent: "#2A9D8F", rgb: "42,157,143" },
+    { Icon: IconBuilding, label: "Patrocinador",        title: "Conecte sua Marca",
+      desc: "Hotéis, empresas de logística e operadores que querem ser protagonistas na narrativa da rota.",
+      cta: "Falar sobre patrocínio", accent: "#F4A261", rgb: "244,162,97", badge: "Mais procurado" },
+    { Icon: IconLandmark, label: "Carta de Intenções", title: "Seja Referência",
+      desc: "Prefeituras, secretarias, câmaras de comércio e entidades que querem protagonismo no corredor.",
+      cta: "Manifesto interesse", accent: "#818cf8", rgb: "129,140,248" },
+];
+
+function App() {
+    return (
+        <section className="apoie-section">
+            <div className="apoie-overlay"/>
+            <div className="apoie-fade-top"/>
+            <div className="apoie-fade-bottom"/>
+
+            <div className="apoie-inner">
+                <div className="apoie-header">
+                    <span className="apoie-eyebrow">Faça parte</span>
+                    <h2 className="apoie-title">
+                        A ROTA É FEITA<br/>
+                        DE ASFALTO.<br/>
+                        <span>ESTE PORTAL É<br/>FEITO DE PESSOAS.</span>
+                    </h2>
+                    <p className="apoie-subtitle">
+                        O maior corredor de integração da América do Sul já tem data. A janela de 2026 está aberta — falta o seu nome nele.
+                    </p>
+                </div>
+
+                <div className="apoie-cards-grid">
+                    {CARDS.map((c, i) => (
+                        <a key={i} className="apoie-card" href="#"
+                           style={{
+                               border: `1px solid rgba(${c.rgb},0.2)`,
+                           }}>
+                            {c.badge && (
+                                <span className="apoie-card-badge" style={{
+                                    color: c.accent,
+                                    background: `rgba(${c.rgb},0.15)`,
+                                    border: `1px solid rgba(${c.rgb},0.3)`,
+                                }}>{c.badge}</span>
+                            )}
+
+                            <div className="apoie-card-icon" style={{
+                                background: `rgba(${c.rgb},0.12)`,
+                                border: `1px solid rgba(${c.rgb},0.2)`,
+                            }}>
+                                <c.Icon color={c.accent}/>
+                            </div>
+
+                            <span className="apoie-card-label" style={{ color: c.accent }}>{c.label}</span>
+                            <h3 className="apoie-card-title">{c.title}</h3>
+                            <p className="apoie-card-desc">{c.desc}</p>
+                            <span className="apoie-card-cta" style={{ color: c.accent }}>
+                                {c.cta} <IconArrow/>
+                            </span>
+
+                            <div className="apoie-card-stripe" style={{
+                                background: `linear-gradient(90deg, transparent, rgba(${c.rgb},0.5), transparent)`,
+                            }}/>
+                        </a>
+                    ))}
+                </div>
+
+                <div className="apoie-cta-wrap">
+                    <a className="apoie-ver-todas" href="#">
+                        Ver formas de participar <IconArrow size={14}/>
+                    </a>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

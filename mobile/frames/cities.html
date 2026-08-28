@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cities — Mobile</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+    body { background: #080704; min-height: 100vh; }
+
+    .hint {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 11px;
+        font-style: italic;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(200,146,42,0.5);
+        padding: 32px 20px 16px;
+    }
+
+    .cities-mobile-grid {
+        display: grid;
+        grid-template-columns: 1fr;       /* 1 col até 480px */
+        gap: 14px;
+        padding: 12px 16px 40px;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+    @media (min-width: 481px) {
+        .cities-mobile-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+    }
+
+    .country-card {
+        position: relative;
+        border: none; background: none; padding: 0;
+        cursor: pointer; text-align: left;
+        overflow: hidden;
+        border-radius: 18px;
+        aspect-ratio: 4 / 5;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        -webkit-tap-highlight-color: transparent;
+        opacity: 0; transform: translateY(20px);
+        animation: fade-up 0.5s ease-out forwards;
+    }
+    .country-card:nth-child(1) { animation-delay: 0.05s; }
+    .country-card:nth-child(2) { animation-delay: 0.15s; }
+    .country-card:nth-child(3) { animation-delay: 0.25s; }
+    .country-card:nth-child(4) { animation-delay: 0.35s; }
+
+    .country-card img {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: brightness(0.55) saturate(1.1);
+    }
+    .country-overlay {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column;
+        justify-content: space-between;
+        padding: 16px;
+    }
+    .country-flag {
+        font-size: 26px;
+        line-height: 1;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+    }
+    .country-info p {
+        margin: 0;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        font-family: Inter, sans-serif;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .country-info h3 {
+        margin: 0;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(1.6rem, 6vw, 2.2rem);
+        color: #fff;
+        letter-spacing: 0.04em;
+        line-height: 0.95;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.6);
+    }
+    .country-cta {
+        display: inline-flex; align-items: center; gap: 4px;
+        margin-top: 10px;
+        font-size: 10px; font-weight: 700;
+        color: rgba(255,255,255,0.85);
+        letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+        position: fixed; inset: 0; z-index: 50;
+        background: radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.94) 100%);
+        backdrop-filter: blur(9px);
+        animation: fade-up 0.22s ease-out;
+    }
+    .modal {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scaleY(1);
+        z-index: 51;
+        width: min(420px, 92vw);
+        aspect-ratio: 4/3;
+        border-radius: 3px;
+        overflow: hidden;
+        box-shadow: 0 50px 150px rgba(0,0,0,0.95);
+        animation: modal-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        transform-origin: top center;
+    }
+    @keyframes modal-in {
+        from { opacity: 0; transform: translate(-50%, -60%) scaleY(0.05); }
+        to   { opacity: 1; transform: translate(-50%, -50%) scaleY(1); }
+    }
+    .modal img {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: center;
+    }
+    .modal-close {
+        position: absolute; top: 9%; right: 12%;
+        z-index: 3;
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        border: 1px solid rgba(60,30,5,0.35);
+        background: rgba(60,30,5,0.15);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        color: rgba(60,30,5,0.6);
+    }
+    .modal-row {
+        position: absolute;
+        top: 23%; bottom: 13%;
+        left: 12%; right: 6%;
+        z-index: 2;
+        display: flex; flex-direction: column;
+    }
+    .modal-row a {
+        flex: 1;
+        display: block;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+    .modal-row a:hover { background: rgba(200,146,42,0.14); cursor: pointer; }
+
+    /* Desktop: image map */
+    .desktop-only { display: none; }
+    .mobile-only { display: block; }
+    @media (min-width: 768px) {
+        .desktop-only { display: block; }
+        .mobile-only { display: none; }
+    }
+
+    .image-map-wrap {
+        position: sticky; top: 0;
+        height: 100vh; overflow: hidden;
+        display: flex; align-items: flex-start;
+    }
+    .image-map {
+        position: relative; width: 100%; user-select: none;
+    }
+    .image-map img { width: 100%; height: auto; display: block; }
+    .image-map-zone {
+        position: absolute;
+        cursor: pointer;
+        border-radius: 4px;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: background 0.3s, border-color 0.3s;
+    }
+    .image-map-zone:hover {
+        background: rgba(200,146,42,0.08);
+        border-color: rgba(200,146,42,0.28);
+    }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const COUNTRIES = [
+    {
+        id: "brasil", flag: "🇧🇷", name: "Brasil",
+        accent: "#2A9D8F", rgb: "42,157,143",
+        thumb: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&h=750&fit=crop&q=80",
+        zone: { top: "19%", left: "13%", width: "36%", height: "36%" },
+        cities: [
+            { name: "Campo Grande" }, { name: "Sidrolândia" }, { name: "Jardim" },
+            { name: "Bonito" }, { name: "Porto Murtinho" },
+        ],
+    },
+    {
+        id: "paraguai", flag: "🇵🇾", name: "Paraguai",
+        accent: "#a78bfa", rgb: "167,139,250",
+        thumb: "https://images.unsplash.com/photo-1599723283133-9ce9f0a6d51f?w=600&h=750&fit=crop&q=80",
+        zone: { top: "19%", left: "51%", width: "36%", height: "36%" },
+        cities: [{name:"Carmelo Peralta"},{name:"Mariscal Estigarribia"},{name:"Filadelfia"}],
+    },
+    {
+        id: "argentina", flag: "🇦🇷", name: "Argentina",
+        accent: "#fb923c", rgb: "251,146,60",
+        thumb: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=750&fit=crop&q=80",
+        zone: { top: "55%", left: "13%", width: "36%", height: "28%" },
+        cities: [{name:"Tartagal"},{name:"Jujuy"},{name:"Salta"}],
+    },
+    {
+        id: "chile", flag: "🇨🇱", name: "Chile",
+        accent: "#38bdf8", rgb: "56,189,248",
+        thumb: "https://images.unsplash.com/photo-1543158266-0066955047b0?w=600&h=750&fit=crop&q=80",
+        zone: { top: "55%", left: "51%", width: "36%", height: "28%" },
+        cities: [{name:"Antofagasta"},{name:"Iquique"},{name:"Mejillones"}],
+    },
+];
+
+const IconArrow = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
+const IconX = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
+
+// "pergaminho" placeholder: gradiente pergaminho com lista de cidades sobreposta
+function ParchmentImage({ country }) {
+    return (
+        <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, #f4e4bc 0%, #ecd9a3 50%, #d9b878 100%)",
+            backgroundSize: "cover",
+            display: "flex", flexDirection: "column",
+            padding: "16% 14% 14% 14%",
+        }}>
+            <div style={{ textAlign: "center", marginBottom: 12 }}>
+                <div style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontStyle: "italic",
+                    fontSize: "clamp(20px, 5vw, 28px)",
+                    color: "#4a2c0e",
+                    fontWeight: 700,
+                    lineHeight: 1,
+                }}>
+                    {country.flag} {country.name}
+                </div>
+                <div style={{
+                    fontSize: 10, color: "rgba(74,44,14,0.55)",
+                    letterSpacing: "0.25em", textTransform: "uppercase",
+                    marginTop: 6, fontWeight: 700,
+                }}>
+                    {country.cities.length} cidades
+                </div>
+            </div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
+                {country.cities.map((c, i) => (
+                    <div key={i} style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontStyle: "italic",
+                        fontSize: "clamp(13px, 3vw, 16px)",
+                        color: "#4a2c0e",
+                        textAlign: "center",
+                        padding: "4px 0",
+                        borderBottom: i < country.cities.length - 1 ? "1px dashed rgba(74,44,14,0.2)" : "none",
+                    }}>
+                        {c.name}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function App() {
+    const [activeId, setActiveId] = useState(null);
+    const country = COUNTRIES.find(c => c.id === activeId);
+
+    useEffect(() => {
+        document.body.style.overflow = activeId ? "hidden" : "";
+    }, [activeId]);
+
+    return (
+        <section>
+            <p className="hint">Selecione um país para explorar as cidades</p>
+
+            {/* MOBILE: grid de cards */}
+            <div className="mobile-only">
+                <div className="cities-mobile-grid">
+                    {COUNTRIES.map(c => (
+                        <button key={c.id} className="country-card" onClick={() => setActiveId(c.id)}>
+                            <img src={c.thumb} alt="" loading="lazy"/>
+                            <div style={{
+                                position: "absolute", inset: 0,
+                                background: `linear-gradient(180deg, rgba(8,7,4,0.2) 0%, rgba(8,7,4,0.65) 60%, rgba(${c.rgb},0.3) 100%)`,
+                            }}/>
+                            <div className="country-overlay">
+                                <span className="country-flag">{c.flag}</span>
+                                <div className="country-info">
+                                    <p style={{ color: c.accent }}>{c.cities.length} cidades</p>
+                                    <h3>{c.name}</h3>
+                                    <span className="country-cta">Ver cidades <IconArrow/></span>
+                                </div>
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* DESKTOP: image map (placeholder ilustrativo) */}
+            <div className="desktop-only">
+                <div style={{ height: "220vh" }}>
+                    <div className="image-map-wrap">
+                        <div className="image-map">
+                            <div style={{
+                                background: "linear-gradient(135deg, #0a1929 0%, #112839 50%, #1a3a4e 100%)",
+                                aspectRatio: "16/9",
+                                position: "relative",
+                            }}>
+                                <div style={{
+                                    position: "absolute", inset: "5%",
+                                    display: "grid",
+                                    gridTemplateColumns: "1fr 1fr",
+                                    gridTemplateRows: "1fr 1fr",
+                                    gap: "4%",
+                                }}>
+                                    {COUNTRIES.map((c, i) => (
+                                        <div key={c.id}
+                                             onClick={() => setActiveId(c.id)}
+                                             style={{
+                                                position: "relative",
+                                                borderRadius: 8,
+                                                background: `linear-gradient(135deg, rgba(${c.rgb},0.15), rgba(${c.rgb},0.05))`,
+                                                border: `1px solid rgba(${c.rgb},0.3)`,
+                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                                cursor: "pointer", overflow: "hidden",
+                                             }}>
+                                            <div style={{ textAlign: "center" }}>
+                                                <div style={{ fontSize: 80, marginBottom: 8 }}>{c.flag}</div>
+                                                <div style={{
+                                                    fontFamily: "'Bebas Neue', sans-serif",
+                                                    fontSize: 32, color: c.accent,
+                                                    letterSpacing: "0.05em",
+                                                }}>{c.name}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div style={{
+                                    position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)",
+                                    fontFamily: "'Playfair Display', serif",
+                                    fontSize: 11, fontStyle: "italic",
+                                    color: "rgba(200,146,42,0.55)",
+                                    letterSpacing: "0.15em",
+                                    animation: "float-y 1.9s ease-in-out infinite",
+                                }}>
+                                    ↓ role para ver o livro completo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ height: 60 }}/>
+            </div>
+
+            {activeId && country && (
+                <React.Fragment>
+                    <div className="modal-backdrop" onClick={() => setActiveId(null)}/>
+                    <div className="modal">
+                        <ParchmentImage country={country}/>
+                        <button className="modal-close" onClick={() => setActiveId(null)} aria-label="Fechar"><IconX/></button>
+                    </div>
+                </React.Fragment>
+            )}
+        </section>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

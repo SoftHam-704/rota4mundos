@@ -40,3 +40,8 @@ backend/prisma/migrations/*.lock
 # Arquivos temporários
 *.tmp
 *.temp
+
+# Arquivos de trabalho pesados (fontes, não servidos pelo site)
+podcasts/
+modelo2/
+imagens/*.mp4

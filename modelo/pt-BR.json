@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Início",
+    "cities": "Cidades",
+    "news": "Notícias",
+    "about": "Sobre",
+    "invest": "Invista",
+    "admin": "Admin",
+    "login": "Entrar",
+    "logout": "Sair"
+  },
+  "hero": {
+    "badge": "Rota Bioceânica · 4 Países · 3.500 km",
+    "title1": "A PONTE ENTRE",
+    "title2": "DOIS OCEANOS",
+    "subtitle": "Do Pantanal ao Pacífico — a maior integração continental da América do Sul",
+    "description": "Da fronteira pantaneira de Mato Grosso do Sul às baías chilenas do Pacífico, a Rota Bioceânica atravessa povos indígenas, heranças mennonitas, folclore andino e paisagens de rara beleza em mais de 3.500 km de história e identidade viva.",
+    "ctaPrimary": "Explorar as Cidades",
+    "ctaSecondary": "Conheça a Rota",
+    "stats": {
+      "distance": "3.500 km",
+      "distanceLabel": "de travessia continental",
+      "countries": "4",
+      "countriesLabel": "países integrados",
+      "cities": "12",
+      "citiesLabel": "cidades de cultura viva",
+      "heritage": "UNESCO",
+      "heritageLabel": "Patrimônio Mundial"
+    }
+  },
+  "cities": {
+    "title": "Cidades da Rota",
+    "subtitle": "Pontos estratégicos de desenvolvimento",
+    "explore": "Explorar",
+    "population": "População",
+    "economy": "Economia"
+  },
+  "newsletter": {
+    "title": "Fique por dentro",
+    "description": "Receba as últimas novidades sobre investimentos e oportunidades na Rota Bioceânica.",
+    "placeholder": "Seu melhor email",
+    "button": "Inscrever-se",
+    "success": "Inscrição realizada com sucesso!"
+  },
+  "footer": {
+    "rights": "Todos os direitos reservados.",
+    "contact": "Contato",
+    "partners": "Parceiros"
+  }
+}

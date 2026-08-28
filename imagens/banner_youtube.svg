@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="1152" viewBox="0 0 2048 1152">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#020d1a"/>
+      <stop offset="50%" style="stop-color:#061B33"/>
+      <stop offset="100%" style="stop-color:#031426"/>
+    </linearGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2A9D8F;stop-opacity:0"/>
+      <stop offset="30%" style="stop-color:#2A9D8F;stop-opacity:0.8"/>
+      <stop offset="70%" style="stop-color:#F4A261;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#F4A261;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="glowLeft" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" style="stop-color:#2A9D8F;stop-opacity:0.18"/>
+      <stop offset="100%" style="stop-color:#2A9D8F;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="glowRight" x1="100%" y1="50%" x2="0%" y2="50%">
+      <stop offset="0%" style="stop-color:#F4A261;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#F4A261;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2048" height="1152" fill="url(#bg)"/>
+
+  <!-- Side glows -->
+  <rect width="600" height="1152" fill="url(#glowLeft)"/>
+  <rect x="1448" width="600" height="1152" fill="url(#glowRight)"/>
+
+  <!-- Decorative route lines — left side -->
+  <g opacity="0.22">
+    <path d="M -60 900 Q 300 600 500 576" stroke="#2A9D8F" stroke-width="2.5" fill="none"/>
+    <path d="M -60 940 Q 320 640 500 596" stroke="#F4A261" stroke-width="1.8" fill="none"/>
+    <path d="M -60 860 Q 280 560 500 556" stroke="#a78bfa" stroke-width="1.5" fill="none"/>
+    <path d="M -60 980 Q 340 680 500 616" stroke="#38bdf8" stroke-width="1.2" fill="none"/>
+  </g>
+
+  <!-- Decorative route lines — right side -->
+  <g opacity="0.22">
+    <path d="M 2108 900 Q 1748 600 1548 576" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+    <path d="M 2108 940 Q 1728 640 1548 596" stroke="#F4A261" stroke-width="1.8" fill="none"/>
+    <path d="M 2108 860 Q 1768 560 1548 556" stroke="#2A9D8F" stroke-width="1.5" fill="none"/>
+    <path d="M 2108 980 Q 1708 680 1548 616" stroke="#a78bfa" stroke-width="1.2" fill="none"/>
+  </g>
+
+  <!-- Center horizontal line -->
+  <rect x="0" y="575" width="2048" height="1" fill="url(#lineGrad)" opacity="0.6"/>
+  <rect x="0" y="577" width="2048" height="1" fill="url(#lineGrad)" opacity="0.3"/>
+
+  <!-- Center dot -->
+  <circle cx="1024" cy="576" r="5" fill="#F4A261" opacity="0.9" filter="url(#glow)"/>
+
+  <!-- ROTA — main title -->
+  <text x="1024" y="440"
+    font-family="'Arial Black', 'Impact', sans-serif"
+    font-size="210"
+    font-weight="900"
+    letter-spacing="32"
+    text-anchor="middle"
+    fill="white"
+    opacity="0.97">ROTA</text>
+
+  <!-- 4 MUNDOS — accent line -->
+  <text x="1024" y="660"
+    font-family="'Arial Black', 'Impact', sans-serif"
+    font-size="210"
+    font-weight="900"
+    letter-spacing="20"
+    text-anchor="middle"
+    fill="#F4A261"
+    filter="url(#glow)"
+    opacity="0.97">4 MUNDOS</text>
+
+  <!-- Thin divider line under title -->
+  <rect x="724" y="694" width="600" height="2" fill="#F4A261" opacity="0.35" rx="1"/>
+
+  <!-- Tagline -->
+  <text x="1024" y="770"
+    font-family="'Arial', 'Helvetica', sans-serif"
+    font-size="32"
+    font-weight="400"
+    letter-spacing="10"
+    text-anchor="middle"
+    fill="rgba(255,255,255,0.55)">DO ATLÂNTICO AO PACÍFICO</text>
+
+  <!-- Country flags row -->
+  <text x="844" y="870" font-size="68" text-anchor="middle">🇧🇷</text>
+  <text x="944" y="870" font-size="68" text-anchor="middle">🇵🇾</text>
+  <text x="1104" y="870" font-size="68" text-anchor="middle">🇦🇷</text>
+  <text x="1204" y="870" font-size="68" text-anchor="middle">🇨🇱</text>
+
+  <!-- Dots between flags -->
+  <circle cx="994" cy="840" r="3" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="1054" cy="840" r="3" fill="rgba(255,255,255,0.25)"/>
+
+  <!-- Country names -->
+  <text x="844" y="914" font-family="Arial,sans-serif" font-size="18" font-weight="600" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.38)">BRASIL</text>
+  <text x="944" y="914" font-family="Arial,sans-serif" font-size="18" font-weight="600" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.38)">PARAGUAI</text>
+  <text x="1104" y="914" font-family="Arial,sans-serif" font-size="18" font-weight="600" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.38)">ARGENTINA</text>
+  <text x="1204" y="914" font-family="Arial,sans-serif" font-size="18" font-weight="600" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.38)">CHILE</text>
+
+  <!-- Website URL bottom -->
+  <text x="1024" y="1020"
+    font-family="'Arial', sans-serif"
+    font-size="26"
+    letter-spacing="4"
+    text-anchor="middle"
+    fill="rgba(255,255,255,0.22)">rotabioceânica.com.br</text>
+
+  <!-- Safe area guide (invisible, just for reference) -->
+  <!-- Safe area: 1546x423 centered = x:251 y:364 -->
+
+</svg>
