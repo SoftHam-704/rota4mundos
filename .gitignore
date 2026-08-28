@@ -45,3 +45,6 @@ backend/prisma/migrations/*.lock
 podcasts/
 modelo2/
 imagens/*.mp4
+
+# Backup desconhecido, mantido apenas localmente
+mobile/uploads/src.rar
