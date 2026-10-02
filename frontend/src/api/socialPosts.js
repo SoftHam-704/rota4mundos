@@ -2,7 +2,11 @@ import { apiClient } from "./client.js";
 
 export const socialPostsApi = {
     list: (params) => apiClient.get("/social-posts", { params }),
-    create: (data) => apiClient.post("/social-posts", data),
-    update: (id, data) => apiClient.put(`/social-posts/${id}`, data),
+    status: () => apiClient.get("/social-posts/status"),
+    gerar: () => apiClient.post("/social-posts/gerar"),
+    aprovar: (id) => apiClient.post(`/social-posts/${id}/aprovar`),
+    rejeitar: (id) => apiClient.post(`/social-posts/${id}/rejeitar`),
+    editarLegenda: (id, caption) => apiClient.put(`/social-posts/${id}`, { caption }),
+    publicarAgora: (id) => apiClient.post(`/social-posts/${id}/publicar-agora`),
     delete: (id) => apiClient.delete(`/social-posts/${id}`),
 };

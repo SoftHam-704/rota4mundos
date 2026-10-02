@@ -1,0 +1,122 @@
+Jardim (Brasil)
+Serra da Bodoquena, lagoas azul-esmeralda e a porta natural entre o Cerrado e o Pantanal.
+
+Guerra do Paraguai e a Retirada da Laguna
+A região foi cenário de um dos episódios mais marcantes da história nacional: a Retirada da Laguna, durante a Guerra do Paraguai. Tropas brasileiras atravessaram esse território em uma campanha militar que ficou gravada na memória coletiva do Mato Grosso do Sul, consolidando a importância estratégica das terras da Serra da Bodoquena.
+Cemitério dos Heróis da Guerra do Paraguai
+A área pertencia à Fazenda Jardim, que deu nome ao futuro povoado. A ocupação definitiva aconteceu com o desenvolvimento de fazendas e rotas comerciais, impulsionada pela atividade pecuária e pela riqueza natural da região — rios cristalinos, cavernas e uma biodiversidade que ainda hoje encanta quem visita.
+A chegada da Comissão de Estradas de Rodagem (CER-3) para a construção da BR-060 foi divisor de águas: impulsionou o povoado, atraiu novas famílias e transformou Jardim em ponto de passagem e integração regional. O Museu da CER-3, hoje patrimônio da cidade, preserva essa memória viva.
+Em 1948, Jardim era Distrito de Bela Vista. A emancipação político-administrativa em 1979 transformou o distrito em município independente, abrindo caminho para o desenvolvimento do ecoturismo, da pecuária e da consolidação de Jardim como polo regional da Serra da Bodoquena.
+Uma das cavernas alagadas mais profundas do mundo. Águas de clareza absoluta e azul intenso — referência internacional em mergulho e contemplação.
+Flutuação em águas azul-turquesa com visibilidade excepcional. Peixes, vegetação subaquática e paisagens preservadas em estado natural.
+Grande dolina natural que abriga dezenas de araras-vermelhas. Um dos cartões-postais mais impressionantes da Serra da Bodoquena.
+Área de rica biodiversidade com cachoeiras, trilhas, rios e cavernas. Reconhecida internacionalmente pelas águas cristalinas e ecossistema preservado.
+Formações rochosas impressionantes, ideais para exploração e contemplação. A geologia calcária cria cenários subterrâneos únicos.
+Cenários incríveis para quem busca aventura e contato com a natureza. Trilhas que revelam a fauna e flora do Cerrado e Pantanal.
+Contato direto com rios cristalinos, peixes e mata nativa. Opções para banho, lazer e contemplação em ambiente totalmente preservado.
+Rios repletos de espécies como pacu, pintado e dourado. Excelente para pesca esportiva em ambiente natural e regulamentado.
+Carnes preparadas no fogo de chão, herança da lida do campo e das comitivas pantaneiras que percorriam a região.
+Tradição regional ligada às comitivas e ao campo. Prato simples e reconfortante, marcante na identidade culinária do interior.
+Pacu, pintado e dourado — os grandes protagonistas das mesas de Jardim, capturados nos rios cristalinos da Serra da Bodoquena.
+Quitute assado de polvilho e queijo com influência paraguaia. Consumido no café, no lanche e em qualquer hora do dia.
+Muito mais que uma bebida — símbolo de convivência, tradição e identidade sul-mato-grossense partilhada em rodas e conversas.
+Mistura de sabores do Pantanal, da fronteira e do interior: mandioca, milho, queijo e receitas herdadas das famílias pioneiras.
+Visita ao Museu da CER-3 e ao centro histórico. Conhecer a história da construção da BR-060 e do papel estratégico de Jardim na região.
+Cemitério dos Heróis da Guerra do Paraguai e monumentos históricos. Roteiro pelo centro da cidade, artesanato local e praça principal.
+Jantar com gastronomia regional, tereré em roda com moradores. Sentir o ritmo tranquilo e hospitaleiro de uma cidade que vive seu passado com orgulho.
+Flutuação no Rio da Prata — águas cristalinas azul-turquesa, peixes mansos e paisagem subaquática de outro mundo.
+Visita à Lagoa Misteriosa para mergulho ou contemplação. Buraco das Araras: as araras-vermelhas em seu habitat natural impressionam qualquer visitante.
+Trilha ecológica ao entardecer. Pôr do sol na Serra da Bodoquena e jantar à base de peixe regional.
+Pesca esportiva nos rios da região ou visita a balneário natural. Contato direto com a fauna e a flora do Cerrado e Pantanal.
+Gastronomia regional: churrasco pantaneiro, arroz carreteiro e chipa. Compras de artesanato em couro, madeira e sementes.
+Despedida com pôr do sol na Serra. Jardim fica para sempre — assim como a clareza das suas águas.
+A Lagoa Misteriosa é uma das cavernas alagadas mais profundas do mundo — a profundidade total ainda não foi completamente mapeada.
+O Buraco das Araras é uma dolina natural onde dezenas de araras-vermelhas fazem seu ninho, visível a olho nu da borda.
+A região foi rota estratégica da Retirada da Laguna durante a Guerra do Paraguai — um dos episódios mais dramáticos da história brasileira.
+O Museu da CER-3 preserva a história da construção da BR-060, estrada que transformou Jardim em polo regional no século XX.
+Jardim integra a Serra da Bodoquena, reconhecida internacionalmente como um dos maiores aquíferos de água doce do planeta.
+A transparência dos rios da região é resultado do processo de filtração pelo calcário da Serra da Bodoquena — fenômeno geológico único.
+Araras, tucanos, antas, onças e jacarés convivem a poucos quilômetros do centro urbano de Jardim.
+Posicionada estrategicamente na Rota Bioceânica, Jardim tem potencial para se tornar um dos grandes destinos de ecoturismo internacional do corredor.
+relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 max-w-4xl mx-auto cursor-zoom-in group
+max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl
+Serra da Bodoquena, lagoas azul-esmeralda e a porta natural entre o Cerrado e o Pantanal.
+linear-gradient(135deg, #0a1f0f 0%, #0d2b1a 50%, #0a1f0f 100%)
+radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)
+radial-gradient(circle, rgba(5,150,105,0.1) 0%, transparent 70%)
+, fontWeight: 700, lineHeight: 1.15, marginBottom:
+Buraco das Araras — dolina de calcário com araras-vermelhas
+linear-gradient(to top, rgba(10,31,15,0.7) 0%, transparent 50%)
+Amanhecer e fim de tarde — melhor horário para ver as araras em voo
+14 km do centro de Jardim pela MS-178; acesso de carro
+Reserva privada com ingresso e guia local incluso
+Mirante com plataforma de observação e câmeras permitidas
+Lagoa Misteriosa, Rio da Prata e balneários com visibilidade que revela outro mundo. A geologia calcária da Bodoquena cria um fenômeno único no planeta.
+Araras, tucanos, onças, antas e jacarés a poucos quilômetros do centro. O Buraco das Araras é um dos espetáculos naturais mais impressionantes do Brasil.
+Cemitério dos Heróis, Museu da CER-3 e traços da Retirada da Laguna. Jardim é um dos guardiões da memória histórica do Mato Grosso do Sul.
+grid grid-cols-1 lg:grid-cols-2 gap-12 items-start
+Marco da Guerra do Paraguai. Memória militar e histórica da bravura do século XIX.
+Acervo da Comissão de Estradas de Rodagem. História da BR-060 e da transformação regional.
+Praça central, Igreja e edificações que preservam a memória das famílias pioneiras.
+Couro, madeira, osso e fibras: peças únicas que contam a identidade pantaneira de Jardim.
+Trajeto histórico que conecta Jardim ao episódio mais marcante da Guerra do Paraguai no território.
+Existem lugares que desafiam a linguagem. A Lagoa Misteriosa é um deles.
+grid grid-cols-1 lg:grid-cols-2 gap-14 items-center
+Caverna alagada entre as mais profundas do mundo. Referência em mergulho técnico
+Flutuação em águas azul-turquesa. Peixes, vegetação e paisagens subaquáticas preservadas
+Dolina natural com araras-vermelhas. Espetáculo da fauna em habitat intocado
+Formações calcárias milenares. Espeleologia e contemplação em cenários subterrâneos únicos
+Pacu, pintado e dourado em rios preservados. Temporada regulamentada e sustentável
+grid grid-cols-1 lg:grid-cols-2 gap-12 items-center
+Costumes, lendas e saberes tradicionais do Pantanal sul-mato-grossense
+Couro, madeira, osso e fibras — peças únicas que contam histórias de gerações
+Chamamé, polca paraguaia e músicas regionais que animam festas e celebrações
+Festas religiosas, cavalgadas, rodeios e eventos que fortalecem a cultura local
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4
+w-4 h-4 group-hover:translate-x-1 transition-transform
+Buraco das Araras
+O maior sumidouro natural do Brasil — um abismo vivo a 14 km de Jardim
+Encravado no calcário cretáceo da Serra da Bodoquena, o Buraco das Araras é uma
+— fenômeno cárstico formado ao longo de milênios pela dissolução da rocha calcária por águas ácidas subterrâneas. Com aproximadamente 500 metros de diâmetro e 100 metros de profundidade, é considerado o maior sumidouro natural do Brasil e um dos mais expressivos da América do Sul.
+As paredes verticais do abismo tornaram-se o lar permanente de dezenas de
+— as majestosas araras-vermelhas-e-verdes que deram nome ao lugar. Cada amanhecer transforma a dolina num espetáculo de cores e sons: bandos inteiros alçam voo do interior do buraco, cruzando os raios dourados do sol enquanto o eco de seus gritos ressoa pelas paredes de pedra. Além das araras, abutres-de-cabeça-amarela, periquitos e diversas espécies de rapina habitam a reserva.
+O Buraco das Araras é uma
+com estrutura de visitação responsável: trilha de bordão, mirante com plataforma de observação e guias locais treinados. A experiência de olhar para dentro desse abismo verde — onde araras circulam como chamas vermelhas contra o fundo escuro — é considerada por muitos visitantes o momento mais impactante de toda a Rota Bioceânica.
+Serra da Bodoquena · Jardim, MS · Brasil
+a natureza cristalina
+que se expressa na gastronomia, no artesanato e na hospitalidade do seu povo.
+Raízes que contam uma trajetória heroica
+Rota Continental
+Jardim foi construída em camadas de história, coragem e natureza. Cada período deixou marcas legíveis em seus monumentos, museus e na memória oral do povo sul-mato-grossense.
+história e mistério
+Jardim preserva tanto os registros naturais da Serra da Bodoquena quanto a memória histórica da ocupação regional. Do Cemitério dos Heróis ao Museu da CER-3, a cidade transforma patrimônio em experiência cultural viva.
+Maravilha Natural
+A Lagoa Misteriosa — profundidade que desafia o conhecimento
+A Lagoa Misteriosa é uma das cavernas alagadas mais profundas do mundo. Suas águas de clareza absoluta revelam tonalidades de azul impossíveis — do turquesa raso ao azul-marinho das profundezas ainda não totalmente mapeadas. Mergulhadores de todo o planeta vêm até Jardim para encarar esse desafio único.
+A formação geológica calcária da Serra da Bodoquena criou esse fenômeno singular: água que filtra e purifica até atingir uma transparência que parece irreal. Na superfície, o reflexo do céu e da mata nativa completa um dos cenários mais fotográficos do Brasil.
+"Existem lugares que desafiam a linguagem. A Lagoa Misteriosa é um deles."
+Referência internacional em mergulho em caverna
+águas cristalinas
+Jardim integra a região da Serra da Bodoquena, reconhecida internacionalmente pela qualidade de suas águas e pela diversidade de ecossistemas. Cerrado, Mata Atlântica e vegetação pantaneira se encontram em um território que abriga espécies raras e experiências naturais de nível mundial.
+Tradições que fazem parte da nossa gente
+viva e acolhedora
+Jardim carrega os costumes, as lendas e os saberes tradicionais do Pantanal sul-mato-grossense. A simplicidade, a hospitalidade e a vida rural formam o tecido social de uma cidade onde o povo é acolhedor, simples e orgulhoso da sua história e da sua terra.
+, a polca paraguaia e o sertanejo raiz animam festas e encontros. O acordeão e a viola são presença constante — assim como o tereré em roda, que transforma qualquer conversa em ritual de pertencimento.
+raiz e afeto
+A mesa de Jardim combina peixe de rio, carne pantaneira, mandioca e receitas herdadas do convívio cotidiano com a fronteira paraguaia. Uma culinária de sustento, celebração e memória afetiva.
+definem Jardim
+inesquecíveis
+surpreendem
+práticas
+~220 km pela BR-060 e MS-178. Aproximadamente 3h de viagem.
+~80 km pela MS-178. Cerca de 1h de viagem pela Serra da Bodoquena.
+Posicionada entre Campo Grande e Porto Murtinho — parada natural no corredor continental.
+Estação seca — melhor visibilidade nos rios e lagoas
+Temperatura amena, ideal para trilhas e atividades ao ar livre
+Lagoa Misteriosa e Buraco das Araras podem ser visitados em qualquer época
+Rota Bioceânica · Brasil · Mato Grosso do Sul
+Jardim — onde a história encontra a natureza, e a aventura começa nas águas cristalinas.
+Continue explorando as cidades que formam o maior corredor bioceânico da América do Sul.
+Ver todas as cidades

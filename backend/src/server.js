@@ -3,6 +3,7 @@ import { env } from "./config/env.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import logger from "./config/logger.js";
 import { startAiNewsJob } from "./jobs/aiNewsJob.js";
+import { startSocialJob } from "./jobs/socialJob.js";
 
 const PORT = env.PORT;
 
@@ -20,6 +21,9 @@ async function startServer() {
 
         // Inicia IRIS — busca diária de notícias
         startAiNewsJob();
+
+        // Agente do Instagram — rascunhos 07:30, publicação 12:00 e 19:00
+        startSocialJob();
 
         // Graceful shutdown
         const gracefulShutdown = async (signal) => {

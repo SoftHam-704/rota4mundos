@@ -1,0 +1,120 @@
+Porto Murtinho (Brasil)
+A última cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos.
+
+Em 1892, o engenheiro Antonio Corrêa da Costa construiu um porto rústico de madeira na fazenda Três Barras para escoar erva-mate — ato fundador que definiria o destino da futura cidade. O município cresceu, recebeu trabalhadores e comerciantes, e consolidou-se como entreposto estratégico do sul do antigo Mato Grosso.
+A abundância do quebracho transformou Porto Murtinho em polo de extração e industrialização do tanino — matéria-prima usada no curtimento de couro. A Florestal Brasileira S/A deixou marcas indeléveis: a Chaminé Florestal Brasileira, ruína que ainda hoje ergue-se como monumento à escala industrial daquele tempo.
+O charque completou a tríade econômica que ergueu a cidade, integrando Porto Murtinho a redes mais amplas de abastecimento regional. Junto com a erva-mate e o tanino, consolidou o município como polo de trabalho, circulação e acumulação de riqueza em diferentes momentos do antigo Mato Grosso uno.
+O Rio Paraguai foi a grande avenida líquida de Porto Murtinho. Por ele passaram mercadorias, notícias, costumes e pessoas de diferentes origens — paraguaios, uruguaios, espanhóis e outros grupos que moldaram o tecido social e arquitetônico local. O porto impulsionou importações, exportações e reforçou o caráter cosmopolita da cidade.
+Identificado pela cor verde, o Bandido desperta torcidas fervorosas. Sua presença na arena é associada à transgressão ritualizada, ao folclore da margem e à potência da fronteira.
+Reconhecido pela cor amarela, o Encantado evoca o mistério, a crença e o maravilhoso popular. Sua torcida celebra a espiritualidade que permeia a festa.
+Clássico regional que valoriza a qualidade do peixe do Rio Paraguai, servido com mandioca, arroz e saladas frescas.
+Preparação já celebrada em materiais de promoção turística do município — gancho perfeito para o storytelling gastronômico.
+Bolo salgado de milho, queijo e cebola — presença indispensável em mesas de fronteira. Engana o nome: é sólida e reconfortante.
+Quitute assado à base de polvilho e queijo, consumido no café da manhã, no lanche e em longas viagens de estrada.
+Preparo rústico e bem temperado, associado ao sabor forte do interior e às cozinhas de fogo a lenha e brasa viva.
+Mais do que bebida — símbolo cultural. A Praça do Tereré transforma esse hábito cotidiano em monumento identitário urbano.
+~550 metros de altitude, trilha interpretativa e mirante natural para o Pantanal do Nabileque e o Chaco paraguaio.
+Paisagem de planície alagável, fauna abundante e vocação singular para contemplação, pesquisa e turismo sensível.
+Ícone arquitetônico e sentimental da cidade, cercado por narrativas de amor, luxo, decadência e assombração.
+Instalado na histórica Padaria Cuê (1928), concluída em tijolo e hoje símbolo de memória e patrimônio urbano.
+Monumento simbólico da erva-mate, instalado na praça central — sintetiza um ciclo econômico inteiro em um único objeto.
+Antigo depósito de erva-mate transformado em equipamento cultural às margens do Rio Paraguai.
+Transforma o hábito cotidiano mais murtinhense em espaço urbano e identitário de convivência.
+Paisagem ligada à pesca, à contemplação e ao imaginário fronteiriço — pôr do sol sobre o Rio Paraguai.
+Chegada, check-in e caminhada leve pela orla do Rio Paraguai. Primeiro contato com a escala humana e o ritmo da cidade.
+Visita ao centro histórico: Castelinho, Padaria Cuê/Museu Dom Jaime, Trenzinho, praça central e Cine-Teatro Murtinhense.
+Jantar com sabores regionais e passeio pela praça para sentir o pulso local. Roda de tereré com moradores.
+Saída cedo para passeio de barco, pesca esportiva ou contemplação do Rio Paraguai e do Pantanal do Nabileque.
+Subida ao Morro Pão de Açúcar para o mirante natural, com foco em fotografia, observação de fauna e amplitude de paisagem.
+Pôr do sol pantaneiro e jantar à base de peixe. Conversa com piloteiros, pescadores e guias locais.
+Museu Histórico de Porto Murtinho, Igreja Sagrado Coração de Jesus e roteiro de monumentos do centro histórico.
+Experiência gastronômica completa: chipa, sopa paraguaia e pratos de fronteira. Compras de artesanato local.
+Se houver calendário cultural, priorizar chamamé ao vivo, apresentações das Meninas Cantoras ou vivências do Toro Candil.
+Conhecida como 'a última guardiã do Rio Paraguai' — identidade ribeirinha e fronteiriça em uma só expressão.
+17.502 km² de território para uma população de ~12.859 pessoas: uma vastidão raramente imaginada.
+O Trenzinho da praça central sintetiza um ciclo econômico inteiro (a erva-mate) em um único monumento urbano.
+O Castelinho carrega uma das lendas de amor, decadência e assombração mais persistentes do Mato Grosso do Sul.
+Em 2024, a Padaria Cuê e a Prefeitura Cuê foram oficialmente tombadas como patrimônio histórico material do estado.
+O Toro Candil foi declarado patrimônio imaterial de Mato Grosso do Sul em 2023.
+A Praça do Tereré elevou um ritual cotidiano de fronteira à categoria de símbolo urbano oficial.
+Porto Murtinho vive hoje um momento raro: passado histórico e futuro logístico continental no mesmo imaginário.
+relative rounded-3xl overflow-hidden shadow-2xl shadow-black/40 max-w-4xl mx-auto cursor-zoom-in group
+max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl
+A ultima cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos.
+linear-gradient(135deg, #140a00 0%, #1f1000 50%, #140a00 100%)
+radial-gradient(circle, rgba(244,162,97,0.14) 0%, transparent 70%)
+radial-gradient(circle, rgba(234,140,60,0.08) 0%, transparent 70%)
+, fontWeight: 700, lineHeight: 1.15, marginBottom:
+Morro Pão de Açúcar — Rio Paraguai na fronteira Brasil-Paraguai
+linear-gradient(to top, rgba(20,10,0,0.75) 0%, transparent 55%)
+Passaporte válido obrigatório — fronteira internacional
+Veículos e pedestres embarcam na beira do rio, centro de Porto Murtinho
+Travessia disponível durante o dia; confirmar horários na cidade
+Taxa de travessia cobrada por pessoa e por veículo, em reais ou guaranis
+Eixo ecológico, econômico e paisagístico da cidade. Por ele passaram erva-mate, tanino, charque e a alma de diferentes culturas.
+Castelinho, Padaria Cuê, Trenzinho e uma série de casarões que leram os ciclos econômicos nas paredes, platibandas e rebocos antigos.
+Chamamé, Toro Candil, culinária mestiça e fé popular tecem uma identidade que só existe nessa esquina singular da América do Sul.
+grid grid-cols-1 lg:grid-cols-2 gap-12 items-start
+Ícone arquitetônico e sentimental. Romantismo, extravagância e lenda.
+Edifício de 1928, tombado em 2024. Memória do comércio e da vida urbana.
+Sede histórica do poder municipal. Também tombada em 2024.
+Antigo armazém de erva-mate à beira do rio, hoje palco de cultura.
+Marco religioso e arquitetônico do centro histórico.
+grid grid-cols-1 md:grid-cols-2 gap-6 mb-12
+Personagens de rua que encarnam o caos festivo e a irreverência popular
+Devotas que carregam a dimensão religiosa e de fé da manifestação
+A bola de fogo — elemento espetacular que intensifica o clima ritual
+Música, corrida, disputa e dramaturgia comunitária que envolvem toda a cidade
+grid grid-cols-1 lg:grid-cols-2 gap-12 items-center
+Ritmo de base paraguaia presente no cotidiano musical da fronteira
+Gênero lírico que une Brasil, Paraguai e Argentina numa mesma melodia
+Ritmo de raíz guarani e europeia, alma do folclore do noroeste platino
+Hábito social e afetivo que acompanha música, conversa e celebração
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5
+grid grid-cols-1 lg:grid-cols-2 gap-14 items-center
+Cenário de pesca, navegação, contemplação, memória e integração internacional
+Planícies alagáveis, fauna abundante e sazonalidade que define o ritmo da vida
+~550 metros. Mirante natural para o Chaco e o Pantanal. Trilha interpretativa
+Tuiuiús, garças, araras, jacarés, capivaras e peixes de grande porte
+Jaú, pintado, pacu e dourado. Temporada de fev a nov, respeitando a piracema
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4
+w-4 h-4 group-hover:translate-x-1 transition-transform
+A Travessia
+O Rio Paraguai separa dois mundos — e a balsa é o portal entre eles
+Porto Murtinho é onde o Brasil acaba. Literalmente. Na margem do
+, o viajante embarca numa balsa e atravessa aproximadamente 800 metros de água escura e silenciosa em direção a Carmelo Peralta, no Paraguai. São menos de 15 minutos de travessia — mas é a fronteira entre o Pantanal brasileiro e o imenso Chaco paraguaio, entre dois países, dois ecossistemas, dois idiomas e dois tempos.
+A balsa não tem nome glamouroso. Não é uma ponte suspensa nem um ferry moderno. É uma embarcação simples, carregando carros, motos e pedestres sob o sol do Pantanal — e é exatamente essa
+que torna o momento tão poderoso. O viajante sente, com o corpo, que está cruzando uma fronteira real. O Morro Pão de Açúcar — formação rochosa que se ergue solitária à beira do rio — marca a passagem como uma sentinela milenar.
+Para os entusiastas da Rota Bioceânica, a travessia em Porto Murtinho é o
+momento mais simbólico de toda a jornada
+: é aqui que o Brasil fica para trás e a Rota dos Quatro Mundos começa de verdade — rumo ao Chaco, aos Andes e, enfim, ao Pacífico. Uma ponte está sendo construída, mas enquanto ela não vem, a balsa carrega toda a poesia da fronteira viva.
+Morro Pão de Açúcar · Rio Paraguai · Fronteira Brasil–Paraguai
+Rota Continental
+Porto Murtinho foi construída em camadas. Cada ciclo econômico deixou não apenas riqueza, mas arquitetura, memória e identidade — legíveis ainda hoje em suas ruas e monumentos.
+Uma caminhada pelo centro de Porto Murtinho é uma aula de história em platibandas, janelas, torres e rebocos antigos. A cidade preserva edifícios que remetem ao auge dos ciclos produtivos e que foram oficialmente tombados em 2024 como patrimônio histórico material do estado.
+Lenda Viva
+O Amor, a Ruína e o Assombro do Castelinho
+Thomaz Herrera apaixonou-se por Virgínia — uma mulher de linhagem europeia sofisticada, acostumada a requintes que o interior do Brasil dificilmente poderia oferecer. Para impressioná-la, Herrera construiu no coração de Porto Murtinho um castelinho de traços europeus: torres, platibandas ornamentadas e um romantismo arquitetônico incomum para a fronteira.
+O amor durou. A fortuna, não. A falência veio, a paixão não sobreviveu à pobreza, e tragédia assombrou o final da história. O castelinho ficou. E com ele, a narrativa que o transformou em personagem: dizem os murtinhenses que a casa guarda os espíritos do amor perdido.
+"Em Porto Murtinho, a história oficial convive com a narrativa oral. O Castelinho é o exemplo mais vivo disso."
+Um dos imóveis históricos mais famosos de Mato Grosso do Sul
+Patrimônio Imaterial · Mato Grosso do Sul, 2023
+Toro Candil:
+fé, fogo e folguedo
+Poucas manifestações resumem tão bem a identidade de Porto Murtinho. Acontece na véspera do dia 8 de dezembro — data ligada à devoção à Virgem de Caacupê, padroeira do Paraguai — e transforma as ruas em palco de comunidade, ritual e pertencimento.
+Porto Murtinho celebra o chamamé — ritmo de raízes argentinas, paraguaias e guaranis, profundamente incorporado à cultura sul-mato-grossense. O Festival Internacional do Chamamé reúne artistas do Brasil, Paraguai e Argentina, além de grupos locais que revelam a força da formação cultural comunitária.
+são exemplos vivos de como a cidade não vive apenas de passado: ela produz cultura no presente, formando artistas que projetam o nome do município pelo estado e pelo país.
+A mesa de Porto Murtinho combina peixe de rio, carne, mandioca, milho, queijo e receitas herdadas do convívio cotidiano com o Paraguai. É uma culinária de sustento e celebração.
+define tudo
+Porto Murtinho pertence ao bioma Pantanal e tem no Rio Paraguai seu eixo ecológico, econômico e paisagístico. A cidade está integrada ao Pantanal do Nabileque — sub-região de grande relevância ambiental, marcada por sazonalidade que molda o cotidiano, a fauna e a cultura local.
+inesquecíveis
+práticas
+437–440 km de Campo Grande via BR-267. Aproximadamente 6h30–7h de viagem.
+Conexão simbólica com Carmelo Peralta (Paraguai) — próxima parada da Rota Bioceânica.
+Estradas estáveis, paisagens abertas e natureza
+Janela da pesca esportiva (piracema em Dez/Jan)
+Rota Bioceânica · Brasil · Mato Grosso do Sul
+Porto Murtinho — onde o Rio Paraguai encontra a história, a cultura e a natureza.
+Continue explorando as cidades que formam o maior corredor bioceânico da América do Sul.
+Ver todas as cidades

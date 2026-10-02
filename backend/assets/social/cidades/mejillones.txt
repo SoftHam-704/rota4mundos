@@ -1,0 +1,76 @@
+Mejillones (Chile)
+O encerramento simbólico da travessia continental — porto artesanal, camanchaca e o pôr do sol mais emocionante do Pacífico.
+
+, fontWeight: 700, color: AC, letterSpacing:
+O encerramento simbolico da travessia continental — porto artesanal, camanchaca e o por do sol mais emocionante do Pacifico.
+Barcos, cais, pescadores e mercados de frutos do mar que funcionam há mais de um século sem interrupção. A vida marítima real, não reconstituída.
+O Deserto do Atacama — o mais árido do planeta — termina literalmente no Pacífico. Falésias rochosas desérticas e águas profundas do oceano dividem o mesmo horizonte.
+Depois de Pantanal, Chaco, Andes e Atacama, Mejillones é onde a travessia continental encontra o oceano. Um porto em escala humana para um momento de magnitude continental.
+Mejillones emergiu como ponto estratégico de saída para o salitre e minerais do interior árido do Atacama. Trabalhadores marítimos e embarcações definiram os primeiros traços da identidade local.
+O conflito que redesenhou o mapa do norte sul-americano tornou os portos da costa estratégicos para movimentação militar e controle marítimo. A memória histórica da guerra permanece na identidade da região.
+Enquanto a era salitreira declinou, a pesca artesanal assumiu o papel de sustento e identidade. Os cais passaram dos vapores carregados de salitre às embarcações de madeira carregadas de frutos do mar.
+Mejillones preserva o que muitas cidades costeiras já perderam. A rotina do cais, o mercado de mariscos do amanhecer e o pôr do sol sobre o Pacífico seguem moldando uma identidade insubstituível.
+linear-gradient(135deg, #001e3c 0%, #003566 50%, #024e87 100%)
+Antes do amanhecer, as embarcações partem. O cais acorda no escuro, com o ruído dos motores e o cheiro de sal. A primeira luz do dia encontra os barcos já no mar.
+Com o retorno das embarcações, o mercado ganha vida. Mexilhões, ostras, congrios e erizos frescos chegam diretamente do oceano à banca. Gaivotas disputam os cais com os compradores.
+O sol desce sobre o Atacama e pinta o oceano de dourado. Os barcos balançam devagar. A brisa marítima carrega o aroma da cozinha costeira. A travessia termina aqui, em paz.
+linear-gradient(to top, rgba(0,20,40,0.65) 0%, transparent 50%)
+Em Mejillones, o mar não é fundo de tela — é atividade cotidiana. Os barcos, os cais e os mercados definem o calendário, o sustento e a identidade de quem nasceu aqui.
+Geração após geração, os pescadores locais mantêm técnicas e rotas que a industrialização não substituiu. A pesca artesanal é patrimônio vivo da comunidade.
+A cidade guarda na arquitetura e na memória coletiva a era do salitre que transformou o norte chileno. Uma história de trabalho duro, migrações e construção de identidade.
+O vento que percorre os cais ao entardecer, o silêncio das vagas no pier e o céu estrelado do Atacama sobre o Pacífico criam um ambiente único de profundidade contemplativa.
+Os mexilhões frescos da baía que deram nome à cidade. Servidos cozidos, gratinados ou em caldos. O símbolo gastronômico local.
+Colhidas nas águas frias da costa, as ostras locais são consumidas frescas com limão — uma das iguarias mais valorizadas pelos visitantes.
+A sopa mais emblemática da culinária chilena, preparada com o congrio-rosa local, batatas, coentro e um caldo de intensidade marinha incomparável.
+Preparação em estilo nortino com peixe e frutos do mar frescos, limão e coentro. O frescor do Pacífico em cada garfada.
+Massa crocante recheada com uma mistura de frutos do mar locais. Símbolo da culinária portuária chilena que acompanha qualquer refeição.
+Iguaria do norte chileno, consumida crua ou com azeite e limão. Uma experiência intensa de sabor que resume toda a essência do Pacífico Norte.
+Uma das baías naturais mais protegidas e bonitas do Pacífico Sul. Águas calmas de azul profundo emolduradas por formações áridas do Atacama.
+O coração vivo do porto. Barcos coloridos, equipamentos de pesca, gaivotas e pescadores que mantêm uma rotina centenária de trabalho no mar.
+Nas primeiras horas da manhã, o mercado local ganha vida com mariscos e peixes frescos recém desembarcados. O cheiro do Pacífico em estado puro.
+Formações rochosas áridas que descem abruptamente até o oceano. O contraste visual entre o deserto cinza e o azul profundo do Pacífico é de rara beleza.
+Praias de areia desértica praticamente sem infraestrutura turística. Solidão, silêncio oceânico e a linha do horizonte do Pacífico como única companhia.
+Ao entardecer, o céu limpo do Atacama e a extensão infinita do Pacífico criam um espetáculo cromático de rara intensidade. Dourado, âmbar e azul profundo.
+Edificações e marcos que remetem às eras do salitre e da Guerra do Pacífico. A arquitetura da cidade guarda camadas de história marítima e mineira.
+Mejillones é o encerramento simbólico da maior travessia continental da América do Sul. Do Pantanal ao Pacífico — a chegada acontece aqui.
+Chegada por Antofagasta pela Rota 1 costeira
+Mercado de frutos do mar e primeira degustação de mejillones
+Empanadas de mariscos em restaurante local
+Pôr do sol sobre a baía — o momento mais aguardado da rota
+Caldillo de congrio no almoço em restaurante ribeirinho
+Passeio pelas falésias do Atacama e praias desertas
+Noite no cais — silêncio do Pacífico e céu estrelado do Atacama
+Jaibas e erizos para fechar a noite gastronômica
+Acordar antes do amanhecer — acompanhar o retorno dos barcos
+Mercado de mariscos logo pela manhã com pescadores locais
+Última visita ao mirante com vista da baía
+Café com empanadas e pão de forma chileno
+Partida com a sensação de travessia completa — do Pantanal ao Pacífico
+, background: ACDIM, border: `1px solid rgba(8,145,178,0.3)`, marginBottom:
+O nome 'Mejillones' vem dos abundantes mexilhões (mejillones em espanhol) que habitam a baía desde tempos pré-históricos, quando os povos originários da costa já os consumiam.
+A baía de Mejillones é considerada uma das mais protegidas do Pacífico Sul pelo Atacama, que age como barreira natural contra os ventos vindos do interior do continente.
+Mejillones é o ponto de chegada simbólico da Rota Bioceânica — aproximadamente 3.000 km de travessia desde Campo Grande, no Brasil, até o Pacífico.
+O deserto do Atacama termina literalmente no oceano em Mejillones. As falésias rochosas áridas descem diretamente ao Pacífico sem transição — um dos contrastes visuais mais dramáticos do planeta.
+O céu noturno de Mejillones combina duas maravilhas: a ausência de poluição luminosa do Atacama e o horizonte infinito do Pacífico — uma dupla raridade para observação astronômica.
+Com apenas 12.000 habitantes, Mejillones mantém escala humana deliberada. A cidade nunca priorizou crescimento acelerado em detrimento da identidade marítima original.
+Durante a Guerra do Pacífico (1879–1884), os portos do norte chileno, incluindo Mejillones, tiveram papel estratégico no conflito que redesenhou as fronteiras do Chile, Bolívia e Peru.
+A 'camanchaca' — névoa marítima densa que cobre o litoral nas primeiras horas da manhã — é um fenômeno característico de Mejillones que cria uma atmosfera cinematográfica ao amanhecer.
+linear-gradient(135deg, #001429 0%, #00264d 40%, #003666 70%, #024e87 100%)
+radial-gradient(ellipse, rgba(8,145,178,0.12) 0%, transparent 70%)
+INFOGRÁFICO DA CIDADE
+Dados, rotas e curiosidades de Mejillones em um só quadro.
+PORTO, MAR E
+Mejillones não tenta impressionar pela grandiosidade. Ela emociona pela verdade. Última parada da Rota Bioceânica, é aqui que o oceano finalmente responde ao viajante que atravessou um continente.
+HISTÓRIA ENTRE
+O RITMO DE UM
+Em Mejillones, o mar não é paisagem — é trabalho, cultura e pertencimento. A cidade vive em três tempos: a madrugada dos pescadores, o meio-dia do mercado e o entardecer dourado sobre o Pacífico.
+A culinária de Mejillones é fundada na pesca artesanal e na abundância do Pacífico Norte Chileno. Aqui, o conceito de "fresco" tem um significado literal — o peixe saiu do mar horas antes de chegar ao prato.
+ATRAÇÕES DE
+3 DIAS NO PORTO
+CURIOSIDADES
+COMO CHEGAR
+A TRAVESSIA ESTÁ COMPLETA
+DO PANTANAL
+Mejillones é onde a Rota Bioceânica encontra o oceano. Depois de rios, fronteiras, montanhas e desertos, o viajante chega à sensação de chegada — ao silêncio do Pacífico.
+Ver toda a rota
+← Antofagasta

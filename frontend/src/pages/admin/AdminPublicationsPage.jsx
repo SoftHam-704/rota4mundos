@@ -1,358 +1,226 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { Plus, Trash2, X, CheckCircle, Clock, Send, Instagram, Youtube, Facebook, Linkedin, Twitter, Edit3 } from "lucide-react";
+import { Instagram, CheckCircle, XCircle, Send, Edit3, Trash2, ExternalLink, RefreshCw, AlertTriangle, Sparkles, Clock } from "lucide-react";
 import { socialPostsApi } from "../../api/socialPosts.js";
-import { articlesApi } from "../../api/articles.js";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 
-const PLATFORM_ICONS = {
-    INSTAGRAM: Instagram,
-    YOUTUBE:   Youtube,
-    FACEBOOK:  Facebook,
-    LINKEDIN:  Linkedin,
-    TWITTER:   Twitter,
+// Agente do Instagram: ele prepara arte + legenda revisada; aqui um humano aprova.
+// Nada vai ao ar sem aprovação. Os aprovados saem às 12:00 e às 19:00.
+
+const STATUS = {
+    DRAFT:      { label: "Para aprovar", bg: "#FEF9C3", text: "#854D0E" },
+    APPROVED:   { label: "Aprovado",     bg: "#DCFCE7", text: "#166534" },
+    PUBLISHING: { label: "Publicando",   bg: "#DBEAFE", text: "#1E40AF" },
+    PUBLISHED:  { label: "Publicado",    bg: "#F0FDF4", text: "#15803D" },
+    FAILED:     { label: "Com erro",     bg: "#FEE2E2", text: "#991B1B" },
+    REJECTED:   { label: "Rejeitado",    bg: "#F1F5F9", text: "#475569" },
 };
 
-const PLATFORM_COLORS = {
-    INSTAGRAM: { bg: "#FDF2F8", text: "#BE185D", border: "#F9A8D4" },
-    YOUTUBE:   { bg: "#FEF2F2", text: "#991B1B", border: "#FCA5A5" },
-    FACEBOOK:  { bg: "#EFF6FF", text: "#1D4ED8", border: "#93C5FD" },
-    LINKEDIN:  { bg: "#EFF6FF", text: "#1E40AF", border: "#BFDBFE" },
-    TWITTER:   { bg: "#F0F9FF", text: "#0369A1", border: "#7DD3FC" },
-};
+const TIPO = { REPORTAGEM: "Reportagem", CIDADE: "Cidade da Rota", INFOGRAFICO: "Infográfico", PODCAST: "Podcast" };
 
-const STATUS_CONFIG = {
-    DRAFT:     { label: "Rascunho",   bg: "#FEF9C3", text: "#854D0E" },
-    APPROVED:  { label: "Aprovado",   bg: "#DCFCE7", text: "#166534" },
-    SCHEDULED: { label: "Agendado",   bg: "#DBEAFE", text: "#1E40AF" },
-    PUBLISHED: { label: "Publicado",  bg: "#F0FDF4", text: "#15803D" },
-    REJECTED:  { label: "Rejeitado",  bg: "#FEF2F2", text: "#991B1B" },
-};
+const ABAS = [
+    { key: "DRAFT", label: "Para aprovar" },
+    { key: "APPROVED", label: "Na fila" },
+    { key: "PUBLISHED", label: "Publicados" },
+    { key: "FAILED", label: "Com erro" },
+    { key: "REJECTED", label: "Rejeitados" },
+    { key: "", label: "Todos" },
+];
 
-const EMPTY_FORM = { articleId: "", platform: "INSTAGRAM", caption: "", imageUrl: "", scheduledFor: "" };
+const erroDe = (err) => err.response?.data?.message || err.message || "Erro";
+
+function PainelConta({ status, onGerar, gerando }) {
+    if (!status) return null;
+    const { conta, cota, erroConta, tokenRenovadoEm, porStatus = {} } = status;
+    return (
+        <div className={`rounded-2xl border p-5 mb-6 flex flex-wrap items-center gap-6 ${erroConta ? "border-red-200 bg-red-50" : "border-slate-200 bg-white"}`}>
+            <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: "#FDF2F8" }}>
+                    <Instagram className="w-6 h-6" style={{ color: "#BE185D" }} />
+                </div>
+                <div>
+                    {conta ? (
+                        <>
+                            <div className="font-semibold text-primary-950">@{conta.username}</div>
+                            <div className="text-xs text-slate-500">{conta.media_count} posts · {conta.followers_count} seguidores</div>
+                        </>
+                    ) : (
+                        <div className="text-sm font-semibold text-red-700 flex items-center gap-1">
+                            <AlertTriangle className="w-4 h-4" /> Instagram sem conexão
+                        </div>
+                    )}
+                </div>
+            </div>
+            {erroConta && <div className="text-sm text-red-700 flex-1 min-w-[240px]">{erroConta}</div>}
+            {!erroConta && (
+                <div className="flex flex-wrap gap-6 text-sm text-slate-600">
+                    <div><span className="text-slate-400">Cota da Meta hoje</span><br />{cota ? `${cota.usado} de ${cota.limite}` : "—"}</div>
+                    <div><span className="text-slate-400">Publicação automática</span><br />12:00 e 19:00</div>
+                    <div><span className="text-slate-400">Token renovado em</span><br />{tokenRenovadoEm ? dayjs(tokenRenovadoEm).format("DD/MM/YYYY") : "—"}</div>
+                    <div><span className="text-slate-400">Para aprovar</span><br />{porStatus.DRAFT || 0}</div>
+                    <div><span className="text-slate-400">Na fila</span><br />{porStatus.APPROVED || 0}</div>
+                </div>
+            )}
+            <button onClick={onGerar} disabled={gerando} className="btn-primary ml-auto disabled:opacity-60">
+                {gerando ? <RefreshCw className="w-5 h-5 mr-2 animate-spin" /> : <Sparkles className="w-5 h-5 mr-2" />}
+                {gerando ? "Gerando rascunhos…" : "Gerar rascunhos agora"}
+            </button>
+        </div>
+    );
+}
+
+function CartaoPost({ post, acoes, ocupado }) {
+    const [editando, setEditando] = useState(false);
+    const [legenda, setLegenda] = useState(post.caption);
+    const st = STATUS[post.status] || STATUS.DRAFT;
+    const alerta = post.reviewNote?.startsWith("ATENÇÃO");
+    const editavel = ["DRAFT", "FAILED", "REJECTED", "APPROVED"].includes(post.status);
+
+    return (
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+            {post.imageUrl && (
+                <a href={post.imageUrl} target="_blank" rel="noreferrer" className="block bg-slate-100" style={{ aspectRatio: "4 / 5" }}>
+                    <img src={post.imageUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
+                </a>
+            )}
+            <div className="p-4 flex flex-col gap-3 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ background: st.bg, color: st.text }}>{st.label}</span>
+                    {post.kind && <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">{TIPO[post.kind]}</span>}
+                    <span className="text-xs text-slate-400 ml-auto flex items-center gap-1"><Clock className="w-3 h-3" />{dayjs(post.createdAt).format("DD/MM HH:mm")}</span>
+                </div>
+
+                {post.errorMessage && (
+                    <div className="text-sm rounded-lg bg-red-50 border border-red-200 text-red-800 p-3">
+                        <strong>Erro na publicação:</strong> {post.errorMessage}
+                    </div>
+                )}
+                {post.reviewNote && (
+                    <div className={`text-xs rounded-lg p-3 whitespace-pre-line ${alerta ? "bg-amber-50 border border-amber-200 text-amber-900" : "bg-slate-50 text-slate-500"}`}>
+                        {post.reviewNote}
+                    </div>
+                )}
+
+                {editando ? (
+                    <>
+                        <textarea value={legenda} onChange={(e) => setLegenda(e.target.value)} rows={12}
+                            className="w-full text-sm rounded-lg border border-slate-200 p-3 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20" />
+                        <div className="text-xs text-slate-400 text-right">{legenda.length} / 2200</div>
+                        <div className="flex gap-2">
+                            <button disabled={ocupado} onClick={() => { acoes.editar(post.id, legenda); setEditando(false); }} className="btn-primary text-sm py-2">Salvar legenda</button>
+                            <button onClick={() => { setLegenda(post.caption); setEditando(false); }} className="text-sm px-3 py-2 rounded-lg border border-slate-200">Cancelar</button>
+                        </div>
+                    </>
+                ) : (
+                    <p className="text-sm text-slate-700 whitespace-pre-line line-clamp-[12]">{post.caption}</p>
+                )}
+
+                <div className="flex flex-wrap gap-2 mt-auto pt-2">
+                    {["DRAFT", "FAILED", "REJECTED"].includes(post.status) && (
+                        <button disabled={ocupado} onClick={() => acoes.aprovar(post.id)} className="text-sm px-3 py-2 rounded-lg bg-emerald-600 text-white flex items-center gap-1 disabled:opacity-60">
+                            <CheckCircle className="w-4 h-4" /> {post.status === "FAILED" ? "Aprovar de novo" : "Aprovar"}
+                        </button>
+                    )}
+                    {post.status === "APPROVED" && (
+                        <button disabled={ocupado} onClick={() => acoes.publicar(post.id)} className="text-sm px-3 py-2 rounded-lg bg-primary-700 text-white flex items-center gap-1 disabled:opacity-60">
+                            <Send className="w-4 h-4" /> Publicar agora
+                        </button>
+                    )}
+                    {editavel && !editando && (
+                        <button onClick={() => setEditando(true)} className="text-sm px-3 py-2 rounded-lg border border-slate-200 flex items-center gap-1">
+                            <Edit3 className="w-4 h-4" /> Editar
+                        </button>
+                    )}
+                    {["DRAFT", "APPROVED", "FAILED"].includes(post.status) && (
+                        <button disabled={ocupado} onClick={() => acoes.rejeitar(post.id)} className="text-sm px-3 py-2 rounded-lg border border-slate-200 text-slate-600 flex items-center gap-1">
+                            <XCircle className="w-4 h-4" /> Rejeitar
+                        </button>
+                    )}
+                    {post.permalink && (
+                        <a href={post.permalink} target="_blank" rel="noreferrer" className="text-sm px-3 py-2 rounded-lg border border-slate-200 flex items-center gap-1">
+                            <ExternalLink className="w-4 h-4" /> Ver no Instagram
+                        </a>
+                    )}
+                    {!["PUBLISHED", "PUBLISHING"].includes(post.status) && (
+                        <button disabled={ocupado} onClick={() => window.confirm("Apagar este post?") && acoes.apagar(post.id)} className="text-sm px-3 py-2 rounded-lg text-red-600 ml-auto" title="Apagar">
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function AdminPublicationsPage() {
     const queryClient = useQueryClient();
-    const [filterStatus, setFilterStatus]   = useState("");
-    const [filterPlatform, setFilterPlatform] = useState("");
-    const [isModalOpen, setIsModalOpen]     = useState(false);
-    const [editingPost, setEditingPost]     = useState(null);
-    const [formData, setFormData]           = useState(EMPTY_FORM);
+    const [aba, setAba] = useState("DRAFT");
+
+    const { data: statusData } = useQuery({
+        queryKey: ["social-status"],
+        queryFn: socialPostsApi.status,
+        refetchInterval: (q) => (q.state.data?.data?.data?.gerando ? 5000 : false),
+    });
+    const status = statusData?.data?.data;
 
     const { data: postsData, isLoading } = useQuery({
-        queryKey: ["social-posts", filterStatus, filterPlatform],
-        queryFn: () => socialPostsApi.list({
-            ...(filterStatus   && { status: filterStatus }),
-            ...(filterPlatform && { platform: filterPlatform }),
-        }),
+        queryKey: ["social-posts", aba],
+        queryFn: () => socialPostsApi.list({ platform: "INSTAGRAM", ...(aba && { status: aba }) }),
+        refetchInterval: status?.gerando ? 5000 : false,
     });
+    const posts = postsData?.data?.data || [];
 
-    const { data: articlesData } = useQuery({
-        queryKey: ["admin-articles-select"],
-        queryFn: () => articlesApi.list({ limit: 100, status: "PUBLISHED" }),
-    });
-
-    const createMutation = useMutation({
-        mutationFn: socialPostsApi.create,
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["social-posts"] }); toast.success("Post criado!"); closeModal(); },
-        onError: (err) => toast.error(err.response?.data?.message || "Erro"),
-    });
-
-    const updateMutation = useMutation({
-        mutationFn: ({ id, data }) => socialPostsApi.update(id, data),
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["social-posts"] }); toast.success("Post atualizado!"); closeModal(); },
-        onError: (err) => toast.error(err.response?.data?.message || "Erro"),
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: socialPostsApi.delete,
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["social-posts"] }); toast.success("Post removido!"); },
-    });
-
-    const quickStatus = (id, status) => {
-        updateMutation.mutate({ id, data: { status } });
+    const atualizar = () => {
+        queryClient.invalidateQueries({ queryKey: ["social-posts"] });
+        queryClient.invalidateQueries({ queryKey: ["social-status"] });
     };
+    const mut = (fn, ok) => useMutation({ mutationFn: fn, onSuccess: (r) => { atualizar(); toast.success(r?.data?.message || ok); }, onError: (e) => { atualizar(); toast.error(erroDe(e)); } });
 
-    const posts    = postsData?.data?.data || [];
-    const articles = articlesData?.data?.data || [];
+    const gerar = mut(socialPostsApi.gerar, "Gerando rascunhos");
+    const aprovar = mut(socialPostsApi.aprovar, "Aprovado");
+    const rejeitar = mut(socialPostsApi.rejeitar, "Rejeitado");
+    const editar = mut(({ id, caption }) => socialPostsApi.editarLegenda(id, caption), "Legenda atualizada");
+    const publicar = mut(socialPostsApi.publicarAgora, "Publicado");
+    const apagar = mut(socialPostsApi.delete, "Removido");
 
-    const openModal = (post = null) => {
-        if (post) {
-            setEditingPost(post);
-            setFormData({
-                articleId:   post.articleId || "",
-                platform:    post.platform,
-                caption:     post.caption,
-                imageUrl:    post.imageUrl || "",
-                scheduledFor: post.scheduledFor ? dayjs(post.scheduledFor).format("YYYY-MM-DDTHH:mm") : "",
-            });
-        } else {
-            setEditingPost(null);
-            setFormData(EMPTY_FORM);
-        }
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => { setIsModalOpen(false); setEditingPost(null); };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const payload = {
-            ...formData,
-            articleId:   formData.articleId || null,
-            scheduledFor: formData.scheduledFor || null,
-        };
-        if (editingPost) updateMutation.mutate({ id: editingPost.id, data: payload });
-        else createMutation.mutate(payload);
+    const ocupado = [aprovar, rejeitar, editar, publicar, apagar].some((m) => m.isPending);
+    const acoes = {
+        aprovar: (id) => aprovar.mutate(id),
+        rejeitar: (id) => rejeitar.mutate(id),
+        editar: (id, caption) => editar.mutate({ id, caption }),
+        publicar: (id) => window.confirm("Publicar agora no Instagram?") && publicar.mutate(id),
+        apagar: (id) => apagar.mutate(id),
     };
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="font-display text-3xl font-bold text-primary-950">Publicações</h1>
-                    <p className="text-slate-500 mt-1">Gerencie posts para redes sociais — Instagram, YouTube e mais</p>
-                </div>
-                <button onClick={() => openModal()} className="btn-primary">
-                    <Plus className="w-5 h-5 mr-2" /> Novo Post
-                </button>
+            <div className="mb-6">
+                <h1 className="font-display text-3xl font-bold text-primary-950">Publicações</h1>
+                <p className="text-slate-500 mt-1">O agente prepara arte e legenda revisada; você aprova. Os aprovados saem no Instagram às 12:00 e às 19:00.</p>
             </div>
 
-            {/* Filters */}
-            <div className="flex items-center gap-3 mb-6 flex-wrap">
-                <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
-                >
-                    <option value="">Todos os status</option>
-                    {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                        <option key={k} value={k}>{v.label}</option>
-                    ))}
-                </select>
-                <select
-                    value={filterPlatform}
-                    onChange={(e) => setFilterPlatform(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
-                >
-                    <option value="">Todas as plataformas</option>
-                    {Object.keys(PLATFORM_ICONS).map(p => (
-                        <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>
-                    ))}
-                </select>
-                <span className="text-sm text-slate-400 ml-auto">{posts.length} post{posts.length !== 1 ? "s" : ""}</span>
+            <PainelConta status={status} gerando={status?.gerando || gerar.isPending} onGerar={() => gerar.mutate()} />
+
+            <div className="flex gap-2 mb-6 flex-wrap">
+                {ABAS.map((a) => (
+                    <button key={a.key || "todos"} onClick={() => setAba(a.key)}
+                        className={`text-sm px-4 py-2 rounded-full border ${aba === a.key ? "bg-primary-900 text-white border-primary-900" : "bg-white border-slate-200 text-slate-600"}`}>
+                        {a.label}
+                        {a.key && status?.porStatus?.[a.key] ? <span className="ml-2 opacity-70">{status.porStatus[a.key]}</span> : null}
+                    </button>
+                ))}
             </div>
 
             {isLoading ? (
                 <div className="p-8 text-center text-slate-400">Carregando...</div>
             ) : posts.length === 0 ? (
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-16 text-center">
-                    <Send className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                    <p className="text-slate-500 font-medium">Nenhum post criado ainda</p>
-                    <p className="text-slate-400 text-sm mt-1">Crie manualmente ou aguarde o agente HERMES gerar automaticamente</p>
-                    <button onClick={() => openModal()} className="btn-primary mt-6">
-                        <Plus className="w-4 h-4 mr-2" /> Criar primeiro post
-                    </button>
+                <div className="p-12 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">
+                    Nenhum post aqui. {aba === "DRAFT" && "Os rascunhos chegam todo dia às 07:30 — ou clique em “Gerar rascunhos agora”."}
                 </div>
             ) : (
-                <div className="grid gap-4">
-                    {posts.map((post) => {
-                        const PlatformIcon = PLATFORM_ICONS[post.platform] || Send;
-                        const pColor = PLATFORM_COLORS[post.platform] || PLATFORM_COLORS.INSTAGRAM;
-                        const sConfig = STATUS_CONFIG[post.status] || STATUS_CONFIG.DRAFT;
-                        return (
-                            <motion.div
-                                key={post.id}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"
-                            >
-                                <div className="flex items-start gap-4">
-                                    {/* Platform badge */}
-                                    <div
-                                        style={{ background: pColor.bg, border: `1px solid ${pColor.border}`, color: pColor.text }}
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                                    >
-                                        <PlatformIcon className="w-5 h-5" />
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        {/* Header */}
-                                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                            <span style={{ background: pColor.bg, color: pColor.text }} className="text-xs font-semibold px-2 py-0.5 rounded-full">
-                                                {post.platform.charAt(0) + post.platform.slice(1).toLowerCase()}
-                                            </span>
-                                            <span style={{ background: sConfig.bg, color: sConfig.text }} className="text-xs font-semibold px-2 py-0.5 rounded-full">
-                                                {sConfig.label}
-                                            </span>
-                                            {post.article && (
-                                                <span className="text-xs text-slate-400 truncate max-w-[200px]">
-                                                    📰 {post.article.title}
-                                                </span>
-                                            )}
-                                            <span className="text-xs text-slate-400 ml-auto flex-shrink-0">
-                                                {dayjs(post.createdAt).format("DD/MM HH:mm")}
-                                            </span>
-                                        </div>
-
-                                        {/* Caption */}
-                                        <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap line-clamp-3">
-                                            {post.caption}
-                                        </p>
-
-                                        {post.scheduledFor && (
-                                            <p className="text-xs text-blue-500 mt-1 flex items-center gap-1">
-                                                <Clock className="w-3 h-3" />
-                                                Agendado: {dayjs(post.scheduledFor).format("DD/MM/YYYY HH:mm")}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex items-center gap-1 flex-shrink-0">
-                                        {post.status === "DRAFT" && (
-                                            <button
-                                                onClick={() => quickStatus(post.id, "APPROVED")}
-                                                title="Aprovar"
-                                                className="p-2 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 transition-colors"
-                                            >
-                                                <CheckCircle className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                        {post.status === "APPROVED" && (
-                                            <button
-                                                onClick={() => quickStatus(post.id, "PUBLISHED")}
-                                                title="Marcar como publicado"
-                                                className="p-2 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"
-                                            >
-                                                <Send className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => openModal(post)}
-                                            className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors"
-                                        >
-                                            <Edit3 className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => deleteMutation.mutate(post.id)}
-                                            className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-            )}
-
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto"
-                    >
-                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-                            <h2 className="font-display text-xl font-bold text-primary-950">
-                                {editingPost ? "Editar Post" : "Novo Post"}
-                            </h2>
-                            <button onClick={closeModal} className="p-2 rounded-lg hover:bg-slate-100">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Plataforma</label>
-                                    <select
-                                        value={formData.platform}
-                                        onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-                                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm"
-                                    >
-                                        {Object.keys(PLATFORM_ICONS).map(p => (
-                                            <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
-                                    <select
-                                        value={formData.status || "DRAFT"}
-                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm"
-                                    >
-                                        {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                                            <option key={k} value={k}>{v.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Artigo relacionado (opcional)</label>
-                                <select
-                                    value={formData.articleId}
-                                    onChange={(e) => setFormData({ ...formData, articleId: e.target.value })}
-                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm"
-                                >
-                                    <option value="">— nenhum —</option>
-                                    {articles.map(a => (
-                                        <option key={a.id} value={a.id}>{a.title}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Legenda / Caption</label>
-                                <textarea
-                                    required
-                                    rows={5}
-                                    value={formData.caption}
-                                    onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-                                    placeholder="Escreva o texto do post..."
-                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm resize-none"
-                                />
-                                <p className="text-xs text-slate-400 mt-1">{formData.caption.length} caracteres</p>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">URL da imagem (opcional)</label>
-                                <input
-                                    type="url"
-                                    value={formData.imageUrl}
-                                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                                    placeholder="https://..."
-                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Agendamento (opcional)</label>
-                                <input
-                                    type="datetime-local"
-                                    value={formData.scheduledFor}
-                                    onChange={(e) => setFormData({ ...formData, scheduledFor: e.target.value })}
-                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-sm"
-                                />
-                            </div>
-
-                            <div className="flex justify-end gap-3 pt-2">
-                                <button type="button" onClick={closeModal} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium text-sm">
-                                    Cancelar
-                                </button>
-                                <button type="submit" className="btn-primary">
-                                    {editingPost ? "Salvar" : "Criar"}
-                                </button>
-                            </div>
-                        </form>
-                    </motion.div>
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    {posts.map((p) => <CartaoPost key={p.id + p.updatedAt} post={p} acoes={acoes} ocupado={ocupado} />)}
                 </div>
             )}
         </div>

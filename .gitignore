@@ -51,3 +51,9 @@ mobile/uploads/src.rar
 
 # Backups locais do site publicado
 backups/
+amostras-instagram/
+.mcp.json
+
+# Backups de .env (contêm segredos)
+.env.bak*
+*.env.bak*

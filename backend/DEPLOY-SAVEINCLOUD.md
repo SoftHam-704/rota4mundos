@@ -11,8 +11,11 @@ O site (frontend) continua na hospedagem cPanel (`public_html`), com DNS na Host
 | Node.js (`cp`, pm2) | 275201 | API em `:8080` (IP interno 10.100.74.103), 1 nó só (o cron da IRIS roda no processo) |
 
 O banco `base_rota` fica no cluster `salesmaster`, **compartilhado com o SalesMaster**.
-A API acessa pela rede interna: `node254557-salesmaster…:5432`. A porta externa 13062 recusa
-conexões vindas de dentro da plataforma.
+A API conecta **sempre pelo Pgpool** (`node254556-salesmaster…`): porta 5432 pela rede interna,
+porta externa 12998 para acesso de fora (desenvolvimento local). O Pgpool encaminha as gravações
+ao nó principal e segue o failover. **Nunca apontar direto para um nó Postgres**: o `node254557`
+virou réplica somente leitura num failover e, de jun a out/2026, toda gravação do RotaBio falhou
+(IRIS parada, curtidas e pageviews sem registro) sem ninguém perceber.
 
 ## Nginx (configuração manual)
 
@@ -38,7 +41,7 @@ Para atualizar: painel → `rotabio` → Deployments → Update (ou API `environ
 |---|---|
 | `NODE_ENV` | `production` |
 | `PORT` | `8080` |
-| `DATABASE_URL` | URL do `base_rota` com host `node254557-salesmaster…` e porta **5432** |
+| `DATABASE_URL` | URL do `base_rota` com host `node254556-salesmaster…` (Pgpool) e porta **5432** |
 | `CORS_ORIGIN` | `https://rota4mundos.com.br,https://www.rota4mundos.com.br` |
 | `APP_BASE_URL` | `https://api.rota4mundos.com.br` |
 | `UPLOAD_DIR` | `/home/jelastic/uploads` (fora da pasta do deploy) |

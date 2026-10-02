@@ -283,15 +283,35 @@ enum SocialPostStatus {
     SCHEDULED
     PUBLISHED
     REJECTED
+    PUBLISHING // reservado por um ciclo do publicador (evita publicar em dobro)
+    FAILED     // a Meta recusou; errorMessage diz o porquê
+}
+
+// O que originou o post — define o modelo de arte, o pilar editorial e a chamada da legenda
+enum SocialPostKind {
+    REPORTAGEM
+    CIDADE
+    INFOGRAFICO
+    PODCAST
 }
 
 model SocialPost {
     id           String           @id @default(uuid())
     articleId    String?
     platform     SocialPlatform
+    kind         SocialPostKind?
+    // Origem estável ("artigo:<id>", "cidade:<slug>", "infografico:<slug>"): impede repetir conteúdo
+    sourceKey    String?
     caption      String           @db.Text
     imageUrl     String?
     status       SocialPostStatus @default(DRAFT)
+    reviewNote   String?          @db.Text // parecer do revisor automático
+    errorMessage String?          @db.Text
+    attempts     Int              @default(0)
+    containerId  String?          // contêiner criado na Meta (passo 1 da publicação)
+    externalId   String?          // id do post publicado no Instagram
+    permalink    String?
+    approvedAt   DateTime?
     scheduledFor DateTime?
     publishedAt  DateTime?
     createdAt    DateTime         @default(now())
@@ -299,6 +319,8 @@ model SocialPost {
 
     article      Article?         @relation(fields: [articleId], references: [id], onDelete: SetNull)
 
+    @@unique([platform, sourceKey])
+    @@index([status, scheduledFor])
     @@map("social_posts")
 }
 
