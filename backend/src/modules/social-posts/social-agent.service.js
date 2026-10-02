@@ -82,17 +82,19 @@ const deInfografico = (c) => criarRascunho({
     desenhar: (l) => artInfografico({ titulo: c.nome, subtitulo: l.linhaArte, arquivo: infograficoCidade(c.slug) }),
 });
 
-async function proximaDaSerie() {
-    const usados = new Set((await prisma.socialPost.findMany({
+// `criadosAgora`: o Pgpool manda leituras para a réplica, que pode ainda não ter o post recém-gravado;
+// dentro de uma rodada o agente lembra o que criou em vez de depender da releitura.
+async function proximaDaSerie(criadosAgora) {
+    const usados = new Set([...(await prisma.socialPost.findMany({
         where: { platform: "INSTAGRAM", kind: { in: ["CIDADE", "INFOGRAFICO"] } }, select: { sourceKey: true },
-    })).map((p) => p.sourceKey));
+    })).map((p) => p.sourceKey), ...criadosAgora]);
     const cidade = CIDADES.find((c) => !usados.has(`cidade:${c.slug}`));
     const info = CIDADES.find((c) => fs.existsSync(path.join(ASSETS, "infograficos", infograficoCidade(c.slug))) && !usados.has(`infografico:${c.slug}`));
     const nCidades = [...usados].filter((k) => k.startsWith("cidade:")).length;
     const nInfos = [...usados].filter((k) => k.startsWith("infografico:")).length;
     // alterna inspirar (cidade) e educar (infográfico); a cidade sai antes do infográfico dela
-    if (cidade && (nCidades <= nInfos || !info)) return () => deCidade(cidade);
-    if (info) return () => deInfografico(info);
+    if (cidade && (nCidades <= nInfos || !info)) return { sourceKey: `cidade:${cidade.slug}`, criar: () => deCidade(cidade) };
+    if (info) return { sourceKey: `infografico:${info.slug}`, criar: () => deInfografico(info) };
     return null;
 }
 
@@ -111,14 +113,16 @@ export async function gerarRascunhos() {
         catch (e) { resumo.erros.push(`reportagem "${a.title}": ${e.message}`); }
     }
 
-    let tentativas = 0;
-    while (tentativas++ < ALVO_FILA) {
-        const fila = await prisma.socialPost.count({ where: { platform: "INSTAGRAM", status: { in: ["DRAFT", "APPROVED"] } } });
-        if (fila >= ALVO_FILA) break;
-        const proximo = await proximaDaSerie();
+    const criadosAgora = new Set();
+    let fila = await prisma.socialPost.count({ where: { platform: "INSTAGRAM", status: { in: ["DRAFT", "APPROVED"] } } }) + resumo.reportagens;
+    while (fila < ALVO_FILA) {
+        const proximo = await proximaDaSerie(criadosAgora);
         if (!proximo) break;
-        try { if (await proximo()) resumo.serie++; }
-        catch (e) { resumo.erros.push(`série: ${e.message}`); break; }
+        try {
+            const post = await proximo.criar();
+            criadosAgora.add(proximo.sourceKey);
+            if (post) { resumo.serie++; fila++; }
+        } catch (e) { resumo.erros.push(`série: ${e.message}`); break; }
     }
 
     if (resumo.erros.length) logger.error("Instagram: erros ao gerar rascunhos", { erros: resumo.erros });
@@ -137,7 +141,7 @@ export async function publicarProximo(id) {
             orderBy: [{ approvedAt: "asc" }],
         })).sort((a, b) => (a.kind === "REPORTAGEM" ? 0 : 1) - (b.kind === "REPORTAGEM" ? 0 : 1))[0];
     if (!post) return { publicado: false, motivo: "nenhum post aprovado na fila" };
-    if (post.status !== "APPROVED") return { publicado: false, motivo: `post está ${post.status}, não APPROVED` };
+    // O status lido pode vir da réplica (atrasada); quem decide é a reserva atômica abaixo, feita no principal.
 
     const { usado, limite } = await ig.cota();
     if (usado >= limite) return { publicado: false, motivo: `cota diária da Meta esgotada (${usado}/${limite})` };
@@ -147,7 +151,7 @@ export async function publicarProximo(id) {
         where: { id: post.id, status: "APPROVED" },
         data: { status: "PUBLISHING", attempts: { increment: 1 }, errorMessage: null },
     });
-    if (reserva.count === 0) return { publicado: false, motivo: "post já foi pego por outro ciclo" };
+    if (reserva.count === 0) return { publicado: false, motivo: "o post não está aprovado (ou já foi pego por outro ciclo)" };
 
     const inicio = new Date();
     try {

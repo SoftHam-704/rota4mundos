@@ -32,6 +32,13 @@ export const gerarAgora = asyncHandler(async (req, res) => {
     return ApiResponse.success(res, { gerando: true }, "Gerando rascunhos — eles aparecem na lista em alguns minutos", 202);
 });
 
+// As mudanças de status são gravações condicionais (updateMany com o status esperado): vão ao nó
+// principal e não dependem da leitura da réplica, que pode estar alguns instantes atrasada.
+async function mudarStatus(id, de, dados) {
+    const r = await prisma.socialPost.updateMany({ where: { id, status: { in: de } }, data: dados });
+    return r.count === 1;
+}
+
 async function carregar(id, res) {
     const post = await prisma.socialPost.findUnique({ where: { id } });
     if (!post) ApiResponse.error(res, "Post não encontrado", 404);
@@ -39,46 +46,32 @@ async function carregar(id, res) {
 }
 
 export const aprovar = asyncHandler(async (req, res) => {
-    const post = await carregar(req.params.id, res);
-    if (!post) return;
-    if (!["DRAFT", "FAILED", "REJECTED"].includes(post.status)) return ApiResponse.error(res, `Não dá para aprovar um post ${post.status}`, 409);
-    const atualizado = await prisma.socialPost.update({
-        where: { id: post.id },
-        data: { status: "APPROVED", approvedAt: new Date(), errorMessage: null, containerId: null },
-        include: comArtigo,
-    });
-    logger.info(`Instagram: post ${post.id} aprovado por ${req.user.email}`);
-    return ApiResponse.success(res, atualizado, "Aprovado — sai no próximo horário (12:00 ou 19:00)");
+    const ok = await mudarStatus(req.params.id, ["DRAFT", "FAILED", "REJECTED"],
+        { status: "APPROVED", approvedAt: new Date(), errorMessage: null, containerId: null });
+    if (!ok) return ApiResponse.error(res, "Este post não pode ser aprovado agora (já aprovado, publicado ou removido)", 409);
+    logger.info(`Instagram: post ${req.params.id} aprovado por ${req.user.email}`);
+    return ApiResponse.success(res, null, "Aprovado — sai no próximo horário (12:00 ou 19:00)");
 });
 
 export const rejeitar = asyncHandler(async (req, res) => {
-    const post = await carregar(req.params.id, res);
-    if (!post) return;
-    if (["PUBLISHED", "PUBLISHING"].includes(post.status)) return ApiResponse.error(res, "Post já publicado ou publicando", 409);
-    const atualizado = await prisma.socialPost.update({ where: { id: post.id }, data: { status: "REJECTED" }, include: comArtigo });
-    return ApiResponse.success(res, atualizado, "Rejeitado");
+    const ok = await mudarStatus(req.params.id, ["DRAFT", "APPROVED", "FAILED"], { status: "REJECTED" });
+    if (!ok) return ApiResponse.error(res, "Este post não pode ser rejeitado agora", 409);
+    return ApiResponse.success(res, null, "Rejeitado");
 });
 
 export const editarLegenda = asyncHandler(async (req, res) => {
-    const post = await carregar(req.params.id, res);
-    if (!post) return;
-    if (["PUBLISHED", "PUBLISHING"].includes(post.status)) return ApiResponse.error(res, "Post já publicado ou publicando", 409);
     const caption = String(req.body.caption || "").trim();
     if (!caption) return ApiResponse.error(res, "Legenda vazia", 400);
     if (caption.length > 2200) return ApiResponse.error(res, "O Instagram aceita até 2.200 caracteres", 400);
-    const atualizado = await prisma.socialPost.update({
-        where: { id: post.id },
-        data: { caption, reviewNote: `${post.reviewNote || ""}\nLegenda editada manualmente por ${req.user.email}.`.trim() },
-        include: comArtigo,
-    });
-    return ApiResponse.success(res, atualizado, "Legenda atualizada");
+    const ok = await mudarStatus(req.params.id, ["DRAFT", "APPROVED", "FAILED", "REJECTED"], { caption, reviewNote: `Legenda editada manualmente por ${req.user.email}.` });
+    if (!ok) return ApiResponse.error(res, "Post já publicado ou publicando", 409);
+    return ApiResponse.success(res, null, "Legenda atualizada");
 });
 
 export const publicarAgora = asyncHandler(async (req, res) => {
     const post = await carregar(req.params.id, res);
     if (!post) return;
-    if (post.status !== "APPROVED") return ApiResponse.error(res, "Aprove o post antes de publicar", 409);
-    const r = await publicarProximo(post.id);
+    const r = await publicarProximo(post.id); // só publica se estiver APPROVED (reserva atômica)
     return r.publicado
         ? ApiResponse.success(res, r, "Publicado no Instagram")
         : ApiResponse.error(res, `Não publicou: ${r.motivo}`, 502);
