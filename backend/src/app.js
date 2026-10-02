@@ -25,7 +25,7 @@ import contributionRoutes from "./modules/contributions/contribution.routes.js";
 
 const app = express();
 
-// Necessário para o Railway (e qualquer proxy reverso) — garante que
+// Necessário atrás do proxy reverso (balanceador da SaveInCloud) — garante que
 // express-rate-limit leia o IP real do visitante via X-Forwarded-For
 app.set("trust proxy", 1);
 
@@ -89,10 +89,13 @@ app.use("/api/social-posts", socialPostRoutes);
 app.use("/api/site", siteRoutes);
 app.use("/api/contributions", contributionRoutes);
 
-// Serve arquivos estáticos de uploads em desenvolvimento
-if (env.NODE_ENV === "development") {
-    app.use("/uploads", express.static("uploads"));
-}
+// Serve as imagens enviadas pelo admin. CORP cross-origin porque o site
+// (rota4mundos.com.br) embute imagens servidas pelo domínio da API
+app.use(
+    "/uploads",
+    helmet.crossOriginResourcePolicy({ policy: "cross-origin" }),
+    express.static(env.UPLOAD_DIR, { maxAge: "30d", immutable: true })
+);
 
 // Rota não encontrada (404)
 app.use(notFoundMiddleware);

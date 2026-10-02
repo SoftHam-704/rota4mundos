@@ -20,6 +20,8 @@ const envSchema = z.object({
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     APP_BASE_URL: z.string().default("http://localhost:3333"),
+    // Na SaveInCloud aponte para um diretório persistente (ex.: /home/jelastic/uploads)
+    UPLOAD_DIR: z.string().default("uploads"),
     OPENAI_API_KEY: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
     AI_PROVIDER_ORDER: z.string().default("openai,gemini"),

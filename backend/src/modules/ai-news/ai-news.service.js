@@ -14,16 +14,16 @@ const RSS_FEEDS = [
     "https://news.google.com/rss/search?q=corredor+bioce%C3%A2nico&hl=pt-BR&gl=BR&ceid=BR:pt-419",
     "https://news.google.com/rss/search?q=rota+bioce%C3%A2nica&hl=pt-BR&gl=BR&ceid=BR:pt-419",
     "https://news.google.com/rss/search?q=porto+murtinho+corredor&hl=pt-BR&gl=BR&ceid=BR:pt-419",
+    "https://news.google.com/rss/search?q=ponte+porto+murtinho&hl=pt-BR&gl=BR&ceid=BR:pt-419",
     "https://news.google.com/rss/search?q=corredor+bioceanico&hl=es&gl=PY&ceid=PY:es-419",
+    "https://news.google.com/rss/search?q=corredor+bioce%C3%A1nico&hl=es-419&gl=AR&ceid=AR:es-419",
+    "https://news.google.com/rss/search?q=corredor+bioce%C3%A1nico&hl=es-419&gl=CL&ceid=CL:es-419",
     // Brasil — feeds gerais (complemento)
     "https://g1.globo.com/rss/g1/ms/",
-    "https://www.campograndenews.com.br/rss.xml",
-    "https://correiodoestado.com.br/feed/",
+    "https://www.campograndenews.com.br/rss",
     "https://agenciabrasil.ebc.com.br/rss/geral/feed.xml",
-    // Internacional
-    "https://www.abc.com.py/rss/",
+    // Internacional (Correio do Estado, ABC Color e La Tercera saíram: feeds retornam 404 desde 2026)
     "https://www.lanacion.com.ar/arc/outboundfeeds/rss/",
-    "https://www.latercera.com/feed/",
 ];
 
 // Pré-filtro amplo — Claude faz a triagem real de relevância
@@ -99,6 +99,10 @@ export async function runIrisFetch(authorId, options = {}) {
         RSS_FEEDS.map((url) => parser.parseURL(url).then((feed) => feed.items.slice(0, 20)))
     );
 
+    feedResults.forEach((r, i) => {
+        if (r.status === "rejected") logger.warn(`IRIS: feed falhou — ${RSS_FEEDS[i]}`, { error: r.reason?.message });
+    });
+
     const feedItems = feedResults.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
     logger.info(`IRIS: ${feedItems.length} itens coletados de ${RSS_FEEDS.length} feeds`);
 
@@ -133,9 +137,10 @@ export async function runIrisFetch(authorId, options = {}) {
     logger.info(`IRIS: ${unique.length} itens únicos passaram pelo pré-filtro`);
 
     // 4. Processar com Claude Haiku (triagem e geração de artigo)
-    let published = 0, drafted = 0, skipped = 0;
+    let published = 0, drafted = 0, skipped = 0, errors = 0;
+    const batch = unique.slice(0, maxItems);
 
-    for (const item of unique.slice(0, maxItems)) {
+    for (const item of batch) {
         try {
             const source = `Título: ${item.title || "(sem título)"}
 Data: ${item.pubDate || "recente"}
@@ -236,11 +241,21 @@ ${source}
                 logger.info(`IRIS: RASCUNHO  — "${parsed.title}" (relevância ${parsed.relevance})`);
             }
         } catch (err) {
-            logger.warn(`IRIS: erro ao processar "${item.title}"`, { error: err.message });
+            // Chave inválida, sem crédito ou sem permissão: nenhum item vai passar — aborta em vez de
+            // "ignorar" tudo em silêncio (foi assim que a IRIS ficou parada de 19/06 a 02/10/2026)
+            if (err instanceof Anthropic.APIError && [400, 401, 403].includes(err.status)) {
+                throw new Error(`IRIS: Anthropic recusou a chamada (${err.status}) — ${err.message}`);
+            }
+            logger.error(`IRIS: erro ao processar "${item.title}"`, { error: err.message });
+            errors++;
             skipped++;
         }
     }
 
-    logger.info(`IRIS: concluído — ${published} publicados, ${drafted} rascunhos, ${skipped} ignorados`);
-    return { published, drafted, skipped, total: unique.length };
+    if (batch.length > 0 && errors === batch.length) {
+        throw new Error(`IRIS: todos os ${batch.length} itens falharam — verificar ANTHROPIC_API_KEY e logs`);
+    }
+
+    logger.info(`IRIS: concluído — ${published} publicados, ${drafted} rascunhos, ${skipped} ignorados, ${errors} erros`);
+    return { published, drafted, skipped, errors, total: unique.length };
 }

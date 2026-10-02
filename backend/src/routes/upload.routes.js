@@ -8,11 +8,12 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { prisma } from "../config/database.js";
 import fs from "fs";
+import { env } from "../config/env.js";
 
-// Configuração do Multer para upload local (em dev)
+// Configuração do Multer — grava em UPLOAD_DIR, servido pelo próprio backend em /uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = "uploads/";
+        const uploadPath = env.UPLOAD_DIR;
         if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
         cb(null, uploadPath);
     },
@@ -45,7 +46,7 @@ router.post(
     asyncHandler(async (req, res) => {
         if (!req.file) return ApiResponse.error(res, "Nenhuma imagem enviada", 400);
 
-        const fileUrl = `${process.env.APP_BASE_URL}/uploads/${req.file.filename}`;
+        const fileUrl = `${env.APP_BASE_URL}/uploads/${req.file.filename}`;
 
         const media = await prisma.media.create({
             data: {
@@ -80,7 +81,7 @@ router.post(
             originalName: file.originalname,
             mimeType: file.mimetype,
             size: file.size,
-            url: `${process.env.APP_BASE_URL}/uploads/${file.filename}`,
+            url: `${env.APP_BASE_URL}/uploads/${file.filename}`,
             folder: "uploads",
         }));
 
