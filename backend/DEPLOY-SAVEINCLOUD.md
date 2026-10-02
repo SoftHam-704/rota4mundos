@@ -1,57 +1,52 @@
 # Deploy da API na SaveInCloud
 
-A API (Node + Express + Prisma + cron da IRIS) roda num nó Node.js da SaveInCloud,
-no mesmo ambiente do PostgreSQL `base_rota`. O site (frontend) continua na hospedagem Apache.
+Produção desde 2026-10-02: **https://api.rota4mundos.com.br** (ambiente `rotabio`).
+O site (frontend) continua na hospedagem cPanel (`public_html`), com DNS na HostGator.
 
-## 1. Nó Node.js
+## Topologia do ambiente `rotabio`
 
-- Painel SaveInCloud → ambiente do banco (`salesmaster`) → **Alterar topologia** → adicionar nó **Node.js 20+**
-  (o mesmo ambiente deixa API e banco na rede interna).
-- 1 nó só: o cron da IRIS roda dentro do processo. Com 2+ nós a busca diária roda em duplicidade.
-- Gerenciador de processo: `npm` (executa `npm start` → `node src/server.js`).
+| Nó | Id | Função |
+|---|---|---|
+| Nginx 1.30 (`bl`) | 275202 | IP público 200.229.77.237, TLS Let's Encrypt, proxy para o Node |
+| Node.js (`cp`, pm2) | 275201 | API em `:8080` (IP interno 10.100.74.103), 1 nó só (o cron da IRIS roda no processo) |
 
-## 2. Código
+O banco `base_rota` fica no cluster `salesmaster`, **compartilhado com o SalesMaster**.
+A API acessa pela rede interna: `node254557-salesmaster…:5432`. A porta externa 13062 recusa
+conexões vindas de dentro da plataforma.
 
-Deploy via Git (repositório do projeto, branch `main`). Como a API fica em `backend/`,
-o diretório da aplicação precisa apontar para essa subpasta: ajuste no painel (variável `ROOT_DIR`
-do nó ou script de deploy) e confirme que `npm install` roda dentro de `backend/`.
-O `postinstall` já gera o Prisma Client.
+## Nginx (configuração manual)
 
-## 3. Variáveis de ambiente (Variáveis do nó)
+Ao adicionar o balanceador, a plataforma não gerou a configuração de proxy. O arquivo
+`/etc/nginx/nginx-jelastic.conf` foi escrito à mão e:
+- atende **somente** `api.rota4mundos.com.br`; acesso por IP ou outro nome recebe 444;
+- redireciona HTTP para HTTPS;
+- usa o certificado do add-on Let's Encrypt (`/var/lib/jelastic/SSL/jelastic.{chain,key}`), que renova sozinho.
 
-Copiar **todas** do Railway (Variables → Raw Editor) antes de desligá-lo. Mínimo:
+Backups no nó: `/var/lib/nginx/nginx-jelastic.conf.orig-20261002` (padrão da imagem) e `.http-only`.
+**Se o IP do Node mudar ou um nó for adicionado, o `upstream common` precisa ser atualizado à mão.**
+O add-on gera um `conf.d/ssl.conf`, que **não** é incluído, porque depende do modelo completo da plataforma.
+
+## Código
+
+Deploy via Git (repositório público, branch `main`, contexto `ROOT`). Variáveis do nó:
+`ROOT_DIR=/home/jelastic/ROOT/backend`, `APP_FILE=src/server.js`. O `postinstall` gera o Prisma Client.
+Para atualizar: painel → `rotabio` → Deployments → Update (ou API `environment/vcs/rest/update`).
+
+## Variáveis de ambiente (nó Node)
 
 | Variável | Valor |
 |---|---|
 | `NODE_ENV` | `production` |
-| `PORT` | porta que o nó Node.js expõe (padrão do contêiner) |
-| `DATABASE_URL` | URL **interna** do PostgreSQL no ambiente |
-| `JWT_SECRET` | o mesmo do Railway (senão todos os logins caem) |
+| `PORT` | `8080` |
+| `DATABASE_URL` | URL do `base_rota` com host `node254557-salesmaster…` e porta **5432** |
 | `CORS_ORIGIN` | `https://rota4mundos.com.br,https://www.rota4mundos.com.br` |
 | `APP_BASE_URL` | `https://api.rota4mundos.com.br` |
-| `UPLOAD_DIR` | diretório persistente, ex.: `/home/jelastic/uploads` (fora da pasta do deploy) |
-| `ANTHROPIC_API_KEY` | chave válida, conferir saldo (a IRIS depende dela) |
-| `SMTP_*`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_PROVIDER_ORDER` | iguais ao Railway |
+| `UPLOAD_DIR` | `/home/jelastic/uploads` (fora da pasta do deploy) |
+| `JWT_SECRET`, `ANTHROPIC_API_KEY`, `SMTP_*`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_PROVIDER_ORDER` | iguais ao `backend/.env` |
 
-Não rodar `prisma migrate deploy` na virada: o banco já está com o schema em dia.
+## Frontend
 
-## 4. Domínio
-
-- DNS: `api.rota4mundos.com.br` → endereço do ambiente (CNAME ou IP público).
-- Painel: vincular o domínio externo ao ambiente e emitir SSL (Let's Encrypt).
-
-## 5. Validação antes da virada
-
-```bash
-curl https://api.rota4mundos.com.br/health          # {"status":"ok","environment":"production"}
-curl "https://api.rota4mundos.com.br/api/articles?limit=1"
-```
-
-Nos logs do nó deve aparecer `IRIS: cron diário agendado para 07:00`.
-
-## 6. Virada
-
-1. `frontend/.env.production` → `VITE_API_URL=https://api.rota4mundos.com.br/api`
-2. `npm run build` no frontend e subir o `dist/` para a hospedagem do site.
-3. Testar login no admin, curtidas e cadastro de colaborador no site real.
-4. Só então desligar o serviço no Railway.
+`frontend/.env.production` → `VITE_API_URL=https://api.rota4mundos.com.br/api`.
+Faça `npm run build` e envie `dist/index.html`, `dist/assets/*` e `dist/.htaccess` para `public_html/`.
+O `.htaccess` publicado tem `Cache-Control: no-cache` para `index.(html|js|css)`, porque os nomes
+são fixos (sem hash).

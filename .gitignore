@@ -48,3 +48,6 @@ imagens/*.mp4
 
 # Backup desconhecido, mantido apenas localmente
 mobile/uploads/src.rar
+
+# Backups locais do site publicado
+backups/
