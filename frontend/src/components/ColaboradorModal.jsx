@@ -232,7 +232,7 @@ export default function ColaboradorModal({ onClose }) {
                                     style={{
                                         flex: 1, padding: "8px",
                                         borderRadius: "7px",
-                                        border: "none", cursor: "pointer",
+                                        cursor: "pointer",
                                         fontFamily: "Inter, sans-serif",
                                         fontSize: "13px", fontWeight: tab === t.id ? 700 : 500,
                                         background: tab === t.id
