@@ -293,6 +293,31 @@ enum SocialPostKind {
     CIDADE
     INFOGRAFICO
     PODCAST
+    HISTORIA // pauta do Agente Historiador (história, folclore, culinária, festas…)
+}
+
+enum PautaStatus {
+    PRONTA     // fatos verificados; virou rascunho de artigo e de post
+    DESCARTADA // poucos fatos sobreviveram à classificação/verificação (motivo registrado)
+}
+
+// Pauta do Agente Historiador: o que ele pesquisou, classificou e verificou sobre uma cidade e um tema.
+// Todo fato guarda a(s) fonte(s); lenda é marcada como lenda.
+model Pauta {
+    id           String      @id @default(uuid())
+    cidadeSlug   String
+    tema         String      // historia | folclore | culinaria | festas | personagens | curiosidades | natureza
+    titulo       String
+    achados      Json        // [{ fato, natureza: "documentado"|"lenda", fontes: [idx], confianca }]
+    fontes       Json        // [{ titulo, url }]
+    status       PautaStatus
+    motivo       String?     @db.Text
+    articleId    String?
+    socialPostId String?
+    createdAt    DateTime    @default(now())
+
+    @@index([cidadeSlug, tema])
+    @@map("pautas")
 }
 
 model SocialPost {

@@ -4,6 +4,7 @@ import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import logger from "./config/logger.js";
 import { startAiNewsJob } from "./jobs/aiNewsJob.js";
 import { startSocialJob } from "./jobs/socialJob.js";
+import { startHistoriadorJob } from "./jobs/historiadorJob.js";
 
 const PORT = env.PORT;
 
@@ -24,6 +25,9 @@ async function startServer() {
 
         // Agente do Instagram — rascunhos 07:30, publicação 12:00 e 19:00
         startSocialJob();
+
+        // Agente Historiador — 06:00, só com HISTORIADOR_ATIVO=true
+        startHistoriadorJob();
 
         // Graceful shutdown
         const gracefulShutdown = async (signal) => {

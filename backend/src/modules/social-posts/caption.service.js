@@ -46,6 +46,7 @@ const TIPO = {
     CIDADE: "Cidade da série 'Cidades da Rota' (pilar: inspirar)",
     INFOGRAFICO: "Infográfico (pilar: educar)",
     PODCAST: "Podcast (pilar: conectar)",
+    HISTORIA: "História da Rota — história, folclore, culinária, festa, personagem ou curiosidade de uma cidade (pilar: encantar). Lenda se apresenta como lenda",
 };
 
 let _client;

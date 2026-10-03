@@ -126,7 +126,7 @@ export const fotoCidade = (foto) => {
  * `fundo` (Buffer) é a imagem gerada para o tema — leva o selo "Imagem ilustrativa"; sem ela,
  * usa a ponte ao amanhecer (também ilustração) ou a `foto` informada.
  */
-export async function artReportagem({ titulo, resumo, categoria = "Notícia", foto, fundo }) {
+export async function artReportagem({ titulo, resumo, categoria = "Notícia", foto, fundo, chamada = "Reportagem completa no link da bio" }) {
     const fonte = fundo
         ? `data:image/jpeg;base64,${(await sharp(fundo).resize(W, H, { fit: "cover", position: "attention" }).jpeg({ quality: 85, mozjpeg: true }).toBuffer()).toString("base64")}`
         : fotoCidade(foto);
@@ -137,7 +137,7 @@ export async function artReportagem({ titulo, resumo, categoria = "Notícia", fo
             etiqueta(categoria),
             h("div", { fontFamily: "Playfair", fontWeight: 800, fontSize: tamanho, lineHeight: 1.12, color: C.white }, t),
             resumo ? h("div", { fontFamily: "Inter", fontWeight: 400, fontSize: T.m, lineHeight: 1.45, color: C.muted }, clamp(resumo, 160)) : null,
-            rodape("Reportagem completa no link da bio")), Boolean(fundo) || fonte === PONTE));
+            rodape(chamada)), Boolean(fundo) || fonte === PONTE));
 }
 
 /** Série das cidades: número na série, nome grande, país e a frase da página da cidade. */

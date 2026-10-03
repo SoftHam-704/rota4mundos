@@ -17,7 +17,7 @@ const STATUS = {
     REJECTED:   { label: "Rejeitado",    bg: "#F1F5F9", text: "#475569" },
 };
 
-const TIPO = { REPORTAGEM: "Reportagem", CIDADE: "Cidade da Rota", INFOGRAFICO: "Infográfico", PODCAST: "Podcast" };
+const TIPO = { REPORTAGEM: "Reportagem", CIDADE: "Cidade da Rota", INFOGRAFICO: "Infográfico", PODCAST: "Podcast", HISTORIA: "História da Rota" };
 
 const ABAS = [
     { key: "DRAFT", label: "Para aprovar" },

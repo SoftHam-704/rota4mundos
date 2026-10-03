@@ -26,6 +26,24 @@ export const ROTAS = {
     "instagram.revisao": { provedor: "anthropic", modelo: "claude-opus-5-5", effort: "low" },
     // Fundo ilustrativo das artes de reportagem → Gemini (Nano Banana 2); sem ele, a foto da ponte
     "instagram.imagem": { provedor: "gemini", modelo: "gemini-3.1-flash-image", aspecto: "4:5" },
+
+    // ---- Agente Historiador ----
+    // Pesquisa na internet com fontes citadas → Gemini com busca do Google
+    "historiador.busca": { provedor: "gemini", modelo: "gemini-flash-latest" },
+    // Organizar a pesquisa em achados estruturados: trabalho longo → DeepSeek
+    "historiador.sintese": {
+        provedor: "deepseek", modelo: "deepseek-flash", maxTokens: 16000, // pesquisa longa + raciocínio
+        reserva: { provedor: "anthropic", modelo: "claude-haiku-4-5-20251001", maxTokens: 4000 },
+    },
+    // Natureza de cada achado (documentado / lenda / incerto / fora do tema) → JEV
+    "historiador.classificacao": { provedor: "jev", modelo: "jev-1.13.0" },
+    // Conferir cada fato contra o texto da fonte: exige robustez → Claude
+    "historiador.verificacao": { provedor: "anthropic", modelo: "claude-opus-5-5", effort: "medium" },
+    // Artigo "Histórias da Rota" para o site a partir dos fatos verificados → DeepSeek
+    "historiador.redacao": {
+        provedor: "deepseek", modelo: "deepseek-flash", maxTokens: 6000,
+        reserva: { provedor: "anthropic", modelo: "claude-haiku-4-5-20251001", maxTokens: 3000 },
+    },
 };
 
 /** Configuração efetiva de uma operação, já com a troca por variável de ambiente aplicada. */
@@ -136,4 +154,47 @@ export async function gerarImagem(operacao, prompt) {
         logger.warn(`roteador: ${operacao} sem imagem (${cfg.modelo})`, { erro: e.message });
         return null;
     }
+}
+
+// Os links de fonte do Google vêm por um redirecionador (vertexaisearch…); guarda o endereço real.
+async function resolverLink(url) {
+    try {
+        const r = await fetch(url, { method: "GET", redirect: "manual", signal: AbortSignal.timeout(10000) });
+        return r.headers.get("location") || url;
+    } catch { return url; }
+}
+
+/**
+ * Pesquisa na internet para uma operação (Gemini + busca do Google).
+ * Retorna { texto, fontes: [{ titulo, url }] } — as fontes são as páginas que o Google usou.
+ */
+export async function pesquisar(operacao, prompt) {
+    const cfg = rota(operacao);
+    if (cfg.provedor !== "gemini") throw new Error(`roteador: pesquisa só suporta gemini, veio ${cfg.provedor}`);
+    if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY ausente");
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${cfg.modelo}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], tools: [{ google_search: {} }] }),
+        signal: AbortSignal.timeout(180000),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(`Gemini HTTP ${r.status}: ${JSON.stringify(j.error || j).slice(0, 200)}`);
+    const c = j.candidates?.[0];
+    const texto = (c?.content?.parts || []).map((p) => p.text || "").join("");
+    const brutas = (c?.groundingMetadata?.groundingChunks || []).map((g) => g.web).filter(Boolean);
+    const fontes = await Promise.all(brutas.map(async (w) => ({ titulo: w.title, url: await resolverLink(w.uri) })));
+    if (!texto) throw new Error(`Gemini sem texto (motivo: ${c?.finishReason || "?"})`);
+
+    // Marca no texto, ao fim de cada trecho, as fontes que o sustentam: "…frase [3][7]".
+    // Os índices do Gemini são posições em BYTES (UTF-8); insere de trás para frente.
+    let bytes = Buffer.from(texto, "utf8");
+    const apoios = (c?.groundingMetadata?.groundingSupports || [])
+        .filter((a) => a.segment?.endIndex != null && a.groundingChunkIndices?.length)
+        .sort((a, b) => b.segment.endIndex - a.segment.endIndex);
+    for (const a of apoios) {
+        const marca = Buffer.from(a.groundingChunkIndices.map((i) => ` [${i + 1}]`).join(""), "utf8");
+        bytes = Buffer.concat([bytes.subarray(0, a.segment.endIndex), marca, bytes.subarray(a.segment.endIndex)]);
+    }
+    return { texto, textoComFontes: bytes.toString("utf8"), fontes };
 }

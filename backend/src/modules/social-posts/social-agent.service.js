@@ -75,6 +75,21 @@ const deReportagem = (a) => criarRascunho({
     }),
 });
 
+/** Post a partir de uma pauta verificada do Agente Historiador (chamado pelo Historiador). */
+export const criarPostDeHistoria = ({ pauta, cidade, tema, fatos, url }) => criarRascunho({
+    kind: "HISTORIA",
+    sourceKey: `historia:${pauta.id}`,
+    titulo: `${pauta.titulo} — ${tema.rotulo} de ${cidade.nome} (${cidade.pais})`,
+    url,
+    material: `Fatos verificados pelo Agente Historiador (com fontes) sobre ${cidade.nome}, tema ${tema.rotulo}:\n` +
+        fatos.map((f) => `- [${f.natureza === "lenda" ? "LENDA — apresentar como lenda" : "FATO"}] ${f.fato}`).join("\n"),
+    desenhar: async (l) => artReportagem({
+        titulo: pauta.titulo, resumo: l.linhaArte, categoria: `${tema.rotulo} · ${cidade.nome}`,
+        fundo: l.cenaArte ? await gerarImagem("instagram.imagem", promptFundo(l.cenaArte)) : null,
+        chamada: "História completa no link da bio",
+    }),
+});
+
 const materialCidade = (c) => fs.readFileSync(path.join(ASSETS, "cidades", `${c.slug}.txt`), "utf8");
 
 const deCidade = (c) => criarRascunho({
