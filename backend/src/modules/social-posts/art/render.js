@@ -56,10 +56,15 @@ const clamp = (text, max) => {
     const t = String(text || "").replace(/\s+/g, " ").trim();
     if (t.length <= max) return t;
     // prefere terminar numa frase inteira; só corta no meio se a 1ª frase já não couber
-    const frases = t.match(/[^.!?]+[.!?]+/g) || [];
+    // fim de frase = pontuação seguida de espaço (não confunde "1.800" nem "R$ 2,5 mi.")
+    const frases = t.split(/(?<=[.!?])\s+/);
     let acc = "";
-    for (const f of frases) { if ((acc + f).trim().length > max) break; acc += f; }
-    return acc.trim() || t.slice(0, max - 1).replace(/\s+\S*$/, "") + "…";
+    for (const f of frases) {
+        const junto = acc ? `${acc} ${f}` : f;
+        if (junto.length > max) break;
+        acc = junto;
+    }
+    return acc || t.slice(0, max - 1).replace(/\s+\S*$/, "") + "…";
 };
 
 // ---------- peças comuns ----------
@@ -154,7 +159,7 @@ export function artInfografico({ titulo, subtitulo, arquivo }) {
             h("div", { flexDirection: "column", gap: G.s },
                 etiqueta("Infográfico"),
                 h("div", { fontFamily: "Playfair", fontWeight: 800, fontSize: T.xxl, lineHeight: 1.08, color: C.white }, clamp(titulo, 40)),
-                subtitulo ? h("div", { fontFamily: "Inter", fontWeight: 400, fontSize: T.m, color: C.muted }, clamp(subtitulo, 60)) : null),
+                subtitulo ? h("div", { fontFamily: "Inter", fontWeight: 400, fontSize: T.m, color: C.muted }, clamp(subtitulo, 120)) : null),
             h("div", { borderRadius: 16, overflow: "hidden", border: "4px solid rgba(255,255,255,0.85)" },
                 img(dataUri(fonte), { width: largura, height: Math.round((largura * 2) / 3), objectFit: "cover" })),
             rodape("Infográfico completo no link da bio")));
