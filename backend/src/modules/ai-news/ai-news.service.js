@@ -80,6 +80,98 @@ async function getSystemAuthorId() {
 }
 
 /**
+ * Redação em volume vai para o DeepSeek (regra da casa: DeepSeek para trabalho em volume, Claude
+ * para o que exige robustez). Sem chave do DeepSeek, ou se ele falhar, cai no Claude Haiku.
+ */
+async function gerarTexto(client, prompt) {
+    if (env.DEEPSEEK_API_KEY) {
+        try {
+            const r = await fetch("https://api.deepseek.com/chat/completions", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${env.DEEPSEEK_API_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    model: "deepseek-flash",
+                    max_tokens: 4000, // o flash raciocina antes de responder, e o raciocínio conta no limite
+                    response_format: { type: "json_object" },
+                    messages: [{ role: "user", content: prompt }],
+                }),
+                signal: AbortSignal.timeout(60000),
+            });
+            const j = await r.json().catch(() => ({}));
+            const escolha = j.choices?.[0];
+            const texto = escolha?.message?.content;
+            if (r.ok && texto && escolha.finish_reason === "stop") return texto;
+            if (escolha?.finish_reason === "length") logger.warn("IRIS: resposta do DeepSeek cortada pelo limite de tokens");
+            logger.warn(`IRIS: DeepSeek falhou (HTTP ${r.status}) — usando Claude`, { erro: JSON.stringify(j.error || j).slice(0, 200) });
+        } catch (e) {
+            logger.warn("IRIS: DeepSeek indisponível — usando Claude", { erro: e.message });
+        }
+    }
+    const msg = await client.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1400,
+        messages: [{ role: "user", content: prompt }],
+    });
+    return msg.content[0]?.text || "";
+}
+
+/**
+ * Avalia a relevância e redige a reportagem de um item de feed (o mesmo texto que a IRIS diária usa).
+ * Retorna { relevance, category, title, excerpt, content } ou null se o modelo não devolver JSON válido.
+ * Usada pela IRIS diária e pela recuperação de notícias (scripts/recuperar-noticias.mjs).
+ */
+export async function redigirReportagem(client, item) {
+    const source = `Título: ${item.title || "(sem título)"}
+Data: ${item.pubDate || "recente"}
+Resumo: ${(item.contentSnippet || item.content || "").slice(0, 600)}
+Link: ${item.link || ""}`;
+
+    const prompt = `Você é a IRIS, editora do portal "Rota Bioceânica" — sobre o Corredor Bioceânico Atlântico-Pacífico (Brasil → Paraguai → Argentina → Chile).
+
+Avalie se a notícia trata DIRETAMENTE do Corredor Bioceânico, suas obras, comércio ou cidades específicas da rota (Porto Murtinho, Carmelo Peralta, Filadelfia, Mariscal Estigarribia, Paso de Jama, Mejillones).
+
+NÃO é relevante (relevância ≤ 4):
+- Notícias gerais do Mato Grosso do Sul sem relação com o Corredor
+- Acidentes, crimes, catástrofes climáticas (granizo, enchentes, etc.)
+- Casos trabalhistas ou judiciais sem conexão com o Corredor
+- Logística genérica, transporte sem citar a Rota Bioceânica
+- Política estadual/municipal desconectada do Corredor
+- Turismo genérico fora do eixo da Rota
+
+É relevante (relevância ≥ 7) quando:
+- Cita explicitamente "Corredor Bioceânico", "Rota Bioceânica" ou "ponte de Porto Murtinho"
+- Trata de obras, investimentos, acordos diplomáticos no eixo BR-PY-AR-CL
+- Envolve comércio ou exportação especificamente pela rota do Corredor
+
+Responda APENAS com JSON válido (sem markdown):
+
+${source}
+
+{
+  "relevance": <inteiro 1-10>,
+  "category": "<Infraestrutura | Turismo | Economia | Cultura | Meio Ambiente | Política>",
+  "title": "<título jornalístico PT-BR, máx 90 chars>",
+  "excerpt": "<resumo factual PT-BR, 1-2 frases, máx 220 chars>",
+  "content": "<artigo HTML simples (p, strong, h3), 3-5 parágrafos, PT-BR, baseado nos fatos>"
+}`;
+
+    const raw = (await gerarTexto(client, prompt)).trim();
+    const jsonStr = raw.replace(/^```json?\s*/i, "").replace(/\s*```$/i, "").trim();
+    // O DeepSeek, no modo JSON, às vezes escreve '{"type": "json_object"}' antes do objeto de verdade:
+    // fica com o primeiro objeto que tenha "relevance".
+    let parsed = null;
+    for (let i = jsonStr.indexOf("{"); i >= 0 && !parsed; i = jsonStr.indexOf("{", i + 1)) {
+        try { const o = JSON.parse(jsonStr.slice(i)); if (o && "relevance" in o) parsed = o; } catch { /* tenta o próximo "{" */ }
+    }
+    if (!parsed) {
+        logger.warn(`IRIS: JSON inválido para "${item.title}"`);
+        return null;
+    }
+
+    return parsed;
+}
+
+/**
  * Core IRIS logic — chamado pelo controller (HTTP) ou pelo cron job.
  * @param {string} authorId
  * @param {object} options
@@ -142,57 +234,8 @@ export async function runIrisFetch(authorId, options = {}) {
 
     for (const item of batch) {
         try {
-            const source = `Título: ${item.title || "(sem título)"}
-Data: ${item.pubDate || "recente"}
-Resumo: ${(item.contentSnippet || item.content || "").slice(0, 600)}
-Link: ${item.link || ""}`;
-
-            const msg = await client.messages.create({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 1400,
-                messages: [
-                    {
-                        role: "user",
-                        content: `Você é a IRIS, editora do portal "Rota Bioceânica" — sobre o Corredor Bioceânico Atlântico-Pacífico (Brasil → Paraguai → Argentina → Chile).
-
-Avalie se a notícia trata DIRETAMENTE do Corredor Bioceânico, suas obras, comércio ou cidades específicas da rota (Porto Murtinho, Carmelo Peralta, Filadelfia, Mariscal Estigarribia, Paso de Jama, Mejillones).
-
-NÃO é relevante (relevância ≤ 4):
-- Notícias gerais do Mato Grosso do Sul sem relação com o Corredor
-- Acidentes, crimes, catástrofes climáticas (granizo, enchentes, etc.)
-- Casos trabalhistas ou judiciais sem conexão com o Corredor
-- Logística genérica, transporte sem citar a Rota Bioceânica
-- Política estadual/municipal desconectada do Corredor
-- Turismo genérico fora do eixo da Rota
-
-É relevante (relevância ≥ 7) quando:
-- Cita explicitamente "Corredor Bioceânico", "Rota Bioceânica" ou "ponte de Porto Murtinho"
-- Trata de obras, investimentos, acordos diplomáticos no eixo BR-PY-AR-CL
-- Envolve comércio ou exportação especificamente pela rota do Corredor
-
-Responda APENAS com JSON válido (sem markdown):
-
-${source}
-
-{
-  "relevance": <inteiro 1-10>,
-  "category": "<Infraestrutura | Turismo | Economia | Cultura | Meio Ambiente | Política>",
-  "title": "<título jornalístico PT-BR, máx 90 chars>",
-  "excerpt": "<resumo factual PT-BR, 1-2 frases, máx 220 chars>",
-  "content": "<artigo HTML simples (p, strong, h3), 3-5 parágrafos, PT-BR, baseado nos fatos>"
-}`,
-                    },
-                ],
-            });
-
-            const raw = (msg.content[0]?.text || "").trim();
-            const jsonStr = raw.replace(/^```json?\s*/i, "").replace(/\s*```$/i, "").trim();
-
-            let parsed;
-            try {
-                parsed = JSON.parse(jsonStr);
-            } catch {
-                logger.warn(`IRIS: JSON inválido para "${item.title}"`);
+            const parsed = await redigirReportagem(client, item);
+            if (!parsed) {
                 skipped++;
                 continue;
             }

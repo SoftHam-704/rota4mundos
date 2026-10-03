@@ -104,8 +104,9 @@ export async function gerarRascunhos() {
     const desde = new Date(Date.now() - JANELA_REPORTAGEM_DIAS * 86400_000);
     const jaPostados = (await prisma.socialPost.findMany({ where: { kind: "REPORTAGEM" }, select: { articleId: true } })).map((p) => p.articleId).filter(Boolean);
     const novas = await prisma.article.findMany({
-        where: { status: "PUBLISHED", createdAt: { gte: desde }, id: { notIn: jaPostados } },
-        orderBy: { createdAt: "desc" },
+        // pela DATA DA NOTÍCIA: reportagens recuperadas de meses atrás são gravadas hoje, mas não são novidade
+        where: { status: "PUBLISHED", publishedAt: { gte: desde }, id: { notIn: jaPostados } },
+        orderBy: { publishedAt: "desc" },
         take: MAX_REPORTAGENS,
     });
     for (const a of novas) {
