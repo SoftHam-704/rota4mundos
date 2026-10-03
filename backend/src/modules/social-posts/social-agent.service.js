@@ -90,7 +90,20 @@ export const criarPostDeHistoria = ({ pauta, cidade, tema, fatos, url }) => cria
     }),
 });
 
-const materialCidade = (c) => fs.readFileSync(path.join(ASSETS, "cidades", `${c.slug}.txt`), "utf8");
+// A posição vem da ORDEM DA TRAVESSIA (cidades.js), dita com todas as letras: sem isso o redator tirava
+// "segunda parada" do texto do site enquanto a arte dizia 04/14 (Hamilton, 03/10).
+function posicaoNaRota(c) {
+    const i = CIDADES.indexOf(c);
+    const ant = CIDADES[i - 1], prox = CIDADES[i + 1];
+    return [
+        `POSIÇÃO NA ROTA (use exatamente esta; não deduza outra do texto): ${c.nome} é a ${i + 1}ª de ${CIDADES.length} cidades da Rota Bioceânica, no sentido Campo Grande (1ª) → Pacífico.`,
+        ant ? `Cidade anterior: ${ant.nome} (${ant.pais}).` : "É o ponto de partida da Rota.",
+        prox ? `Próxima cidade: ${prox.nome} (${prox.pais}).` : "É o encerramento da travessia, no Pacífico.",
+    ].join(" ");
+}
+const materialCidade = (c) => `${posicaoNaRota(c)}
+
+${fs.readFileSync(path.join(ASSETS, "cidades", `${c.slug}.txt`), "utf8")}`;
 
 const deCidade = (c) => criarRascunho({
     kind: "CIDADE",
