@@ -23,7 +23,7 @@ const Legenda = {
     properties: {
         legenda: { type: "string", description: "texto da legenda SEM as hashtags" },
         hashtags: { type: "array", items: { type: "string" }, description: "de 3 a 5 hashtags, cada uma começando com #" },
-        linhaArte: { type: "string", description: "resumo de uma frase para a arte, até 140 caracteres, só com fatos do material" },
+        linhaArte: { type: "string", description: "resumo de uma frase para a arte, até 120 caracteres, só com fatos do material; vai logo abaixo do título na arte, então NÃO comece repetindo o nome da cidade ou o título" },
         categoria: { type: "string", enum: CATEGORIAS },
     },
     required: ["legenda", "hashtags", "linhaArte", "categoria"],
