@@ -9,12 +9,17 @@
         "login": "Login",
         "logout": "Logout",
         "support": "Support",
-        "supportMobile": "Support the project"
+        "supportMobile": "Support the project",
+        "stories": "Stories"
     },
     "hero": {
         "badge": "Bioceanic Route · 4 Countries · 3,500 km",
         "titleLine1": "THE BRIDGE BETWEEN",
-        "words": ["TWO OCEANS", "ONE STORY", "ONE FUTURE"],
+        "words": [
+            "TWO OCEANS",
+            "ONE STORY",
+            "ONE FUTURE"
+        ],
         "description": "From the Pantanal to the Pacific — the greatest continental integration in South America, uniting cultures, peoples and markets across 3,500 km of living history.",
         "ctaPrimary": "Explore Cities",
         "ctaSecondary": "Discover the Route",
@@ -94,7 +99,11 @@
         "titleHighlight": "of this story",
         "description": "Local journalists, historians, photographers and storytellers — send articles, old photos or stories and see your voice reach the four countries of the route.",
         "cta": "I want to collaborate",
-        "items": ["Articles & Reports", "Historic Photos", "Stories & Testimonials"],
+        "items": [
+            "Articles & Reports",
+            "Historic Photos",
+            "Stories & Testimonials"
+        ],
         "more": "+ testimonials and much more"
     },
     "apoie": {
@@ -107,9 +116,27 @@
         "cta": "See all ways to participate",
         "ctaMobile": "See ways to participate",
         "cards": [
-            { "label": "Supporter",           "title": "Believe in the Cause",  "desc": "People who believe in South American integration and want to be part of this story.",                                       "cta": "I want to support",       "badge": "" },
-            { "label": "Sponsor",              "title": "Connect Your Brand",    "desc": "Hotels, logistics companies and operators who want to be protagonists in the route's narrative.",                         "cta": "Talk about sponsorship",  "badge": "Most popular" },
-            { "label": "Letter of Intent",     "title": "Be a Reference",        "desc": "Municipalities, secretariats, chambers of commerce and entities that want a leading role in the corridor.",             "cta": "I express interest",      "badge": "" }
+            {
+                "label": "Supporter",
+                "title": "Believe in the Cause",
+                "desc": "People who believe in South American integration and want to be part of this story.",
+                "cta": "I want to support",
+                "badge": ""
+            },
+            {
+                "label": "Sponsor",
+                "title": "Connect Your Brand",
+                "desc": "Hotels, logistics companies and operators who want to be protagonists in the route's narrative.",
+                "cta": "Talk about sponsorship",
+                "badge": "Most popular"
+            },
+            {
+                "label": "Letter of Intent",
+                "title": "Be a Reference",
+                "desc": "Municipalities, secretariats, chambers of commerce and entities that want a leading role in the corridor.",
+                "cta": "I express interest",
+                "badge": ""
+            }
         ]
     }
 }

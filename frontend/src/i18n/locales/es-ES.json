@@ -9,12 +9,17 @@
         "login": "Ingresar",
         "logout": "Salir",
         "support": "Apoye",
-        "supportMobile": "Apoye el proyecto"
+        "supportMobile": "Apoye el proyecto",
+        "stories": "Historias"
     },
     "hero": {
         "badge": "Ruta Bioceánica · 4 Países · 3.500 km",
         "titleLine1": "EL PUENTE ENTRE",
-        "words": ["DOS OCÉANOS", "UNA HISTORIA", "UN FUTURO"],
+        "words": [
+            "DOS OCÉANOS",
+            "UNA HISTORIA",
+            "UN FUTURO"
+        ],
         "description": "Del Pantanal al Pacífico — la mayor integración continental de América del Sur, uniendo culturas, pueblos y mercados en 3.500 km de historia viva.",
         "ctaPrimary": "Explorar Ciudades",
         "ctaSecondary": "Conoce la Ruta",
@@ -94,7 +99,11 @@
         "titleHighlight": "de esta historia",
         "description": "Periodistas locales, historiadores, fotógrafos y narradores — envía artículos, fotos antiguas o cuentos y verás tu voz llegar a los cuatro países de la ruta.",
         "cta": "Quiero colaborar",
-        "items": ["Artículos y Reportajes", "Fotos Históricas", "Cuentos y Testimonios"],
+        "items": [
+            "Artículos y Reportajes",
+            "Fotos Históricas",
+            "Cuentos y Testimonios"
+        ],
         "more": "+ testimonios y mucho más"
     },
     "apoie": {
@@ -107,9 +116,27 @@
         "cta": "Ver todas las formas de participar",
         "ctaMobile": "Ver formas de participar",
         "cards": [
-            { "label": "Partidario",          "title": "Cree en la Causa",    "desc": "Personas que creen en la integración de América del Sur y quieren ser parte de esta historia.",                              "cta": "Quiero apoyar",           "badge": "" },
-            { "label": "Patrocinador",         "title": "Conecta tu Marca",    "desc": "Hoteles, empresas de logística y operadores que quieren ser protagonistas en la narrativa de la ruta.",                    "cta": "Hablar de patrocinio",    "badge": "Más solicitado" },
-            { "label": "Carta de Intención",   "title": "Sé Referencia",       "desc": "Alcaldías, secretarías, cámaras de comercio y entidades que quieren protagonismo en el corredor.",                        "cta": "Manifiesto interés",      "badge": "" }
+            {
+                "label": "Partidario",
+                "title": "Cree en la Causa",
+                "desc": "Personas que creen en la integración de América del Sur y quieren ser parte de esta historia.",
+                "cta": "Quiero apoyar",
+                "badge": ""
+            },
+            {
+                "label": "Patrocinador",
+                "title": "Conecta tu Marca",
+                "desc": "Hoteles, empresas de logística y operadores que quieren ser protagonistas en la narrativa de la ruta.",
+                "cta": "Hablar de patrocinio",
+                "badge": "Más solicitado"
+            },
+            {
+                "label": "Carta de Intención",
+                "title": "Sé Referencia",
+                "desc": "Alcaldías, secretarías, cámaras de comercio y entidades que quieren protagonismo en el corredor.",
+                "cta": "Manifiesto interés",
+                "badge": ""
+            }
         ]
     }
 }

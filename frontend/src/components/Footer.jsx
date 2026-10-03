@@ -26,6 +26,7 @@ const NAV_DESTINOS = [
 
 const NAV_PORTAL = [
     { to: "/",          label: "Home" },
+    { to: "/historias", label: "Histórias da Rota" },
     { to: "/noticias",  label: "Notícias" },
     { to: "/cidades",   label: "Destinos" },
     { to: "/sobre",     label: "Sobre a Rota" },

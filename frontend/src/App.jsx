@@ -89,6 +89,7 @@ const SHARED_ROUTES = [
     { path: "cidades/mejillones",               el: <MejillonesPage /> },
     { path: "cidades/:slug",                    el: <CityDetailPage /> },
     { path: "noticias",                         el: <ArticlesPage /> },
+    { path: "historias",                        el: <ArticlesPage secao="historias" /> },
     { path: "noticias/:slug",                   el: <ArticleDetailPage /> },
     { path: "apoie",                            el: <ApoiePage /> },
     { path: "colabore",                         el: <ColaborePage /> },

@@ -16,13 +16,32 @@ const CATEGORY_COLOR = {
 };
 const DEFAULT_COLOR = { bg: "#F1F5F9", text: "#475569", dot: "#94A3B8" };
 
-export default function ArticlesPage() {
+// A mesma página serve a "Notícias da Rota" (padrão, sem as Histórias) e a "Histórias da Rota".
+export const SECOES = {
+    noticias: {
+        filtro: { excludeCategory: "historias-da-rota" },
+        eyebrow: "IRIS — Monitoramento em Tempo Real",
+        titulo: "Notícias da Rota",
+        subtitulo: "Acompanhe as últimas novidades sobre o Corredor Bioceânico",
+        fundo: "/ultimas_noticias.png",
+    },
+    historias: {
+        filtro: { category: "historias-da-rota" },
+        eyebrow: "Agente Historiador — Pesquisa com fontes",
+        titulo: "Histórias da Rota",
+        subtitulo: "Folclore, culinária, festas, personagens e curiosidades das cidades cortadas pela Rota Bioceânica",
+        fundo: "/Quarto_paises.webp",
+    },
+};
+
+export default function ArticlesPage({ secao = "noticias" }) {
+    const cfg = SECOES[secao] || SECOES.noticias;
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
 
     const { data, isLoading } = useQuery({
-        queryKey: ["articles", search, page],
-        queryFn: () => articlesApi.list({ search, page, limit: 12 }),
+        queryKey: ["articles", secao, search, page],
+        queryFn: () => articlesApi.list({ search, page, limit: 12, ...cfg.filtro }),
         staleTime: 0,
     });
 
@@ -45,7 +64,7 @@ export default function ArticlesPage() {
             }}>
                 <div style={{
                     position: "absolute", inset: 0,
-                    backgroundImage: "url(/ultimas_noticias.png)",
+                    backgroundImage: `url(${cfg.fundo})`,
                     backgroundSize: "cover", backgroundPosition: "center",
                     opacity: 0.18,
                 }} />
@@ -62,7 +81,7 @@ export default function ArticlesPage() {
                             color: "#F4A261", textTransform: "uppercase",
                             marginBottom: "10px",
                         }}>
-                            IRIS — Monitoramento em Tempo Real
+                            {cfg.eyebrow}
                         </p>
                         <h1 style={{
                             fontFamily: '"Bebas Neue", sans-serif',
@@ -71,7 +90,7 @@ export default function ArticlesPage() {
                             marginBottom: "12px",
                             letterSpacing: "0.03em",
                         }}>
-                            Notícias da Rota
+                            {cfg.titulo}
                         </h1>
                         <p style={{
                             color: "rgba(255,255,255,0.6)",
@@ -80,7 +99,7 @@ export default function ArticlesPage() {
                             margin: "0 auto",
                             padding: "0 8px",
                         }}>
-                            Acompanhe as últimas novidades sobre o Corredor Bioceânico
+                            {cfg.subtitulo}
                         </p>
                     </motion.div>
 

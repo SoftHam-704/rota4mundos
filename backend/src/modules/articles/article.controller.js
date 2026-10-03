@@ -30,7 +30,7 @@ export const createArticle = asyncHandler(async (req, res) => {
 });
 
 export const listArticles = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, search, category, status = "PUBLISHED", lang = "pt", tag } = req.query;
+    const { page = 1, limit = 10, search, category, excludeCategory, status = "PUBLISHED", lang = "pt", tag } = req.query;
     const pageNum  = Math.max(1, parseInt(page)  || 1);
     const limitNum = Math.min(100, parseInt(limit) || 10);
     const skip = (pageNum - 1) * limitNum;
@@ -38,7 +38,9 @@ export const listArticles = asyncHandler(async (req, res) => {
     const where = { lang };
     if (status !== "all") where.status = status;
     if (search) where.OR = [{ title: { contains: search, mode: "insensitive" } }, { excerpt: { contains: search, mode: "insensitive" } }];
-    if (category) where.categoryId = category;
+    // categoria por id ou por slug (ex.: ?category=historias-da-rota); excludeCategory tira uma seção da lista
+    if (category) where.category = { is: { OR: [{ id: category }, { slug: category }] } };
+    if (excludeCategory) where.NOT = { category: { is: { OR: [{ id: excludeCategory }, { slug: excludeCategory }] } } };
     if (tag) where.tags = { some: { tag: { slug: tag } } };
 
     const [articles, totalItems] = await Promise.all([

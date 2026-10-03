@@ -9,6 +9,7 @@ import ColaboradorModal from "./ColaboradorModal.jsx";
 const NAV_LINKS = [
     { to: "/",         key: "nav.home" },
     { to: "/cidades",  key: "nav.cities" },
+    { to: "/historias", key: "nav.stories" },
     { to: "/noticias", key: "nav.news" },
     { to: "/apoie",    key: "nav.support" },
 ];
