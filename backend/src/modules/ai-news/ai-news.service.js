@@ -130,7 +130,7 @@ ${source}
         try { const o = JSON.parse(jsonStr.slice(i)); if (o && "relevance" in o) parsed = o; } catch { /* tenta o próximo "{" */ }
     }
     if (!parsed) {
-        logger.warn(`IRIS: JSON inválido para "${item.title}"`);
+        logger.warn(`Repórter: JSON inválido para "${item.title}"`);
         return null;
     }
 
@@ -158,11 +158,11 @@ export async function runIrisFetch(authorId, options = {}) {
     );
 
     feedResults.forEach((r, i) => {
-        if (r.status === "rejected") logger.warn(`IRIS: feed falhou — ${RSS_FEEDS[i]}`, { error: r.reason?.message });
+        if (r.status === "rejected") logger.warn(`Repórter: feed falhou — ${RSS_FEEDS[i]}`, { error: r.reason?.message });
     });
 
     const feedItems = feedResults.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
-    logger.info(`IRIS: ${feedItems.length} itens coletados de ${RSS_FEEDS.length} feeds`);
+    logger.info(`Repórter: ${feedItems.length} itens coletados de ${RSS_FEEDS.length} feeds`);
 
     // 2. Pré-filtrar por keywords
     const relevant = feedItems.filter((item) =>
@@ -170,7 +170,7 @@ export async function runIrisFetch(authorId, options = {}) {
     );
 
     if (relevant.length === 0) {
-        logger.info("IRIS: nenhum item relevante encontrado nos feeds");
+        logger.info("Repórter: nenhum item relevante encontrado nos feeds");
         return { published: 0, drafted: 0, skipped: 0, total: 0 };
     }
 
@@ -192,7 +192,7 @@ export async function runIrisFetch(authorId, options = {}) {
         return true;
     });
 
-    logger.info(`IRIS: ${unique.length} itens únicos passaram pelo pré-filtro`);
+    logger.info(`Repórter: ${unique.length} itens únicos passaram pelo pré-filtro`);
 
     // 4. Processar com Claude Haiku (triagem e geração de artigo)
     let published = 0, drafted = 0, skipped = 0, errors = 0;
@@ -207,7 +207,7 @@ export async function runIrisFetch(authorId, options = {}) {
             }
 
             if (!parsed.relevance || parsed.relevance < draftThreshold) {
-                logger.info(`IRIS: ignorado — "${item.title}" (relevância ${parsed.relevance ?? "?"}})`);
+                logger.info(`Repórter: ignorado — "${item.title}" (relevância ${parsed.relevance ?? "?"}})`);
                 skipped++;
                 continue;
             }
@@ -244,27 +244,27 @@ export async function runIrisFetch(authorId, options = {}) {
 
             if (status === "PUBLISHED") {
                 published++;
-                logger.info(`IRIS: PUBLICADO — "${parsed.title}" (relevância ${parsed.relevance})`);
+                logger.info(`Repórter: PUBLICADO — "${parsed.title}" (relevância ${parsed.relevance})`);
             } else {
                 drafted++;
-                logger.info(`IRIS: RASCUNHO  — "${parsed.title}" (relevância ${parsed.relevance})`);
+                logger.info(`Repórter: RASCUNHO  — "${parsed.title}" (relevância ${parsed.relevance})`);
             }
         } catch (err) {
             // Chave inválida, sem crédito ou sem permissão: nenhum item vai passar — aborta em vez de
             // "ignorar" tudo em silêncio (foi assim que a IRIS ficou parada de 19/06 a 02/10/2026)
             if (err instanceof Anthropic.APIError && [400, 401, 403].includes(err.status)) {
-                throw new Error(`IRIS: Anthropic recusou a chamada (${err.status}) — ${err.message}`);
+                throw new Error(`Repórter: Anthropic recusou a chamada (${err.status}) — ${err.message}`);
             }
-            logger.error(`IRIS: erro ao processar "${item.title}"`, { error: err.message });
+            logger.error(`Repórter: erro ao processar "${item.title}"`, { error: err.message });
             errors++;
             skipped++;
         }
     }
 
     if (batch.length > 0 && errors === batch.length) {
-        throw new Error(`IRIS: todos os ${batch.length} itens falharam — verificar ANTHROPIC_API_KEY e logs`);
+        throw new Error(`Repórter: todos os ${batch.length} itens falharam — verificar ANTHROPIC_API_KEY e logs`);
     }
 
-    logger.info(`IRIS: concluído — ${published} publicados, ${drafted} rascunhos, ${skipped} ignorados, ${errors} erros`);
+    logger.info(`Repórter: concluído — ${published} publicados, ${drafted} rascunhos, ${skipped} ignorados, ${errors} erros`);
     return { published, drafted, skipped, errors, total: unique.length };
 }

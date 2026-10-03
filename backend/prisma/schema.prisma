@@ -407,3 +407,25 @@ model SponsorInterest {
 
     @@map("sponsor_interests")
 }
+
+// Cada rodada dos agentes agendados — inclusive a que quebrou. É o que a rota de saúde
+// (/api/saude/agentes) mostra ao Guardião da casa comum: sem isto, falha só ficava no log.
+enum ResultadoRodada {
+    EXECUTANDO
+    OK
+    NADA_A_FAZER // rodou e não havia o que fazer (ex.: nenhum post aprovado)
+    FALHOU
+}
+
+model AgentRun {
+    id          String          @id @default(uuid())
+    agente      String          // historiador | reporter | instagram_rascunhos | instagram_publicacao
+    iniciadoEm  DateTime        @default(now())
+    terminadoEm DateTime?
+    resultado   ResultadoRodada @default(EXECUTANDO)
+    detalhe     String?         @db.Text // resumo sem dado de leitor nem texto de post
+    erro        String?         @db.Text
+
+    @@index([agente, iniciadoEm])
+    @@map("agent_runs")
+}

@@ -20,7 +20,7 @@ const DEFAULT_COLOR = { bg: "#F1F5F9", text: "#475569", dot: "#94A3B8" };
 export const SECOES = {
     noticias: {
         filtro: { excludeCategory: "historias-da-rota" },
-        eyebrow: "IRIS — Monitoramento em Tempo Real",
+        eyebrow: "Repórter da Rota — Monitoramento em Tempo Real",
         titulo: "Notícias da Rota",
         subtitulo: "Acompanhe as últimas novidades sobre o Corredor Bioceânico",
         fundo: "/ultimas_noticias.png",

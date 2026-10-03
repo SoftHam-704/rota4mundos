@@ -28,6 +28,7 @@ const envSchema = z.object({
     ANTHROPIC_API_KEY: z.string().optional(),
     DEEPSEEK_API_KEY: z.string().optional(),
     JEV_API_KEY: z.string().optional(),
+    SAUDE_AGENTES_TOKEN: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

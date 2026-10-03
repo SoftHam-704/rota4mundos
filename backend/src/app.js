@@ -22,6 +22,7 @@ import aiNewsRoutes from "./modules/ai-news/ai-news.routes.js";
 import socialPostRoutes from "./modules/social-posts/social-post.routes.js";
 import siteRoutes from "./modules/site/site.routes.js";
 import contributionRoutes from "./modules/contributions/contribution.routes.js";
+import saudeRoutes from "./modules/saude/saude.routes.js";
 
 const app = express();
 
@@ -88,6 +89,7 @@ app.use("/api/ai-news", aiNewsRoutes);
 app.use("/api/social-posts", socialPostRoutes);
 app.use("/api/site", siteRoutes);
 app.use("/api/contributions", contributionRoutes);
+app.use("/api/saude", saudeRoutes); // Guardião da casa comum (token próprio)
 
 // Serve as imagens enviadas pelo admin. CORP cross-origin porque o site
 // (rota4mundos.com.br) embute imagens servidas pelo domínio da API
