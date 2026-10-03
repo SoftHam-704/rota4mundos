@@ -27,6 +27,7 @@ const envSchema = z.object({
     AI_PROVIDER_ORDER: z.string().default("openai,gemini"),
     ANTHROPIC_API_KEY: z.string().optional(),
     DEEPSEEK_API_KEY: z.string().optional(),
+    JEV_API_KEY: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

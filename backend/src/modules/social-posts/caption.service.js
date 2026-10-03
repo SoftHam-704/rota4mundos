@@ -11,8 +11,8 @@ import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { env } from "../../config/env.js";
 import logger from "../../config/logger.js";
+import { rota } from "../ai/model-router.js";
 
-const MODELO = "claude-opus-5-5";
 const GUIA = fs.readFileSync(path.join(import.meta.dirname, "GUIA-EDITORIAL.md"), "utf8");
 
 const CATEGORIAS = ["Infraestrutura", "Economia", "Turismo", "Cultura", "Meio Ambiente", "Política", "Logística"];
@@ -25,8 +25,9 @@ const Legenda = {
         hashtags: { type: "array", items: { type: "string" }, description: "de 3 a 5 hashtags, cada uma começando com #" },
         linhaArte: { type: "string", description: "resumo de uma frase para a arte, até 120 caracteres, só com fatos do material; vai logo abaixo do título na arte, então NÃO comece repetindo o nome da cidade ou o título" },
         categoria: { type: "string", enum: CATEGORIAS },
+        cenaArte: { type: "string", description: "em INGLÊS: descrição visual de uma fotografia documental para o fundo da arte (paisagem, infraestrutura, porto, estrada, fronteira, natureza ligada ao tema). Sem pessoas identificáveis, sem políticos, sem texto, letras ou logotipos. Uma ou duas frases." },
     },
-    required: ["legenda", "hashtags", "linhaArte", "categoria"],
+    required: ["legenda", "hashtags", "linhaArte", "categoria", "cenaArte"],
     additionalProperties: false,
 };
 
@@ -50,9 +51,11 @@ const TIPO = {
 let _client;
 const client = () => (_client ??= new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
 
-async function chamar({ system, user, schema, effort }) {
+// Modelo e esforço vêm do roteador (instagram.legenda / instagram.revisao)
+async function chamar({ operacao, system, user, schema }) {
+    const { modelo, effort } = rota(operacao);
     const resp = await client().beta.messages.create({
-        model: MODELO,
+        model: modelo,
         max_tokens: 16000,
         betas: ["server-side-fallback-2026-07-01"],
         fallbacks: "default",
@@ -96,14 +99,14 @@ export async function gerarLegenda({ kind, titulo, material, url, hashtagsRecent
 
     while (tentativa < 3) {
         tentativa++;
-        rascunho = await chamar({ system, user: pedido, schema: Legenda, effort: "medium" });
+        rascunho = await chamar({ operacao: "instagram.legenda", system, user: pedido, schema: Legenda });
         rascunho.hashtags = normalizarHashtags(rascunho.hashtags);
 
         parecer = await chamar({
             system: `Você é o revisor do Instagram do portal Rota 4 Mundos. Aplique o "Checklist do revisor" do guia abaixo, item por item, com rigor: reprove se qualquer item falhar. Confira cada fato da legenda contra o material.\n\n${GUIA}`,
             user: `${contexto}\n\n${blocoMaterial(material)}\n\n<legenda>\n${rascunho.legenda}\n\n${rascunho.hashtags.join(" ")}\n</legenda>\n\n<linha_da_arte>${rascunho.linhaArte}</linha_da_arte>`,
             schema: Parecer,
-            effort: "low",
+            operacao: "instagram.revisao",
         });
         if (parecer.aprovado) break;
 
@@ -119,6 +122,7 @@ export async function gerarLegenda({ kind, titulo, material, url, hashtagsRecent
         caption: `${rascunho.legenda.trim()}\n\n${rascunho.hashtags.join(" ")}`,
         linhaArte: rascunho.linhaArte.trim(),
         categoria: rascunho.categoria,
+        cenaArte: rascunho.cenaArte,
         reviewNote,
     };
 }

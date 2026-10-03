@@ -18,6 +18,7 @@ import Parser from "rss-parser";
 import Anthropic from "@anthropic-ai/sdk";
 import { PrismaClient } from "@prisma/client";
 import { redigirReportagem } from "../src/modules/ai-news/ai-news.service.js";
+import { classificar } from "../src/modules/ai/model-router.js";
 
 const arg = (nome, padrao) => { const i = process.argv.indexOf(`--${nome}`); return i > 0 ? process.argv[i + 1] : padrao; };
 const DE = arg("de", "2026-06-18");
@@ -28,6 +29,7 @@ const MAX_PUBLICADAS_DIA = 3;
 const CONFIANCA_RASCUNHO = 0.5;
 
 const JEV_KEY = process.env.JEV_API_KEY || lerChaveRaiz("JEV_API_KEY");
+process.env.JEV_API_KEY ??= JEV_KEY || "";
 function lerChaveRaiz(nome) {
     try { return fs.readFileSync("../.env", "utf8").match(new RegExp(`^${nome}\\s*=\\s*"?([^"\\r\\n]+)`, "m"))?.[1]; } catch { return null; }
 }
@@ -96,22 +98,18 @@ const PERGUNTA = {
     },
 };
 
+// Triagem pelo roteador (noticias.triagem → JEV). 429/5xx: tenta de novo com espera.
 async function triagemJev(item) {
     for (let tentativa = 1; tentativa <= 3; tentativa++) {
         try {
-            const r = await fetch("https://api.typesafe.ai/v1/systemone", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${JEV_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "jev-1.13.0", state: { manchete: item.title, resumo: (item.contentSnippet || "").slice(0, 400) }, questions: { relevancia: PERGUNTA } }),
-                signal: AbortSignal.timeout(15000),
+            const { respostas, tokens } = await classificar("noticias.triagem", {
+                estado: { manchete: item.title, resumo: (item.contentSnippet || "").slice(0, 400) },
+                perguntas: { relevancia: PERGUNTA },
             });
-            const j = await r.json().catch(() => ({}));
-            if (r.status === 429 || r.status >= 500) { await esperar(2000 * tentativa); continue; }
-            if (!r.ok) throw new Error(`JEV HTTP ${r.status}: ${JSON.stringify(j).slice(0, 200)}`);
-            const a = j.answers?.relevancia;
-            return { escolha: a?.choice, confianca: a?.confidence ?? 0, tokens: j.usage?.input_tokens ?? 0 };
+            const a = respostas.relevancia;
+            return { escolha: a?.choice, confianca: a?.confidence ?? 0, tokens };
         } catch (e) {
-            if (tentativa === 3) return { escolha: "erro", confianca: 0, erro: e.message };
+            if (tentativa === 3 || (e.status && e.status < 500 && e.status !== 429)) return { escolha: "erro", confianca: 0, erro: e.message };
             await esperar(2000 * tentativa);
         }
     }

@@ -3,6 +3,7 @@ import Parser from "rss-parser";
 import { prisma } from "../../config/database.js";
 import { env } from "../../config/env.js";
 import logger from "../../config/logger.js";
+import { gerarTexto } from "../ai/model-router.js";
 
 const parser = new Parser({
     timeout: 10000,
@@ -80,42 +81,6 @@ async function getSystemAuthorId() {
 }
 
 /**
- * Redação em volume vai para o DeepSeek (regra da casa: DeepSeek para trabalho em volume, Claude
- * para o que exige robustez). Sem chave do DeepSeek, ou se ele falhar, cai no Claude Haiku.
- */
-async function gerarTexto(client, prompt) {
-    if (env.DEEPSEEK_API_KEY) {
-        try {
-            const r = await fetch("https://api.deepseek.com/chat/completions", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${env.DEEPSEEK_API_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    model: "deepseek-flash",
-                    max_tokens: 4000, // o flash raciocina antes de responder, e o raciocínio conta no limite
-                    response_format: { type: "json_object" },
-                    messages: [{ role: "user", content: prompt }],
-                }),
-                signal: AbortSignal.timeout(60000),
-            });
-            const j = await r.json().catch(() => ({}));
-            const escolha = j.choices?.[0];
-            const texto = escolha?.message?.content;
-            if (r.ok && texto && escolha.finish_reason === "stop") return texto;
-            if (escolha?.finish_reason === "length") logger.warn("IRIS: resposta do DeepSeek cortada pelo limite de tokens");
-            logger.warn(`IRIS: DeepSeek falhou (HTTP ${r.status}) — usando Claude`, { erro: JSON.stringify(j.error || j).slice(0, 200) });
-        } catch (e) {
-            logger.warn("IRIS: DeepSeek indisponível — usando Claude", { erro: e.message });
-        }
-    }
-    const msg = await client.messages.create({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1400,
-        messages: [{ role: "user", content: prompt }],
-    });
-    return msg.content[0]?.text || "";
-}
-
-/**
  * Avalia a relevância e redige a reportagem de um item de feed (o mesmo texto que a IRIS diária usa).
  * Retorna { relevance, category, title, excerpt, content } ou null se o modelo não devolver JSON válido.
  * Usada pela IRIS diária e pela recuperação de notícias (scripts/recuperar-noticias.mjs).
@@ -155,7 +120,8 @@ ${source}
   "content": "<artigo HTML simples (p, strong, h3), 3-5 parágrafos, PT-BR, baseado nos fatos>"
 }`;
 
-    const raw = (await gerarTexto(client, prompt)).trim();
+    // modelo definido no roteador (noticias.redacao → DeepSeek, reserva Claude Haiku)
+    const raw = (await gerarTexto("noticias.redacao", prompt, { json: true })).trim();
     const jsonStr = raw.replace(/^```json?\s*/i, "").replace(/\s*```$/i, "").trim();
     // O DeepSeek, no modo JSON, às vezes escreve '{"type": "json_object"}' antes do objeto de verdade:
     // fica com o primeiro objeto que tenha "relevance".

@@ -16,6 +16,16 @@ import { gerarLegenda } from "./caption.service.js";
 import { artReportagem, artCidade, artInfografico } from "./art/render.js";
 import { CIDADES, urlCidade, infograficoCidade } from "./content/cidades.js";
 import * as ig from "./instagram.client.js";
+import { gerarImagem } from "../ai/model-router.js";
+
+// Fundo das artes de reportagem (Gemini/Nano Banana via roteador). A cena vem do redator da legenda.
+// Sem texto e sem pessoas reais: o título é desenhado por código, e a notícia não pode virar retrato
+// inventado de alguém. A arte leva o selo "Imagem ilustrativa".
+const promptFundo = (cena) =>
+    `Editorial documentary photograph for a news portal about the Bioceanic Corridor (Brazil, Paraguay, Argentina, Chile). ` +
+    `Scene: ${cena}. Realistic, natural light, wide shot, vertical 4:5 composition, the lower third calmer and darker ` +
+    `because a headline will be overlaid there. No text, no letters, no readable signs, no logos, no flags with writing, ` +
+    `no identifiable real people, no politicians.`;
 
 const ASSETS = path.resolve(import.meta.dirname, "..", "..", "..", "assets", "social");
 const ALVO_FILA = 4;          // rascunhos + aprovados esperando; abaixo disso entra conteúdo da série
@@ -59,7 +69,10 @@ const deReportagem = (a) => criarRascunho({
     titulo: a.title,
     url: `https://www.rota4mundos.com.br/noticias/${a.slug}`,
     material: `${a.title}\n\n${a.excerpt || ""}\n\n${textoPuro(a.content)}`,
-    desenhar: (l) => artReportagem({ titulo: a.title, resumo: l.linhaArte, categoria: l.categoria }),
+    desenhar: async (l) => artReportagem({
+        titulo: a.title, resumo: l.linhaArte, categoria: l.categoria,
+        fundo: l.cenaArte ? await gerarImagem("instagram.imagem", promptFundo(l.cenaArte)) : null, // null → ponte
+    }),
 });
 
 const materialCidade = (c) => fs.readFileSync(path.join(ASSETS, "cidades", `${c.slug}.txt`), "utf8");

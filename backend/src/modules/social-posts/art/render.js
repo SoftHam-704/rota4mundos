@@ -94,9 +94,10 @@ const rodape = (chamada) =>
 
 // Foto de fundo com degradê escuro embaixo, onde fica o texto.
 // Ilustração (não foto real) leva o selo "Imagem ilustrativa" no canto superior direito.
+// `foto`: caminho de arquivo ou data URI (imagem gerada pelo Gemini)
 const comFoto = (foto, conteudo, ilustrativa = foto === PONTE) =>
     h("div", { width: W, height: H, position: "relative", background: C.navy },
-        img(dataUri(foto), { position: "absolute", top: 0, left: 0, width: W, height: H, objectFit: "cover" }),
+        img(foto.startsWith("data:") ? foto : dataUri(foto), { position: "absolute", top: 0, left: 0, width: W, height: H, objectFit: "cover" }),
         h("div", {
             position: "absolute", top: 0, left: 0, width: W, height: H,
             backgroundImage: "linear-gradient(180deg, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.05) 22%, rgba(10,22,40,0.35) 48%, rgba(10,22,40,0.92) 70%, rgba(10,22,40,0.98) 100%)",
@@ -120,16 +121,23 @@ export const fotoCidade = (foto) => {
 
 // ---------- os três modelos ----------
 
-/** Reportagem da IRIS: categoria, título e resumo sobre a ponte ao amanhecer (padrão) ou uma foto dada. */
-export function artReportagem({ titulo, resumo, categoria = "Notícia", foto }) {
+/**
+ * Reportagem da IRIS: categoria, título e resumo sobre um fundo.
+ * `fundo` (Buffer) é a imagem gerada para o tema — leva o selo "Imagem ilustrativa"; sem ela,
+ * usa a ponte ao amanhecer (também ilustração) ou a `foto` informada.
+ */
+export async function artReportagem({ titulo, resumo, categoria = "Notícia", foto, fundo }) {
+    const fonte = fundo
+        ? `data:image/jpeg;base64,${(await sharp(fundo).resize(W, H, { fit: "cover", position: "attention" }).jpeg({ quality: 85, mozjpeg: true }).toBuffer()).toString("base64")}`
+        : fotoCidade(foto);
     const t = clamp(titulo, 110);
     const tamanho = t.length > 60 ? T.xl : T.xxl;
-    return rasterizar(comFoto(fotoCidade(foto),
+    return rasterizar(comFoto(fonte,
         h("div", { flexDirection: "column", gap: G.l },
             etiqueta(categoria),
             h("div", { fontFamily: "Playfair", fontWeight: 800, fontSize: tamanho, lineHeight: 1.12, color: C.white }, t),
             resumo ? h("div", { fontFamily: "Inter", fontWeight: 400, fontSize: T.m, lineHeight: 1.45, color: C.muted }, clamp(resumo, 160)) : null,
-            rodape("Reportagem completa no link da bio"))));
+            rodape("Reportagem completa no link da bio")), Boolean(fundo) || fonte === PONTE));
 }
 
 /** Série das cidades: número na série, nome grande, país e a frase da página da cidade. */
