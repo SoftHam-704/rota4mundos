@@ -3,9 +3,8 @@
      CSS puro pinta no primeiro instante e roda liso enquanto o JavaScript ainda baixa. Não mede
      carregamento e não mente progresso: é a TRAVESSIA — as quatro faixas do logo se traçam na ordem
      da rota (Brasil → Paraguai → Argentina → Chile) com o nome de cada país, a estrela acende,
-     o nome se monta, e a abertura TERMINA NA LUZ: o brilho da estrela enche a tela e, ao se
-     dissipar, entrega o hero como ele é (Hamilton, 03/10: "não toque no hero").
-     Referências: kit Grigoletto 3.4 ("emerging from darkness with a light sweep").
+     o nome se monta e a ESTRELA vira a passagem: um recorte por onde já se vê o site, que cresce
+     até engolir a tela (inspiração: a janela do jeskojets.com). O hero não é tocado.
      Regras da casa (C:\Sites\01-Sites\SoftHam-Site\qg\arsenal\TECNICAS.md, "Abertura"):
      só na página inicial, uma vez por sessão, Pular + Esc, quem pede menos movimento não vê. -->
 <style>
@@ -30,10 +29,9 @@ html.r4m-abrindo,html.r4m-abrindo body{overflow:hidden}
 #r4m-abertura .pular:focus-visible{outline:2px solid #f4a261;outline-offset:2px}
 @media (hover:hover) and (pointer:fine){#r4m-abertura .pular:hover{color:#fff;border-color:rgba(255,255,255,.4)}}
 /* saída: a cortina se recolhe para o canto da estrela, na diagonal da seta; a marca parte junto */
-#r4m-abertura.is-saindo .p{animation:r4m-recua 620ms var(--eio) forwards}
+#r4m-abertura.is-saindo .p{animation:r4m-recua 900ms var(--eio) 480ms forwards}
 #r4m-abertura.is-saindo .pular{opacity:0;transition:opacity 200ms}
-/* a flor de luz nasce na estrela e enche a tela; o hero entra em foco por trás dela */
-#r4m-luz{position:fixed;z-index:2147483001;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffaf2 0%,rgba(255,236,206,.97) 16%,rgba(255,214,166,.85) 30%,rgba(244,162,97,.55) 46%,rgba(244,162,97,.22) 60%,rgba(244,162,97,.07) 72%,rgba(244,162,97,0) 84%);transform:scale(.2);opacity:0;animation:r4m-flor 760ms cubic-bezier(.65,0,.35,1) forwards,r4m-dissipa 1000ms cubic-bezier(.23,1,.32,1) 760ms forwards}
+#r4m-passagem{position:fixed;inset:0;z-index:2147483001;pointer-events:none}
 #r4m-abertura.is-cortando{transition:opacity 280ms var(--eo);opacity:0}
 @keyframes r4m-traca{to{stroke-dashoffset:0}}
 @keyframes r4m-acende{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
@@ -45,8 +43,6 @@ html.r4m-abrindo,html.r4m-abrindo body{overflow:hidden}
 @keyframes r4m-passa-in{to{opacity:1}}
 @keyframes r4m-enche{to{transform:scaleX(1)}}
 @keyframes r4m-recua{to{opacity:0;transform:scale(.94);filter:blur(6px)}}
-@keyframes r4m-flor{0%{opacity:0;transform:scale(.2)}25%{opacity:1}100%{opacity:1;transform:scale(var(--escala,40))}}
-@keyframes r4m-dissipa{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){#r4m-abertura{display:none}}
 </style>
 <div id="r4m-abertura" aria-hidden="true">
@@ -118,19 +114,63 @@ html.r4m-abrindo,html.r4m-abrindo body{overflow:hidden}
       return;
     }
     el.classList.add("is-saindo");
-    // 1. a marca recua; 2. a luz nasce na estrela e enche a tela (raio = diagonal da tela)
-    var e=el.querySelector(".estrela").getBoundingClientRect(),cx=e.left+e.width/2,cy=e.top+e.height/2;
-    var raio=Math.hypot(Math.max(cx,innerWidth-cx),Math.max(cy,innerHeight-cy));
-    var luz=document.createElement("div");luz.id="r4m-luz";
-    luz.style.left=cx+"px";luz.style.top=cy+"px";luz.style.setProperty("--escala",(raio/60*2.1).toFixed(1));
-    document.body.appendChild(luz);
-    // 3. no auge da luz o palco escuro sai; a luz se dissipa e o hero aparece como é.
-    //    A abertura TERMINA NA LUZ (Hamilton, 03/10) — nada dela acontece por cima do hero.
-    setTimeout(function(){
-      fim();
-      window.dispatchEvent(new CustomEvent("r4m:abriu"));
-    },700);
-    setTimeout(function(){luz.parentNode&&luz.parentNode.removeChild(luz)},1800);
+    passagem();
+  }
+  // A PASSAGEM PELA ESTRELA (Hamilton, 03/10). Inspiração: a janela do jeskojets.com, o
+  // "efeito-assinatura" do catálogo do diretor-de-cena — uma forma da própria cena cresce até
+  // engolir a tela e a cena seguinte já está dentro dela. A nossa forma é a ESTRELA do logo: ela
+  // vira um recorte na abertura, por onde já se vê o site, e cresce girando de leve até engolir a
+  // tela. O contorno de luz dourada acompanha. Redesenhada a cada quadro (nítida em qualquer
+  // escala); o furo é clip-path na abertura, então o hero aparece como é, sem ser tocado.
+  function passagem(){
+    var NS="http://www.w3.org/2000/svg",W=innerWidth,H=innerHeight;
+    var e=el.querySelector(".estrela").getBoundingClientRect();
+    var x0=e.left+e.width/2,y0=e.top+e.height/2,r0=Math.max(e.width,e.height)/2; // estrela do logo
+    var svg=document.createElementNS(NS,"svg");svg.id="r4m-passagem";
+    svg.setAttribute("width",W);svg.setAttribute("height",H);svg.setAttribute("aria-hidden","true");
+    svg.innerHTML='<path class="halo" fill="none" stroke="#f4a261" stroke-linejoin="round"/><path class="aro" fill="none" stroke="#ffe2b8" stroke-linejoin="round"/>';
+    document.body.appendChild(svg);
+    var halo=svg.querySelector(".halo"),aro=svg.querySelector(".aro");
+    var tela="M0 0H"+W+"V"+H+"H0Z";
+    function estrela(cx,cy,r,giro){ // 5 pontas, raio interno 0,42 (o mesmo desenho do logo)
+      var d="";
+      for(var i=0;i<10;i++){
+        var a=(i*36-90+giro)*Math.PI/180,rad=i%2?r*.42:r;
+        d+=(i?"L":"M")+(cx+rad*Math.cos(a)).toFixed(1)+" "+(cy+rad*Math.sin(a)).toFixed(1);
+      }
+      return d+"Z";
+    }
+    function desenha(cx,cy,r,giro,brilho){
+      var d=estrela(cx,cy,r,giro);
+      el.style.clipPath='path(evenodd,"'+tela+d+'")';
+      halo.setAttribute("d",d);aro.setAttribute("d",d);
+      var w=Math.min(5,Math.max(1.5,r*.03));
+      halo.setAttribute("stroke-width",w*4);halo.style.opacity=.35*brilho;
+      aro.setAttribute("stroke-width",w);aro.style.opacity=brilho;
+      halo.style.filter="blur("+(w*1.5).toFixed(1)+"px)";
+    }
+    function roda(dur,fn,depois){
+      var t0=performance.now();
+      (function q(){var t=Math.min(1,(performance.now()-t0)/dur);fn(t);if(t<1)requestAnimationFrame(q);else if(depois)depois()})();
+    }
+    var vai=function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+    var sobe=function(t){return 1-Math.pow(1-Math.min(1,t*1.6),3)}; // chega ao centro antes de crescer muito
+    // raio final: o miolo da estrela (raio interno) precisa cobrir a tela inteira
+    var rMax=Math.hypot(W,H)/.42*1.05;
+    var cxF=W/2,cyF=H/2;
+    // 1. a estrela do logo vira um recorte: por ela já se vê o site (pequena, ainda no lugar)
+    roda(520,function(t){var k=vai(t);desenha(x0,y0,r0*(1+1.6*k),0,k)},function(){
+      // 2. viaja ao centro e cresce até engolir a tela, girando de leve
+      var lnA=Math.log(r0*2.6),lnB=Math.log(rMax);
+      roda(1800,function(t){
+        var k=vai(t),r=Math.exp(lnA+(lnB-lnA)*k);
+        desenha(x0+(cxF-x0)*sobe(t),y0+(cyF-y0)*sobe(t),r,-72*k,1-k*k);
+      },function(){
+        if(svg.parentNode)svg.parentNode.removeChild(svg);
+        fim();
+        window.dispatchEvent(new CustomEvent("r4m:abriu"));
+      });
+    });
   }
   function fim(){if(el.parentNode)el.parentNode.removeChild(el);raiz.classList.remove("r4m-abrindo")}
   function tenta(){if(tempo&&pronto)sair(false)}
