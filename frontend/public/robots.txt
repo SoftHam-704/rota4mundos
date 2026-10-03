@@ -1,0 +1,25 @@
+# Rota 4 Mundos — queremos ser lidos por buscadores e por assistentes de IA.
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /registro
+Disallow: /minha-conta
+
+# Assistentes de IA (busca e citação) — liberados de propósito
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.rota4mundos.com.br/sitemap.xml

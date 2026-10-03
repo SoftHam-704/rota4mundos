@@ -1,12 +1,72 @@
-Options -MultiViews
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.html [QSA,L]
+# Rota 4 Mundos — SPA React no cPanel/Apache.
+# Base: modelo da casa (C:\Sites\01-Sites\Rizzo\public\.htaccess), adaptado:
+# - toda página passa pelo index.php, que entrega título, descrição, prévia e texto já no HTML
+#   (buscadores, IAs e WhatsApp não executam o React);
+# - nossos assets têm nome FIXO (assets/index.js|css), então NADA de cache longo neles.
 
-# Arquivos com nome fixo (index.html, assets/index.js, assets/index.css): o navegador
-# revalida a cada visita (304 se não mudou) para atualizações chegarem na hora
+Options -MultiViews -Indexes
+DirectoryIndex index.php index.html
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Certificados (Let's Encrypt): sempre direto
+    RewriteRule ^\.well-known/ - [L]
+
+    # HTTPS e domínio registrado (www): uma URL só para cada página
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^(.*)$ https://www.rota4mundos.com.br/$1 [R=301,L]
+    RewriteCond %{HTTP_HOST} ^rota4mundos\.com\.br$ [NC]
+    RewriteRule ^(.*)$ https://www.rota4mundos.com.br/$1 [R=301,L]
+
+    # /index.html digitado → /
+    RewriteCond %{THE_REQUEST} \s/index\.html[\s?]
+    RewriteRule ^ / [R=301,L]
+
+    # Arquivos de SEO montados na hora
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    RewriteRule ^llms\.txt$ llms.php [L]
+
+    # Arquivos e pastas que existem de verdade são servidos direto
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Todo o resto: página do SPA, montada pelo index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Compressão
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json application/xml image/svg+xml
+</IfModule>
+
 <IfModule mod_headers.c>
-    <FilesMatch "^index\.(html|js|css)$">
+    # Nome fixo: o navegador revalida a cada visita (304 se não mudou) para atualizações chegarem na hora
+    <FilesMatch "^index\.(html|js|css|php)$">
         Header set Cache-Control "no-cache"
     </FilesMatch>
+    # Imagens e vídeo: 7 dias
+    <FilesMatch "\.(jpg|jpeg|png|webp|avif|svg|ico|mp4|mp3)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header unset X-Powered-By
+</IfModule>
+
+# Nunca servir arquivos de ambiente, logs ou cópias, caso subam por engano
+<FilesMatch "^\.(env|git|htpasswd)|\.(env\..*|log|bak|sql|map)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_mime.c>
+    AddType application/javascript .js .mjs
+    AddType application/json .json
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff2
 </IfModule>

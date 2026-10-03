@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "node scripts/gerar-seo-cidades.mjs && vite build",
         "preview": "vite preview",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
     },
