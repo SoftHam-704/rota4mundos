@@ -13,7 +13,7 @@ import { CIDADES } from "../social-posts/content/cidades.js";
 // Horários dos agendamentos (America/Campo_Grande, UTC−4 o ano todo; MS não tem horário de verão)
 export const AGENTES = {
     historiador: { nome: "Historiador", horarios: ["06:00"], ativo: () => process.env.HISTORIADOR_ATIVO === "true" },
-    reporter: { nome: "Repórter", horarios: ["07:00"], ativo: () => true },
+    reporter: { nome: "Repórter", horarios: ["06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"], ativo: () => true },
     instagram_rascunhos: { nome: "Publicitário — rascunhos", horarios: ["07:30"], ativo: () => true },
     instagram_publicacao: { nome: "Publicitário — publicação", horarios: ["12:00", "19:00"], ativo: () => true },
 };

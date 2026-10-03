@@ -19,6 +19,11 @@ export const ROTAS = {
         provedor: "deepseek", modelo: "deepseek-flash", maxTokens: 4000,
         reserva: { provedor: "anthropic", modelo: "claude-haiku-4-5-20251001", maxTokens: 1400 },
     },
+    // Agrupar a mesma notícia contada por vários veículos (1 chamada por rodada) → DeepSeek
+    "noticias.agrupamento": {
+        provedor: "deepseek", modelo: "deepseek-flash", maxTokens: 8000,
+        reserva: { provedor: "anthropic", modelo: "claude-haiku-4-5-20251001", maxTokens: 1000 },
+    },
     // "Esta notícia é da Rota?" — classificação → JEV
     "noticias.triagem": { provedor: "jev", modelo: "jev-1.13.0" },
     // Legenda do Instagram e sua revisão: voz da marca → Claude
