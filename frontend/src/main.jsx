@@ -40,3 +40,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </QueryClientProvider>
     </React.StrictMode>
 );
+
+// Avisa a abertura (abertura.html, embutida no index.html) que o site montou atrás dela:
+// a luz da estrela só abre quando há o que revelar.
+requestAnimationFrame(() => {
+    window.__r4mPronto = true;
+    window.dispatchEvent(new Event("r4m:pronto"));
+});

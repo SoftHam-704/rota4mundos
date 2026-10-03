@@ -1,0 +1,144 @@
+<!-- ABERTURA DO ROTA 4 MUNDOS — colada inteira no index.html pelo plugin "r4m-abertura" (vite.config.js).
+     Fica no HTML (não no React) de propósito: o bundle tem ~600 KB comprimidos, e uma abertura em
+     CSS puro pinta no primeiro instante e roda liso enquanto o JavaScript ainda baixa. Não mede
+     carregamento e não mente progresso: é a TRAVESSIA — as quatro faixas do logo se traçam na ordem
+     da rota (Brasil → Paraguai → Argentina → Chile) com o nome de cada país, a estrela acende,
+     o nome se monta, e a abertura TERMINA NA LUZ: o brilho da estrela enche a tela e, ao se
+     dissipar, entrega o hero como ele é (Hamilton, 03/10: "não toque no hero").
+     Referências: kit Grigoletto 3.4 ("emerging from darkness with a light sweep").
+     Regras da casa (C:\Sites\01-Sites\SoftHam-Site\qg\arsenal\TECNICAS.md, "Abertura"):
+     só na página inicial, uma vez por sessão, Pular + Esc, quem pede menos movimento não vê. -->
+<style>
+#r4m-abertura{--eo:cubic-bezier(.23,1,.32,1);--eio:cubic-bezier(.77,0,.175,1);position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:radial-gradient(ellipse 80% 70% at 50% 42%,#0d3557 0%,#061b33 55%,#020d1a 100%);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);color:#fff;font-family:Inter,system-ui,sans-serif;overflow:hidden}
+html.r4m-abrindo,html.r4m-abrindo body{overflow:hidden}
+#r4m-abertura .p{display:flex;flex-direction:column;align-items:center;transform:translateZ(0)}
+#r4m-abertura svg{width:min(58vmin,440px);height:auto;overflow:visible}
+#r4m-abertura .fx path{fill:none;stroke-linecap:butt;stroke-width:13;stroke-dasharray:1;stroke-dashoffset:1;animation:r4m-traca var(--d,620ms) var(--eio) var(--t) forwards}
+#r4m-abertura .seta{opacity:0;transform-box:fill-box;transform-origin:30% 70%;animation:r4m-acende 380ms var(--eo) 1900ms forwards}
+#r4m-abertura .estrela{opacity:0;transform-box:fill-box;transform-origin:center;animation:r4m-estrela 800ms var(--eo) 2020ms forwards}
+#r4m-abertura .brilho{opacity:0;transform-box:fill-box;transform-origin:center;animation:r4m-brilho 1200ms var(--eo) 2020ms forwards}
+#r4m-abertura .nome{margin-top:clamp(18px,3.4vmin,30px);font:400 clamp(40px,9vmin,84px)/1 "Bebas Neue",Inter,sans-serif;letter-spacing:.14em;white-space:nowrap}
+#r4m-abertura .nome span{display:inline-block;opacity:0;transform:translateY(55%);animation:r4m-letra 520ms var(--eo) calc(1650ms + var(--i) * 36ms) forwards}
+#r4m-abertura .nome .n4{color:#f4a261}
+#r4m-abertura .via{position:relative;margin-top:clamp(10px,2vmin,18px);height:1.3em;width:min(90vw,560px);overflow:hidden;font:500 italic clamp(22px,4.4vmin,38px)/1.3 "Playfair Display",Georgia,serif}
+#r4m-abertura .c{position:absolute;inset:0;text-align:center;transform:translateY(105%)}
+#r4m-abertura .c{animation:r4m-painel var(--d,190ms) var(--eio) var(--t) both}
+#r4m-abertura .c.ult{animation:r4m-chega 260ms var(--eo) var(--t) both}
+#r4m-abertura .faixa{display:flex;gap:4px;width:min(60vw,320px);margin-top:clamp(10px,2vmin,16px)}
+#r4m-abertura .faixa i{flex:1;height:3px;border-radius:2px;background:var(--c);transform:scaleX(0);transform-origin:left;animation:r4m-enche var(--d) linear var(--t) forwards}
+#r4m-abertura .pular{position:absolute;right:clamp(16px,3vw,32px);bottom:clamp(16px,3vh,28px);padding:10px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.7);font:500 12px/1 Inter,sans-serif;letter-spacing:.12em;cursor:pointer;opacity:0;animation:r4m-passa-in 400ms var(--eo) 600ms forwards}
+#r4m-abertura .pular:focus-visible{outline:2px solid #f4a261;outline-offset:2px}
+@media (hover:hover) and (pointer:fine){#r4m-abertura .pular:hover{color:#fff;border-color:rgba(255,255,255,.4)}}
+/* saída: a cortina se recolhe para o canto da estrela, na diagonal da seta; a marca parte junto */
+#r4m-abertura.is-saindo .p{animation:r4m-recua 620ms var(--eio) forwards}
+#r4m-abertura.is-saindo .pular{opacity:0;transition:opacity 200ms}
+/* a flor de luz nasce na estrela e enche a tela; o hero entra em foco por trás dela */
+#r4m-luz{position:fixed;z-index:2147483001;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffaf2 0%,rgba(255,236,206,.97) 16%,rgba(255,214,166,.85) 30%,rgba(244,162,97,.55) 46%,rgba(244,162,97,.22) 60%,rgba(244,162,97,.07) 72%,rgba(244,162,97,0) 84%);transform:scale(.2);opacity:0;animation:r4m-flor 760ms cubic-bezier(.65,0,.35,1) forwards,r4m-dissipa 1000ms cubic-bezier(.23,1,.32,1) 760ms forwards}
+#r4m-abertura.is-cortando{transition:opacity 280ms var(--eo);opacity:0}
+@keyframes r4m-traca{to{stroke-dashoffset:0}}
+@keyframes r4m-acende{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes r4m-estrela{0%{opacity:0;transform:scale(.6) rotate(-40deg)}60%{opacity:1;transform:scale(1.18) rotate(6deg)}100%{opacity:1;transform:none}}
+@keyframes r4m-brilho{0%{opacity:0;transform:scale(.4)}35%{opacity:.9}100%{opacity:0;transform:scale(2.4)}}
+@keyframes r4m-letra{to{opacity:1;transform:none}}
+@keyframes r4m-painel{0%{transform:translateY(105%)}22%,78%{transform:none}100%{transform:translateY(-105%)}}
+@keyframes r4m-chega{from{transform:translateY(105%)}to{transform:none}}
+@keyframes r4m-passa-in{to{opacity:1}}
+@keyframes r4m-enche{to{transform:scaleX(1)}}
+@keyframes r4m-recua{to{opacity:0;transform:scale(.94);filter:blur(6px)}}
+@keyframes r4m-flor{0%{opacity:0;transform:scale(.2)}25%{opacity:1}100%{opacity:1;transform:scale(var(--escala,40))}}
+@keyframes r4m-dissipa{to{opacity:0}}
+@media (prefers-reduced-motion:reduce){#r4m-abertura{display:none}}
+</style>
+<div id="r4m-abertura" aria-hidden="true">
+
+<div class="p">
+<svg viewBox="0 0 440 440" role="img" aria-label="Rota 4 Mundos">
+<defs><radialGradient id="r4m-g"><stop offset="0" stop-color="#ffd9a8"/><stop offset=".45" stop-color="#f4a261" stop-opacity=".55"/><stop offset="1" stop-color="#f4a261" stop-opacity="0"/></radialGradient></defs>
+<!-- a ordem das faixas é a ordem da travessia; cada uma se traça enquanto as cidades do seu país passam -->
+<g class="fx" style="--t:150ms;--d:560ms">
+<path pathLength="1" stroke="#1a9e48" d="M30 430C110 300 225 165 372 58"/>
+<path pathLength="1" stroke="#ffd400" d="M48 437C126 309 238 172 377 62"/>
+<path pathLength="1" stroke="#0f8a3c" d="M66 442C142 318 250 180 382 67"/>
+</g>
+<g class="fx" style="--t:640ms;--d:480ms">
+<path pathLength="1" stroke="#d52b1e" d="M16 188C140 176 255 128 368 54"/>
+<path pathLength="1" stroke="#ffffff" d="M16 206C143 192 259 141 372 59"/>
+<path pathLength="1" stroke="#0038a8" d="M16 224C146 208 263 154 376 64"/>
+</g>
+<g class="fx" style="--t:1080ms;--d:480ms">
+<path pathLength="1" stroke="#74acdf" d="M70 42C170 112 270 106 364 50"/>
+<path pathLength="1" stroke="#ffffff" d="M58 58C165 128 272 120 367 56"/>
+<path pathLength="1" stroke="#74acdf" d="M46 74C160 144 274 134 370 62"/>
+</g>
+<g class="fx" style="--t:1520ms;--d:480ms">
+<path pathLength="1" stroke="#0039a6" d="M402 332C310 292 308 168 378 70"/>
+<path pathLength="1" stroke="#ffffff" d="M388 340C292 298 292 164 372 66"/>
+<path pathLength="1" stroke="#d52b1e" d="M374 348C274 304 276 160 366 62"/>
+</g>
+<polygon class="seta" fill="#e9f0f7" points="404,30 330,46 356,62 352,92"/>
+<circle class="brilho" cx="408" cy="24" r="40" fill="url(#r4m-g)"/>
+<polygon class="estrela" fill="#f4a261" points="408,6 412.7,18.5 426,19 415.6,27 419.3,40 408,32.6 396.7,40 400.4,27 390,19 403.3,18.5"/>
+</svg>
+<div class="nome" aria-hidden="true"><span style="--i:0">R</span><span style="--i:1">O</span><span style="--i:2">T</span><span style="--i:3">A</span><span style="--i:4">&nbsp;</span><span class="n4" style="--i:5">4</span><span style="--i:6">&nbsp;</span><span style="--i:7">M</span><span style="--i:8">U</span><span style="--i:9">N</span><span style="--i:10">D</span><span style="--i:11">O</span><span style="--i:12">S</span></div>
+<div class="via">
+<span class="c" data-p="0" style="--t:150ms;--d:560ms;color:#7be0a0">Brasil</span>
+<span class="c" data-p="1" style="--t:640ms;--d:500ms;color:#ff8a7e">Paraguai</span>
+<span class="c" data-p="2" style="--t:1080ms;--d:500ms;color:#a9d3f5">Argentina</span>
+<span class="c ult" data-p="3" style="--t:1520ms;color:#ff8a7e">Chile</span>
+</div>
+<div class="faixa"><i style="--c:#1a9e48;--t:150ms;--d:560ms"></i><i style="--c:#d52b1e;--t:640ms;--d:480ms"></i><i style="--c:#74acdf;--t:1080ms;--d:480ms"></i><i style="--c:#0039a6;--t:1520ms;--d:480ms"></i></div>
+</div>
+<button type="button" class="pular" aria-label="Pular abertura">PULAR&nbsp;›</button>
+<script>
+(function(){
+  var el=document.getElementById("r4m-abertura");if(!el)return;
+  var raiz=document.documentElement,caminho=location.pathname.replace(/\/+$/,"");
+  var inicio=caminho===""||caminho==="/es"||caminho==="/en",visto=null;
+  try{visto=sessionStorage.getItem("r4m-abertura")}catch(e){}
+  var robo=/bot|crawl|spider|slurp|lighthouse|headless|preview/i.test(navigator.userAgent)&&!/r4m-gravacao/.test(location.search);
+  if(!inicio||visto||robo||matchMedia("(prefers-reduced-motion: reduce)").matches){el.parentNode.removeChild(el);return}
+  try{sessionStorage.setItem("r4m-abertura","1")}catch(e){}
+  // idioma: só o que muda de grafia
+  var l=caminho==="/es"?"es":caminho==="/en"?"en":"pt";
+  var P={pt:["Brasil","Paraguai","Argentina","Chile"],es:["Brasil","Paraguay","Argentina","Chile"],en:["Brazil","Paraguay","Argentina","Chile"]}[l];
+  el.querySelectorAll(".c").forEach(function(c){c.textContent=P[+c.getAttribute("data-p")]});
+  el.querySelector(".pular").textContent={pt:"PULAR",es:"SALTAR",en:"SKIP"}[l]+"\u00a0\u203a";
+  raiz.classList.add("r4m-abrindo");
+  try{history.scrollRestoration="manual"}catch(e){}
+  scrollTo(0,0);
+  // A cortina abre quando a travessia termina E o site já montou atrás dela (evento do main.jsx).
+  // Em 4G lento o bundle pode demorar: a estrela fica acesa até o site estar pronto, no máximo 9 s.
+  var tempo=false,pronto=!!window.__r4mPronto,foi=false;
+  function sair(cortando){
+    if(foi)return;foi=true;
+    if(cortando){
+      el.classList.add("is-cortando");
+      window.dispatchEvent(new CustomEvent("r4m:abriu"));
+      setTimeout(fim,300);
+      return;
+    }
+    el.classList.add("is-saindo");
+    // 1. a marca recua; 2. a luz nasce na estrela e enche a tela (raio = diagonal da tela)
+    var e=el.querySelector(".estrela").getBoundingClientRect(),cx=e.left+e.width/2,cy=e.top+e.height/2;
+    var raio=Math.hypot(Math.max(cx,innerWidth-cx),Math.max(cy,innerHeight-cy));
+    var luz=document.createElement("div");luz.id="r4m-luz";
+    luz.style.left=cx+"px";luz.style.top=cy+"px";luz.style.setProperty("--escala",(raio/60*2.1).toFixed(1));
+    document.body.appendChild(luz);
+    // 3. no auge da luz o palco escuro sai; a luz se dissipa e o hero aparece como é.
+    //    A abertura TERMINA NA LUZ (Hamilton, 03/10) — nada dela acontece por cima do hero.
+    setTimeout(function(){
+      fim();
+      window.dispatchEvent(new CustomEvent("r4m:abriu"));
+    },700);
+    setTimeout(function(){luz.parentNode&&luz.parentNode.removeChild(luz)},1800);
+  }
+  function fim(){if(el.parentNode)el.parentNode.removeChild(el);raiz.classList.remove("r4m-abrindo")}
+  function tenta(){if(tempo&&pronto)sair(false)}
+  addEventListener("r4m:pronto",function(){pronto=true;tenta()});
+  setTimeout(function(){tempo=true;tenta()},2650);
+  setTimeout(function(){pronto=true;tenta()},9000);
+  el.querySelector(".pular").addEventListener("click",function(){sair(true)});
+  addEventListener("keydown",function(e){if(e.key==="Escape")sair(true)});
+})();
+</script>
+</div>

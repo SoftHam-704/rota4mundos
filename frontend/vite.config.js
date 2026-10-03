@@ -1,9 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import fs from "fs";
+
+// A abertura (abertura.html) vai DENTRO do index.html, logo após <body>: em CSS puro ela pinta no
+// primeiro instante, antes de o bundle (~600 KB) chegar. Fica num arquivo próprio para editar.
+const abertura = () => ({
+    name: "r4m-abertura",
+    transformIndexHtml(html) {
+        const bloco = fs.readFileSync(path.resolve(__dirname, "abertura.html"), "utf8");
+        return html.replace("<body>", "<body>\n" + bloco);
+    },
+});
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), abertura()],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
