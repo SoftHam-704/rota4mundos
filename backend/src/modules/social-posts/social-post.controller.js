@@ -3,6 +3,7 @@ import { ApiResponse } from "../../utils/apiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import logger from "../../config/logger.js";
 import { gerarRascunhos, publicarProximo, statusAgente } from "./social-agent.service.js";
+import * as fb from "./facebook.client.js";
 
 const comArtigo = { article: { select: { id: true, title: true, slug: true } } };
 
@@ -73,14 +74,42 @@ export const publicarAgora = asyncHandler(async (req, res) => {
     if (!post) return;
     const r = await publicarProximo(post.id); // só publica se estiver APPROVED (reserva atômica)
     return r.publicado
-        ? ApiResponse.success(res, r, "Publicado no Instagram")
+        ? ApiResponse.success(res, r, "Publicado")
         : ApiResponse.error(res, `Não publicou: ${r.motivo}`, 502);
 });
 
 export const deleteSocialPost = asyncHandler(async (req, res) => {
     const post = await carregar(req.params.id, res);
     if (!post) return;
-    if (["PUBLISHED", "PUBLISHING"].includes(post.status)) return ApiResponse.error(res, "Post publicado não é apagado daqui (apague no Instagram)", 409);
+    if (["PUBLISHED", "PUBLISHING"].includes(post.status)) return ApiResponse.error(res, "Post publicado não é apagado daqui (apague na rede social)", 409);
     await prisma.socialPost.delete({ where: { id: post.id } });
     return ApiResponse.success(res, null, "Post removido");
+});
+
+
+// ---------------------------------------------------------------- conexão da Página do Facebook
+
+const TELA_PUBLICACOES = "https://www.rota4mundos.com.br/admin/publicacoes";
+
+/** Admin clicou em "Conectar Facebook": devolve o endereço do diálogo do Facebook. */
+export const conectarFacebook = asyncHandler(async (req, res) => {
+    try {
+        return ApiResponse.success(res, { url: await fb.iniciarConexao(req.user.email) });
+    } catch (e) {
+        return ApiResponse.error(res, e.message, 400);
+    }
+});
+
+/** O Facebook devolve o navegador aqui. Conclui e volta para a tela Publicações com o resultado. */
+export const retornoFacebook = asyncHandler(async (req, res) => {
+    const { code, state, error_description: negado } = req.query;
+    const voltar = (params) => res.redirect(`${TELA_PUBLICACOES}?${new URLSearchParams(params)}`);
+    if (negado || !code) return voltar({ facebook: "erro", motivo: negado || "autorização cancelada" });
+    try {
+        const pagina = await fb.concluirConexao({ code: String(code), state: String(state || "") });
+        return voltar({ facebook: "ok", pagina: pagina.nome });
+    } catch (e) {
+        logger.error("Facebook: falha ao conectar", { erro: e.message });
+        return voltar({ facebook: "erro", motivo: e.message.slice(0, 200) });
+    }
 });

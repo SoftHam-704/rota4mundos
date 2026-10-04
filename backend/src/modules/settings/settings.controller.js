@@ -2,8 +2,13 @@ import { prisma } from "../../config/database.js";
 import { ApiResponse } from "../../utils/apiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
+// Esta rota é PÚBLICA (sem login). site_settings também guarda segredos e estado interno
+// (ig_token, fb_page_token, links vistos pelo Repórter…), então só sai o que está nesta lista.
+// Até 04/10/2026 ela devolvia a tabela inteira — o token do Instagram ficou exposto.
+const CHAVES_PUBLICAS = ["siteTitle", "siteDescription", "contactEmail", "analyticsId", "maintenanceMode"];
+
 export const getSettings = asyncHandler(async (req, res) => {
-    const settings = await prisma.siteSetting.findMany();
+    const settings = await prisma.siteSetting.findMany({ where: { key: { in: CHAVES_PUBLICAS } } });
     const settingsMap = settings.reduce((acc, s) => {
         acc[s.key] = s.type === "boolean" ? s.value === "true" : s.value;
         return acc;

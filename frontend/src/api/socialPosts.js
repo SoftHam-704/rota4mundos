@@ -9,4 +9,5 @@ export const socialPostsApi = {
     editarLegenda: (id, caption) => apiClient.put(`/social-posts/${id}`, { caption }),
     publicarAgora: (id) => apiClient.post(`/social-posts/${id}/publicar-agora`),
     delete: (id) => apiClient.delete(`/social-posts/${id}`),
+    conectarFacebook: () => apiClient.post("/social-posts/facebook/conectar"),
 };

@@ -16,6 +16,7 @@ import { gerarLegenda } from "./caption.service.js";
 import { artReportagem, artCidade, artInfografico } from "./art/render.js";
 import { CIDADES, urlCidade, infograficoCidade } from "./content/cidades.js";
 import * as ig from "./instagram.client.js";
+import * as fb from "./facebook.client.js";
 import { gerarImagem } from "../ai/model-router.js";
 
 // Fundo das artes de reportagem (Gemini/Nano Banana via roteador). A cena vem do redator da legenda.
@@ -183,6 +184,7 @@ export async function publicarProximo(id) {
             orderBy: [{ approvedAt: "asc" }],
         })).sort((a, b) => (a.kind === "REPORTAGEM" ? 0 : 1) - (b.kind === "REPORTAGEM" ? 0 : 1))[0];
     if (!post) return { publicado: false, motivo: "nenhum post aprovado na fila" };
+    if (post.platform === "FACEBOOK") return publicarNoFacebook(post);
     // O status lido pode vir da réplica (atrasada); quem decide é a reserva atômica abaixo, feita no principal.
 
     const { usado, limite } = await ig.cota();
@@ -206,10 +208,82 @@ export async function publicarProximo(id) {
             data: { status: "PUBLISHED", externalId: r.externalId, permalink: r.permalink, publishedAt: r.publishedAt },
         });
         logger.info(`Instagram: publicado ${r.permalink}`);
-        return { publicado: true, permalink: r.permalink };
+        // o mesmo post sai na Página do Facebook; falha lá nunca desfaz o Instagram
+        const espelho = await espelharNoFacebook({ ...post, status: "PUBLISHED", publishedAt: r.publishedAt })
+            .catch((e) => ({ publicado: false, motivo: e.message }));
+        return { publicado: true, permalink: r.permalink, facebook: espelho };
     } catch (e) {
         await prisma.socialPost.update({ where: { id: post.id }, data: { status: "FAILED", errorMessage: e.message } });
         logger.error("Instagram: falha ao publicar", { postId: post.id, erro: e.message });
+        return { publicado: false, motivo: e.message };
+    }
+}
+
+// ---------------------------------------------------------------- Facebook
+
+/** Endereço do conteúdo no portal, para a legenda do Facebook (lá o link é clicável no post). */
+async function urlDoPost(post) {
+    if (post.articleId) {
+        const a = await prisma.article.findUnique({ where: { id: post.articleId }, select: { slug: true } });
+        if (a?.slug) return `https://www.rota4mundos.com.br/noticias/${a.slug}`;
+    }
+    const [tipo, slug] = String(post.sourceKey || "").split(":");
+    if ((tipo === "cidade" || tipo === "infografico") && slug) return urlCidade(slug);
+    return "https://www.rota4mundos.com.br";
+}
+
+/** A legenda do Instagram aponta para "o link da bio"; no Facebook vira o link de verdade. */
+export function legendaParaFacebook(caption, url) {
+    const trocada = caption.replace(/\s*(no|pelo|via)?\s*link (da|na) bio\b/gi, ` em ${url}`);
+    return trocada.includes(url) ? trocada : `${trocada.trimEnd()}\n\n👉 ${url}`;
+}
+
+/**
+ * Cria (se ainda não existe) a versão do Facebook de um post já publicado no Instagram e publica.
+ * Só posts publicados DEPOIS da conexão da Página — nada antigo é republicado em massa.
+ */
+export async function espelharNoFacebook(postIg) {
+    if (!(await fb.conectado())) return { publicado: false, motivo: "Facebook não conectado" };
+    const conectadoEm = (await prisma.siteSetting.findUnique({ where: { key: "fb_conectado_em" } }))?.value;
+    if (conectadoEm && postIg.publishedAt && new Date(postIg.publishedAt) < new Date(conectadoEm)) {
+        return { publicado: false, motivo: "post anterior à conexão do Facebook" };
+    }
+    const sourceKey = `ig:${postIg.id}`;
+    let post = await prisma.socialPost.findFirst({ where: { platform: "FACEBOOK", sourceKey } });
+    if (post && ["PUBLISHED", "PUBLISHING"].includes(post.status)) return { publicado: false, motivo: "já espelhado" };
+    if (!post) {
+        post = await prisma.socialPost.create({
+            data: {
+                platform: "FACEBOOK", kind: postIg.kind, sourceKey, articleId: postIg.articleId,
+                caption: legendaParaFacebook(postIg.caption, await urlDoPost(postIg)),
+                imageUrl: postIg.imageUrl, status: "APPROVED", approvedAt: postIg.approvedAt || new Date(),
+                reviewNote: `Versão do Facebook do post aprovado para o Instagram${postIg.permalink ? ` (${postIg.permalink})` : ""}.`,
+            },
+        });
+    } else if (post.status === "FAILED") {
+        await prisma.socialPost.update({ where: { id: post.id }, data: { status: "APPROVED" } });
+        post = { ...post, status: "APPROVED" };
+    }
+    return publicarNoFacebook(post);
+}
+
+async function publicarNoFacebook(post) {
+    const reserva = await prisma.socialPost.updateMany({
+        where: { id: post.id, status: { in: ["APPROVED", "FAILED"] } },
+        data: { status: "PUBLISHING", attempts: { increment: 1 }, errorMessage: null },
+    });
+    if (reserva.count === 0) return { publicado: false, motivo: "o post não está aprovado (ou já foi pego por outro ciclo)" };
+    try {
+        const r = await fb.publicarFoto({ imageUrl: post.imageUrl, caption: post.caption, desde: new Date() });
+        await prisma.socialPost.update({
+            where: { id: post.id },
+            data: { status: "PUBLISHED", externalId: r.externalId, permalink: r.permalink, publishedAt: r.publishedAt },
+        });
+        logger.info(`Facebook: publicado ${r.permalink}`);
+        return { publicado: true, permalink: r.permalink };
+    } catch (e) {
+        await prisma.socialPost.update({ where: { id: post.id }, data: { status: "FAILED", errorMessage: e.message } });
+        logger.error("Facebook: falha ao publicar", { postId: post.id, erro: e.message });
         return { publicado: false, motivo: e.message };
     }
 }
@@ -224,5 +298,5 @@ export async function statusAgente() {
     try { conta = await ig.conta(); cota = await ig.cota(); }
     catch (e) { erroConta = e.message; }
 
-    return { conta, cota, erroConta, tokenRenovadoEm: renovadoEm, porStatus, horarios: ["12:00", "19:00"] };
+    return { conta, cota, erroConta, tokenRenovadoEm: renovadoEm, porStatus, horarios: ["12:00", "19:00"], facebook: await fb.status() };
 }

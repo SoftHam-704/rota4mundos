@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Instagram, CheckCircle, XCircle, Send, Edit3, Trash2, ExternalLink, RefreshCw, AlertTriangle, Sparkles, Clock } from "lucide-react";
+import { Instagram, Facebook, CheckCircle, XCircle, Send, Edit3, Trash2, ExternalLink, RefreshCw, AlertTriangle, Sparkles, Clock } from "lucide-react";
 import { socialPostsApi } from "../../api/socialPosts.js";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -66,6 +66,41 @@ function PainelConta({ status, onGerar, gerando }) {
                 {gerando ? <RefreshCw className="w-5 h-5 mr-2 animate-spin" /> : <Sparkles className="w-5 h-5 mr-2" />}
                 {gerando ? "Gerando rascunhos…" : "Gerar rascunhos agora"}
             </button>
+        </div>
+    );
+}
+
+// Página do Facebook: conectada uma vez pelo administrador (o Facebook pede login e autorização);
+// depois, todo post publicado no Instagram sai também na Página, com o link do portal na legenda.
+function PainelFacebook({ fb, onConectar, conectando }) {
+    if (!fb) return null;
+    const { appConfigurado, conectado, pagina, erro } = fb;
+    return (
+        <div className={`rounded-2xl border p-5 mb-6 flex flex-wrap items-center gap-6 ${erro ? "border-red-200 bg-red-50" : "border-slate-200 bg-white"}`}>
+            <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: "#EFF6FF" }}>
+                    <Facebook className="w-6 h-6" style={{ color: "#1877F2" }} />
+                </div>
+                <div>
+                    {conectado && pagina ? (
+                        <>
+                            <a href={pagina.link} target="_blank" rel="noreferrer" className="font-semibold text-primary-950 hover:underline">{pagina.nome}</a>
+                            <div className="text-xs text-slate-500">{pagina.seguidores != null ? `${pagina.seguidores} seguidores · ` : ""}recebe tudo o que sai no Instagram</div>
+                        </>
+                    ) : (
+                        <div className="text-sm font-semibold text-slate-700">Página do Facebook {erro ? "desconectada" : "não conectada"}</div>
+                    )}
+                </div>
+            </div>
+            {erro && <div className="text-sm text-red-700 flex-1 min-w-[240px]">{erro}</div>}
+            {!appConfigurado && (
+                <div className="text-sm text-amber-800 flex-1 min-w-[240px]">Falta configurar FB_APP_ID e FB_APP_SECRET no servidor.</div>
+            )}
+            {appConfigurado && (!conectado || erro) && (
+                <button onClick={onConectar} disabled={conectando} className="ml-auto text-sm px-4 py-2 rounded-lg text-white flex items-center gap-2 disabled:opacity-60" style={{ background: "#1877F2" }}>
+                    <Facebook className="w-4 h-4" /> {erro ? "Reconectar Facebook" : "Conectar Facebook"}
+                </button>
+            )}
         </div>
     );
 }
@@ -139,7 +174,7 @@ function CartaoPost({ post, acoes, ocupado }) {
                     )}
                     {post.permalink && (
                         <a href={post.permalink} target="_blank" rel="noreferrer" className="text-sm px-3 py-2 rounded-lg border border-slate-200 flex items-center gap-1">
-                            <ExternalLink className="w-4 h-4" /> Ver no Instagram
+                            <ExternalLink className="w-4 h-4" /> Ver no {post.platform === "FACEBOOK" ? "Facebook" : "Instagram"}
                         </a>
                     )}
                     {!["PUBLISHED", "PUBLISHING"].includes(post.status) && (
@@ -156,6 +191,16 @@ function CartaoPost({ post, acoes, ocupado }) {
 export default function AdminPublicationsPage() {
     const queryClient = useQueryClient();
     const [aba, setAba] = useState("DRAFT");
+    const [rede, setRede] = useState("INSTAGRAM");
+
+    // volta do diálogo do Facebook: ?facebook=ok&pagina=… ou ?facebook=erro&motivo=…
+    useEffect(() => {
+        const q = new URLSearchParams(window.location.search);
+        if (!q.get("facebook")) return;
+        if (q.get("facebook") === "ok") toast.success(`Facebook conectado: ${q.get("pagina") || "Página"}`);
+        else toast.error(`Facebook não conectou: ${q.get("motivo") || "erro desconhecido"}`, { duration: 9000 });
+        window.history.replaceState(null, "", window.location.pathname);
+    }, []);
 
     const { data: statusData } = useQuery({
         queryKey: ["social-status"],
@@ -165,8 +210,8 @@ export default function AdminPublicationsPage() {
     const status = statusData?.data?.data;
 
     const { data: postsData, isLoading } = useQuery({
-        queryKey: ["social-posts", aba],
-        queryFn: () => socialPostsApi.list({ platform: "INSTAGRAM", ...(aba && { status: aba }) }),
+        queryKey: ["social-posts", rede, aba],
+        queryFn: () => socialPostsApi.list({ platform: rede, ...(aba && { status: aba }) }),
         refetchInterval: status?.gerando ? 5000 : false,
     });
     const posts = postsData?.data?.data || [];
@@ -183,13 +228,18 @@ export default function AdminPublicationsPage() {
     const editar = mut(({ id, caption }) => socialPostsApi.editarLegenda(id, caption), "Legenda atualizada");
     const publicar = mut(socialPostsApi.publicarAgora, "Publicado");
     const apagar = mut(socialPostsApi.delete, "Removido");
+    const conectarFb = useMutation({
+        mutationFn: socialPostsApi.conectarFacebook,
+        onSuccess: (r) => { window.location.href = r.data.data.url; },
+        onError: (e) => toast.error(erroDe(e)),
+    });
 
     const ocupado = [aprovar, rejeitar, editar, publicar, apagar].some((m) => m.isPending);
     const acoes = {
         aprovar: (id) => aprovar.mutate(id),
         rejeitar: (id) => rejeitar.mutate(id),
         editar: (id, caption) => editar.mutate({ id, caption }),
-        publicar: (id) => window.confirm("Publicar agora no Instagram?") && publicar.mutate(id),
+        publicar: (id) => window.confirm(`Publicar agora no ${rede === "FACEBOOK" ? "Facebook" : "Instagram"}?`) && publicar.mutate(id),
         apagar: (id) => apagar.mutate(id),
     };
 
@@ -201,13 +251,23 @@ export default function AdminPublicationsPage() {
             </div>
 
             <PainelConta status={status} gerando={status?.gerando || gerar.isPending} onGerar={() => gerar.mutate()} />
+            <PainelFacebook fb={status?.facebook} conectando={conectarFb.isPending} onConectar={() => conectarFb.mutate()} />
+
+            <div className="flex gap-2 mb-3">
+                {[["INSTAGRAM", "Instagram", Instagram], ["FACEBOOK", "Facebook", Facebook]].map(([k, rotulo, Icone]) => (
+                    <button key={k} onClick={() => setRede(k)}
+                        className={`text-sm px-4 py-2 rounded-lg border flex items-center gap-2 ${rede === k ? "bg-primary-900 text-white border-primary-900" : "bg-white border-slate-200 text-slate-600"}`}>
+                        <Icone className="w-4 h-4" /> {rotulo}
+                    </button>
+                ))}
+            </div>
 
             <div className="flex gap-2 mb-6 flex-wrap">
                 {ABAS.map((a) => (
                     <button key={a.key || "todos"} onClick={() => setAba(a.key)}
                         className={`text-sm px-4 py-2 rounded-full border ${aba === a.key ? "bg-primary-900 text-white border-primary-900" : "bg-white border-slate-200 text-slate-600"}`}>
                         {a.label}
-                        {a.key && status?.porStatus?.[a.key] ? <span className="ml-2 opacity-70">{status.porStatus[a.key]}</span> : null}
+                        {rede === "INSTAGRAM" && a.key && status?.porStatus?.[a.key] ? <span className="ml-2 opacity-70">{status.porStatus[a.key]}</span> : null}
                     </button>
                 ))}
             </div>
