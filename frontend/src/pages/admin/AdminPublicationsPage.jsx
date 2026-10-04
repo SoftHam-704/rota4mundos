@@ -73,7 +73,8 @@ function PainelConta({ status, onGerar, gerando }) {
 // Página do Facebook: conectada uma vez pelo administrador (o Facebook pede login e autorização);
 // depois, todo post publicado no Instagram sai também na Página, com o link do portal na legenda.
 function PainelFacebook({ fb, onConectar, conectando }) {
-    if (!fb) return null;
+    // sem o app da Meta configurado no servidor, o Facebook fica fora da tela (deixado de lado em 04/10/2026)
+    if (!fb?.appConfigurado) return null;
     const { appConfigurado, conectado, pagina, erro } = fb;
     return (
         <div className={`rounded-2xl border p-5 mb-6 flex flex-wrap items-center gap-6 ${erro ? "border-red-200 bg-red-50" : "border-slate-200 bg-white"}`}>
@@ -257,14 +258,14 @@ export default function AdminPublicationsPage() {
             <PainelConta status={status} gerando={status?.gerando || gerar.isPending} onGerar={() => gerar.mutate()} />
             <PainelFacebook fb={status?.facebook} conectando={conectarFb.isPending} onConectar={() => conectarFb.mutate()} />
 
-            <div className="flex gap-2 mb-3">
+            {status?.facebook?.appConfigurado && <div className="flex gap-2 mb-3">
                 {[["INSTAGRAM", "Instagram", Instagram], ["FACEBOOK", "Facebook", Facebook]].map(([k, rotulo, Icone]) => (
                     <button key={k} onClick={() => setRede(k)}
                         className={`text-sm px-4 py-2 rounded-lg border flex items-center gap-2 ${rede === k ? "bg-primary-900 text-white border-primary-900" : "bg-white border-slate-200 text-slate-600"}`}>
                         <Icone className="w-4 h-4" /> {rotulo}
                     </button>
                 ))}
-            </div>
+            </div>}
 
             <div className="flex gap-2 mb-6 flex-wrap">
                 {ABAS.map((a) => (
