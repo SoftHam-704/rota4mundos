@@ -174,15 +174,25 @@ export async function gerarRascunhos() {
 }
 
 /** Publica um post aprovado. Sem id, pega o próximo da fila (reportagem primeiro, depois o mais antigo aprovado). */
-export async function publicarProximo(id) {
+/**
+ * Publica o próximo post aprovado (ou o `id` indicado).
+ * `formato`: "IMAGE" (12:00) só posts com arte; "REEL" (19:00) prefere o Reel e, sem Reel aprovado,
+ * publica o próximo post com arte. Sem formato (publicar agora), qualquer um.
+ */
+export async function publicarProximo(id, { formato } = {}) {
     await ig.renovarTokenSePreciso().catch((e) => logger.error("Instagram: falha ao renovar token", { erro: e.message }));
 
     const post = id
         ? await prisma.socialPost.findUnique({ where: { id } })
         : (await prisma.socialPost.findMany({
-            where: { platform: "INSTAGRAM", status: "APPROVED", OR: [{ scheduledFor: null }, { scheduledFor: { lte: new Date() } }] },
+            where: {
+                platform: "INSTAGRAM", status: "APPROVED", OR: [{ scheduledFor: null }, { scheduledFor: { lte: new Date() } }],
+                ...(formato === "IMAGE" && { mediaType: "IMAGE" }),
+            },
             orderBy: [{ approvedAt: "asc" }],
-        })).sort((a, b) => (a.kind === "REPORTAGEM" ? 0 : 1) - (b.kind === "REPORTAGEM" ? 0 : 1))[0];
+        })).sort((a, b) =>
+            (formato === "REEL" ? (a.mediaType === "REEL" ? 0 : 1) - (b.mediaType === "REEL" ? 0 : 1) : 0) ||
+            (a.kind === "REPORTAGEM" ? 0 : 1) - (b.kind === "REPORTAGEM" ? 0 : 1))[0];
     if (!post) return { publicado: false, motivo: "nenhum post aprovado na fila" };
     if (post.platform === "FACEBOOK") return publicarNoFacebook(post);
     // O status lido pode vir da réplica (atrasada); quem decide é a reserva atômica abaixo, feita no principal.
@@ -199,18 +209,21 @@ export async function publicarProximo(id) {
 
     const inicio = new Date();
     try {
-        const containerId = await ig.criarConteiner({ imageUrl: post.imageUrl, caption: post.caption });
+        const ehReel = post.mediaType === "REEL";
+        if (ehReel && !post.videoUrl) throw new Error("Reel sem vídeo (apagado do disco?) — gere de novo");
+        const containerId = await ig.criarConteiner({ imageUrl: post.imageUrl, videoUrl: ehReel ? post.videoUrl : null, caption: post.caption });
         await prisma.socialPost.update({ where: { id: post.id }, data: { containerId } });
-        await ig.aguardarConteiner(containerId);
+        await ig.aguardarConteiner(containerId, { video: ehReel });
         const r = await ig.publicarConteiner({ containerId, caption: post.caption, desde: inicio });
         await prisma.socialPost.update({
             where: { id: post.id },
             data: { status: "PUBLISHED", externalId: r.externalId, permalink: r.permalink, publishedAt: r.publishedAt },
         });
         logger.info(`Instagram: publicado ${r.permalink}`);
-        // o mesmo post sai na Página do Facebook; falha lá nunca desfaz o Instagram
-        const espelho = await espelharNoFacebook({ ...post, status: "PUBLISHED", publishedAt: r.publishedAt })
-            .catch((e) => ({ publicado: false, motivo: e.message }));
+        // o mesmo post sai na Página do Facebook (só os com arte); falha lá nunca desfaz o Instagram
+        const espelho = ehReel
+            ? { publicado: false, motivo: "Reel não é espelhado no Facebook" }
+            : await espelharNoFacebook({ ...post, status: "PUBLISHED", publishedAt: r.publishedAt }).catch((e) => ({ publicado: false, motivo: e.message }));
         return { publicado: true, permalink: r.permalink, facebook: espelho };
     } catch (e) {
         await prisma.socialPost.update({ where: { id: post.id }, data: { status: "FAILED", errorMessage: e.message } });

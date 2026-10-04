@@ -83,22 +83,29 @@ export async function renovarTokenSePreciso() {
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** Passo 1: cria o contêiner da imagem. A Meta baixa a imagem da URL pública. */
-export async function criarConteiner({ imageUrl, caption }) {
-    const r = await chamar("POST", `/${await userId()}/media`, { image_url: imageUrl, caption }, "criar contêiner");
+/**
+ * Passo 1: cria o contêiner. A Meta baixa a mídia da URL pública.
+ * Reel: `videoUrl` (mp4 9:16) + capa em `imageUrl`; aparece também no feed (share_to_feed).
+ */
+export async function criarConteiner({ imageUrl, videoUrl, caption }) {
+    const params = videoUrl
+        ? { media_type: "REELS", video_url: videoUrl, cover_url: imageUrl, share_to_feed: "true", caption }
+        : { image_url: imageUrl, caption };
+    const r = await chamar("POST", `/${await userId()}/media`, params, "criar contêiner");
     return r.id;
 }
 
-/** Passo 2: espera a Meta terminar de processar a imagem. */
-export async function aguardarConteiner(containerId) {
-    for (let i = 0; i < MAX_CHECAGENS_CONTEINER; i++) {
+/** Passo 2: espera a Meta terminar de processar a mídia (vídeo demora mais: até ~6 min). */
+export async function aguardarConteiner(containerId, { video = false } = {}) {
+    const maximo = video ? MAX_CHECAGENS_CONTEINER * 3 : MAX_CHECAGENS_CONTEINER;
+    for (let i = 0; i < maximo; i++) {
         const r = await chamar("GET", `/${containerId}`, { fields: "status_code,status" }, "consultar contêiner");
         if (r.status_code === "FINISHED") return;
         if (r.status_code === "ERROR") throw new Error(`contêiner com erro na Meta: ${r.status || "sem detalhe"}`);
         if (r.status_code === "EXPIRED") throw new Error("contêiner expirou na Meta (passa de 24h sem publicar)");
         await esperar(ESPERA_CONTEINER_MS);
     }
-    throw new Error("a Meta não terminou de processar a imagem em 2 minutos");
+    throw new Error(`a Meta não terminou de processar ${video ? "o vídeo em 6" : "a imagem em 2"} minutos`);
 }
 
 /**

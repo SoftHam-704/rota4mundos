@@ -31,6 +31,12 @@ export const ROTAS = {
     "instagram.revisao": { provedor: "anthropic", modelo: "claude-opus-5-5", effort: "low" },
     // Fundo ilustrativo das artes de reportagem → Gemini (Nano Banana 2); sem ele, a foto da ponte
     "instagram.imagem": { provedor: "gemini", modelo: "gemini-3.1-flash-image", aspecto: "4:5" },
+    // Os 3 fatos do Reel tirados do texto da reportagem: volume → DeepSeek (o código confere cada
+    // fato contra o texto, ver reel.service.js)
+    "reel.fatos": {
+        provedor: "deepseek", modelo: "deepseek-flash", maxTokens: 12000, // ele raciocina antes de responder; 4000 cortava em artigos longos
+        reserva: { provedor: "anthropic", modelo: "claude-haiku-4-5-20251001", maxTokens: 1200 },
+    },
 
     // ---- Agente Historiador ----
     // Pesquisa na internet com fontes citadas → Gemini com busca do Google

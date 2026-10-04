@@ -329,6 +329,9 @@ model SocialPost {
     sourceKey    String?
     caption      String           @db.Text
     imageUrl     String?
+    // Reel: o vídeo (mp4) e o formato; imageUrl continua sendo a arte/capa
+    videoUrl     String?
+    mediaType    String           @default("IMAGE") // IMAGE | REEL
     status       SocialPostStatus @default(DRAFT)
     reviewNote   String?          @db.Text // parecer do revisor automático
     errorMessage String?          @db.Text

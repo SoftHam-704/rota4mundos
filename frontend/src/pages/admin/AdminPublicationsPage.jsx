@@ -114,7 +114,10 @@ function CartaoPost({ post, acoes, ocupado }) {
 
     return (
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
-            {post.imageUrl && (
+            {post.mediaType === "REEL" && post.videoUrl ? (
+                <video src={post.videoUrl} poster={post.imageUrl || undefined} controls playsInline preload="metadata"
+                    className="w-full bg-slate-900" style={{ aspectRatio: "9 / 16" }} />
+            ) : post.imageUrl && (
                 <a href={post.imageUrl} target="_blank" rel="noreferrer" className="block bg-slate-100" style={{ aspectRatio: "4 / 5" }}>
                     <img src={post.imageUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
                 </a>
@@ -122,6 +125,7 @@ function CartaoPost({ post, acoes, ocupado }) {
             <div className="p-4 flex flex-col gap-3 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ background: st.bg, color: st.text }}>{st.label}</span>
+                    {post.mediaType === "REEL" && <span className="text-xs font-semibold px-2 py-1 rounded-full bg-purple-100 text-purple-800">Reel · 19:00</span>}
                     {post.kind && <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">{TIPO[post.kind]}</span>}
                     <span className="text-xs text-slate-400 ml-auto flex items-center gap-1"><Clock className="w-3 h-3" />{dayjs(post.createdAt).format("DD/MM HH:mm")}</span>
                 </div>
@@ -247,7 +251,7 @@ export default function AdminPublicationsPage() {
         <div>
             <div className="mb-6">
                 <h1 className="font-display text-3xl font-bold text-primary-950">Publicações</h1>
-                <p className="text-slate-500 mt-1">O agente prepara arte e legenda revisada; você aprova. Os aprovados saem no Instagram às 12:00 e às 19:00.</p>
+                <p className="text-slate-500 mt-1">O agente prepara arte e legenda revisada (e um Reel por dia); você aprova. Os posts aprovados saem às 12:00 e o Reel às 19:00.</p>
             </div>
 
             <PainelConta status={status} gerando={status?.gerando || gerar.isPending} onGerar={() => gerar.mutate()} />
