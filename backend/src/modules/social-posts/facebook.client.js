@@ -10,7 +10,9 @@
 // senha mudar, o app perder a permissão ou o administrador sair da Página) — aí basta reconectar.
 //
 // Variáveis do servidor: FB_APP_ID e FB_APP_SECRET (do app na Meta). Opcional: FB_PAGE_ID, para
-// escolher a Página quando o administrador gerencia mais de uma.
+// escolher a Página quando o administrador gerencia mais de uma; FB_CONFIG_ID, quando o app usa o
+// "Login do Facebook para Empresas" — nele as permissões vêm de uma configuração criada no painel
+// da Meta (config_id) e não da lista `scope`.
 // Permissões pedidas: pages_show_list, pages_read_engagement, pages_manage_posts.
 import crypto from "crypto";
 import { prisma } from "../../config/database.js";
@@ -65,7 +67,7 @@ export async function iniciarConexao(email) {
         client_id: process.env.FB_APP_ID,
         redirect_uri: urlRetorno(),
         state,
-        scope: PERMISSOES.join(","),
+        ...(process.env.FB_CONFIG_ID ? { config_id: process.env.FB_CONFIG_ID } : { scope: PERMISSOES.join(",") }),
         response_type: "code",
     })}`;
 }
