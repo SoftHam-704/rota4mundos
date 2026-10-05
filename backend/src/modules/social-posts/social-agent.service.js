@@ -197,7 +197,13 @@ export async function publicarProximo(id, { formato } = {}) {
     if (post.platform === "FACEBOOK") return publicarNoFacebook(post);
     // O status lido pode vir da réplica (atrasada); quem decide é a reserva atômica abaixo, feita no principal.
 
-    const { usado, limite } = await ig.cota();
+    // sem conexão (token inválido), a resposta é clara e o post fica intacto na fila — antes virava erro 500
+    let usado, limite;
+    try {
+        ({ usado, limite } = await ig.cota());
+    } catch (e) {
+        return { publicado: false, motivo: `Instagram sem conexão — o post continua aprovado na fila (${e.message})` };
+    }
     if (usado >= limite) return { publicado: false, motivo: `cota diária da Meta esgotada (${usado}/${limite})` };
 
     // Reserva atômica: só um ciclo consegue mover APPROVED → PUBLISHING
