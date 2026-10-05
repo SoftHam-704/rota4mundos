@@ -147,7 +147,10 @@ function rodar(bin, args) {
         let erro = "";
         p.stderr.on("data", (d) => { erro = (erro + d).slice(-4000); });
         p.on("error", falha);
-        p.on("close", (code) => (code === 0 ? ok() : falha(new Error(`ffmpeg saiu com código ${code}: ${erro.slice(-600)}`))));
+        p.on("close", (code) => {
+            if (process.env.REEL_DEBUG) console.log("[ffmpeg]", (erro.match(/bench:[^\n]*/g) || []).join(" | "));
+            code === 0 ? ok() : falha(new Error(`ffmpeg saiu com código ${code}: ${erro.slice(-600)}`));
+        });
     });
 }
 
@@ -186,49 +189,92 @@ export async function renderReel({ fundo, clipes = [], estilo, titulo, categoria
         ];
         for (const c of camadas) fs.writeFileSync(path.join(dir, c.arq), await png(c.arvore));
 
-        // fundo: vídeos emendados com fusão (cada um cortado em 9:16 pelo centro) ou a foto com zoom lento
-        const nFundo = comVideo ? clipes.length : 1;
-        const f = [];
-        if (comVideo) {
-            const X = 0.6; // duração de cada fusão
-            const L = (total + (nFundo - 1) * X) / nFundo; // trecho de cada vídeo
-            clipes.forEach((_, k) => f.push(`[${k}:v]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},fps=${FPS},setsar=1,trim=duration=${L.toFixed(3)},setpts=PTS-STARTPTS[v${k}]`));
-            let atual = "v0";
-            for (let k = 1; k < nFundo; k++) {
-                const saida = k === nFundo - 1 ? "b0" : `x${k}`;
-                f.push(`[${atual}][v${k}]xfade=transition=fade:duration=${X}:offset=${(k * (L - X)).toFixed(3)}[${saida}]`);
-                atual = saida;
-            }
-            if (nFundo === 1) f.push(`[v0]null[b0]`);
-        } else {
-            const frames = Math.round(total * FPS);
-            f.push(`[0:v]scale=${W * 1.2}:${H * 1.2},zoompan=z='1+0.12*on/${frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=${W}x${H}:fps=${FPS},setsar=1[b0]`);
-        }
-        // cada camada entra (fade + sobe 60px) e sai (fade)
-        camadas.forEach((c, i) => {
-            const entra = 0.55;
-            const sai = 0.45;
-            f.push(`[${i + nFundo}:v]format=rgba,fade=t=in:st=${c.ini}:d=${entra}:alpha=1${c.fim < total ? `,fade=t=out:st=${(c.fim - sai).toFixed(2)}:d=${sai}:alpha=1` : ""}[c${i}]`);
-            const y = c.sobe ? `'if(lt(t,${c.ini + entra}),60*(1-(t-${c.ini})/${entra}),0)'` : "0";
-            f.push(`[b${i}][c${i}]overlay=x=0:y=${y}:enable='between(t,${c.ini},${c.fim})'[b${i + 1}]`);
-        });
-        const n = camadas.length;
-        f.push(`[b${n}]drawbox=x=0:y=${H - 10}:w='${W}*t/${total}':h=10:color=0xF4A261@0.95:t=fill,format=yuv420p[v]`);
-
         const saida = path.join(dir, "reel.mp4");
-        const entradasFundo = comVideo
-            ? clipes.flatMap((c) => ["-stream_loop", "-1", "-i", c]) // vídeo curto repete até cobrir o trecho
-            : ["-loop", "1", "-t", String(total), "-i", path.join(dir, "fundo.jpg")];
-        const args = [
-            "-y", ...entradasFundo,
-            ...camadas.flatMap((c) => ["-loop", "1", "-t", String(total), "-i", path.join(dir, c.arq)]),
-            "-f", "lavfi", "-t", String(total), "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
-            "-filter_complex", f.join(";"),
-            "-map", "[v]", "-map", `${n + nFundo}:a`, "-t", String(total),
-            "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-profile:v", "high", "-r", String(FPS),
-            "-c:a", "aac", "-b:a", "128k", "-shortest", "-movflags", "+faststart", saida,
-        ];
-        await rodar(await caminhoFfmpeg(), args);
+        const ff = await caminhoFfmpeg();
+        if (!comVideo) {
+            // MEMÓRIA: montar tudo num grafo só (fundo + 5 camadas 1080x1920 abertas juntas) chegou a
+            // 1,7 GB e o sistema matou o ffmpeg no servidor (~1 GB). Por partes: cada trecho tem só o
+            // fundo e a sua camada; no fim os trechos são emendados sem recodificar.
+            const frames = Math.round(total * FPS);
+            const partes = [];
+            for (let k = 0; k < camadas.length; k++) {
+                const c = camadas[k];
+                const ultimo = k === camadas.length - 1;
+                const dur = (ultimo ? total : camadas[k + 1].ini) - c.ini;
+                const entra = 0.55;
+                const sai = 0.45;
+                const y = c.sobe ? `'if(lt(t,${entra}),60*(1-t/${entra}),0)'` : "0";
+                const g = [
+                    `[0:v]scale=${W * 1.2}:${H * 1.2},zoompan=z='1+0.12*(on+${Math.round(c.ini * FPS)})/${frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=${W}x${H}:fps=${FPS},setsar=1[b]`,
+                    `[1:v]format=rgba,fade=t=in:st=0:d=${entra}:alpha=1${ultimo ? "" : `,fade=t=out:st=${(dur - sai).toFixed(2)}:d=${sai}:alpha=1`}[c]`,
+                    `[b][c]overlay=x=0:y=${y}[o]`,
+                    `[o]drawbox=x=0:y=${H - 10}:w='${W}*(t+${c.ini})/${total}':h=10:color=0xF4A261@0.95:t=fill,format=yuv420p[v]`,
+                ];
+                const arq = path.join(dir, `parte${k}.mp4`);
+                await rodar(ff, [
+                    "-y", ...(process.env.REEL_DEBUG ? ["-benchmark"] : []),
+                    "-loop", "1", "-framerate", String(FPS), "-t", dur.toFixed(3), "-i", path.join(dir, "fundo.jpg"),
+                    "-loop", "1", "-framerate", String(FPS), "-t", dur.toFixed(3), "-i", path.join(dir, c.arq),
+                    "-f", "lavfi", "-t", dur.toFixed(3), "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
+                    "-threads", "2", "-filter_threads", "1", "-filter_complex_threads", "1",
+                    "-filter_complex", g.join(";"), "-map", "[v]", "-map", "2:a", "-t", dur.toFixed(3),
+                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-x264-params", "rc-lookahead=10:ref=2", "-profile:v", "high", "-r", String(FPS),
+                    "-c:a", "aac", "-b:a", "128k", "-ar", "44100", arq,
+                ]);
+                partes.push(arq);
+            }
+            const lista = path.join(dir, "partes.txt");
+            fs.writeFileSync(lista, partes.map((a) => `file '${a.split(path.sep).join("/")}'`).join("\n"));
+            await rodar(ff, ["-y", "-f", "concat", "-safe", "0", "-i", lista, "-c", "copy", "-movflags", "+faststart", saida]);
+        } else {
+            // fundo: vídeos emendados com fusão (cada um cortado em 9:16 pelo centro) ou a foto com zoom lento
+            const nFundo = comVideo ? clipes.length : 1;
+            const f = [];
+            if (comVideo) {
+                const X = 0.6; // duração de cada fusão
+                const L = (total + (nFundo - 1) * X) / nFundo; // trecho de cada vídeo
+                clipes.forEach((_, k) => f.push(`[${k}:v]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},fps=${FPS},setsar=1,trim=duration=${L.toFixed(3)},setpts=PTS-STARTPTS[v${k}]`));
+                let atual = "v0";
+                for (let k = 1; k < nFundo; k++) {
+                    const saida = k === nFundo - 1 ? "b0" : `x${k}`;
+                    f.push(`[${atual}][v${k}]xfade=transition=fade:duration=${X}:offset=${(k * (L - X)).toFixed(3)}[${saida}]`);
+                    atual = saida;
+                }
+                if (nFundo === 1) f.push(`[v0]null[b0]`);
+            } else {
+                const frames = Math.round(total * FPS);
+                f.push(`[0:v]scale=${W * 1.2}:${H * 1.2},zoompan=z='1+0.12*on/${frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=${W}x${H}:fps=${FPS},setsar=1[b0]`);
+            }
+            // cada camada entra (fade + sobe 60px) e sai (fade)
+            camadas.forEach((c, i) => {
+                const entra = 0.55;
+                const sai = 0.45;
+                f.push(`[${i + nFundo}:v]format=rgba,fade=t=in:st=${c.ini}:d=${entra}:alpha=1${c.fim < total ? `,fade=t=out:st=${(c.fim - sai).toFixed(2)}:d=${sai}:alpha=1` : ""}[c${i}]`);
+                const y = c.sobe ? `'if(lt(t,${c.ini + entra}),60*(1-(t-${c.ini})/${entra}),0)'` : "0";
+                f.push(`[b${i}][c${i}]overlay=x=0:y=${y}:enable='between(t,${c.ini},${c.fim})'[b${i + 1}]`);
+            });
+            const n = camadas.length;
+            f.push(`[b${n}]drawbox=x=0:y=${H - 10}:w='${W}*t/${total}':h=10:color=0xF4A261@0.95:t=fill,format=yuv420p[v]`);
+
+            const entradasFundo = comVideo
+                ? clipes.flatMap((c) => ["-stream_loop", "-1", "-i", c]) // vídeo curto repete até cobrir o trecho
+                : ["-loop", "1", "-framerate", String(FPS), "-t", String(total), "-i", path.join(dir, "fundo.jpg")];
+            const args = [
+                "-y", ...(process.env.REEL_DEBUG ? ["-benchmark"] : []), ...entradasFundo,
+                // camadas no mesmo ritmo do vídeo (30 qps): sem conversão de taxa, nada se acumula na memória
+                ...camadas.flatMap((c) => ["-loop", "1", "-framerate", String(FPS), "-t", String(total), "-i", path.join(dir, c.arq)]),
+                "-f", "lavfi", "-t", String(total), "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
+                // MEMÓRIA: o nó da API tem ~1 GB para tudo. Com threads automáticas e preset medium o ffmpeg
+                // chegou a 1,7 GB e foi morto pelo sistema (05/10/2026). Poucas threads + preset leve.
+                "-threads", "2", "-filter_threads", "1", "-filter_complex_threads", "1",
+                "-filter_complex", f.join(";"),
+                "-map", "[v]", "-map", `${n + nFundo}:a`, "-t", String(total),
+                "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-x264-params", "rc-lookahead=10:ref=2", "-profile:v", "high", "-r", String(FPS),
+                "-c:a", "aac", "-b:a", "128k", "-shortest", "-movflags", "+faststart", saida,
+            ];
+            await rodar(ff, args);
+
+        }
 
         // capa: o quadro de ~2,5 s do próprio Reel (abertura composta sobre o fundo)
         await rodar(await caminhoFfmpeg(), ["-y", "-ss", "2.5", "-i", saida, "-frames:v", "1", "-q:v", "3", path.join(dir, "capa.jpg")]);
