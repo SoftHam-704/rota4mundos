@@ -29,6 +29,13 @@ export function fatoConfere(fato, texto) {
     const d = String(fato.destaque || "").trim();
     if (/\d/.test(d) && !t.includes(normal(d))) return false; // número/ano do destaque está no texto
     if (/^lenda$/i.test(d) && !/(lenda|tradicao|conta se|reza|diz se)/.test(t)) return false;
+    // número de documento não é destaque: "9.685" do decreto saiu num Reel em 05/10
+    // (olha as ~4 palavras antes do número, no texto do artigo: "Decreto Municipal nº 9.685")
+    if (/\d/.test(d)) {
+        const pos = t.indexOf(normal(d));
+        const antes = t.slice(Math.max(0, pos - 40), pos);
+        if (pos > 0 && /\b(decreto|lei|processo|portaria|resolucao|oficio|edital)\b/.test(antes)) return false;
+    }
     return fato.texto && fato.texto.length >= 30 && fato.texto.length <= 130;
 }
 
@@ -37,9 +44,11 @@ Escolha os 3 fatos mais marcantes e concretos do texto abaixo (datas, números, 
 
 Regras:
 - Use SÓ fatos que estão no texto. Nada de inferência, opinião ou dado de fora.
-- "destaque": 1 a 3 palavras curtas que abrem o cartão — de preferência o ano, o número ou o valor do fato
-  exatamente como aparece no texto (ex.: "1875", "62 pessoas", "R$ 2,5 bi"). Se o fato for lenda ou
-  tradição, use "Lenda".
+- "destaque": 1 a 3 palavras curtas que abrem o cartão e IMPRESSIONAM quem passa o dedo: um ano marcante,
+  uma quantidade ou um valor do fato, exatamente como aparece no texto (ex.: "1875", "62 pessoas",
+  "R$ 2,5 bi", "18,5 mil turistas"). NUNCA número de lei, decreto, processo, portaria ou documento
+  ("Decreto nº 9.685", "Processo 1536-T") — isso não diz nada a quem vê. Sem número que impressione,
+  use 1 a 3 palavras do assunto (ex.: "Patrimônio", "Trem Solar"). Se o fato for lenda ou tradição, use "Lenda".
 - "texto": a frase do fato, em português do Brasil, de 40 a 120 caracteres, clara para quem não leu a matéria.
 - "trecho": copie, LITERALMENTE, de 6 a 25 palavras seguidas do texto que comprovam o fato.
 - Lenda é apresentada como lenda ("Conta a tradição…"), nunca como fato.
