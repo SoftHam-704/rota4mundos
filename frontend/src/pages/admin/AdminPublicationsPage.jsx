@@ -210,14 +210,14 @@ export default function AdminPublicationsPage() {
     const { data: statusData } = useQuery({
         queryKey: ["social-status"],
         queryFn: socialPostsApi.status,
-        refetchInterval: (q) => (q.state.data?.data?.data?.gerando ? 5000 : false),
+        refetchInterval: (q) => (q.state.data?.data?.data?.gerando ? 15000 : false),
     });
     const status = statusData?.data?.data;
 
     const { data: postsData, isLoading } = useQuery({
         queryKey: ["social-posts", rede, aba],
         queryFn: () => socialPostsApi.list({ platform: rede, ...(aba && { status: aba }) }),
-        refetchInterval: status?.gerando ? 5000 : false,
+        refetchInterval: status?.gerando ? 15000 : false,
     });
     const posts = postsData?.data?.data || [];
 
