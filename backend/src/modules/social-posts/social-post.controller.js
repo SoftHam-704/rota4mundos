@@ -4,6 +4,7 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import logger from "../../config/logger.js";
 import { gerarRascunhos, publicarProximo, statusAgente } from "./social-agent.service.js";
 import * as fb from "./facebook.client.js";
+import { criarReelDoDia } from "./reel/reel.service.js";
 
 const comArtigo = { article: { select: { id: true, title: true, slug: true } } };
 
@@ -27,8 +28,11 @@ let gerando = false;
 export const gerarAgora = asyncHandler(async (req, res) => {
     if (gerando) return ApiResponse.success(res, { gerando: true }, "Geração já em andamento");
     gerando = true;
+    // os rascunhos e, se ainda não houver hoje, o Reel do dia
     gerarRascunhos()
         .catch((e) => logger.error("Instagram: geração manual falhou", { erro: e.message }))
+        .then(() => criarReelDoDia())
+        .catch((e) => logger.error("Instagram: Reel manual falhou", { erro: e.message }))
         .finally(() => { gerando = false; });
     return ApiResponse.success(res, { gerando: true }, "Gerando rascunhos — eles aparecem na lista em alguns minutos", 202);
 });

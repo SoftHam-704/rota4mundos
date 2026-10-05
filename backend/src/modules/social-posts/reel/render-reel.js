@@ -109,13 +109,36 @@ async function png(arvore) {
     return new Resvg(svg, { fitTo: { mode: "width", value: W } }).render().asPng();
 }
 
+// O binário do ffmpeg-static é baixado pelo script de instalação do pacote — e o npm do servidor
+// NÃO roda scripts de instalação (allow-scripts). Por isso, se o arquivo não estiver lá, o próprio
+// Rota roda o install.js do pacote uma vez (baixa o ffmpeg do GitHub) e segue. 05/10/2026: o
+// primeiro Reel falhou com "spawn …/ffmpeg-static/ffmpeg ENOENT".
+let _ffmpeg;
 async function caminhoFfmpeg() {
     if (process.env.FFMPEG_PATH) return process.env.FFMPEG_PATH;
-    try {
-        const m = await import("ffmpeg-static");
-        if (m.default) return m.default;
-    } catch { /* sem o pacote: usa o do sistema */ }
-    return "ffmpeg";
+    return (_ffmpeg ??= (async () => {
+        try {
+            const bin = (await import("ffmpeg-static")).default;
+            if (bin && fs.existsSync(bin)) return bin;
+            if (bin) {
+                const pasta = path.dirname(bin);
+                await rodarNode(path.join(pasta, "install.js"), pasta);
+                if (fs.existsSync(bin)) {
+                    fs.chmodSync(bin, 0o755);
+                    return bin;
+                }
+            }
+        } catch { /* sem o pacote ou sem rede: tenta o do sistema */ }
+        return "ffmpeg";
+    })().catch(() => "ffmpeg"));
+}
+
+function rodarNode(script, cwd) {
+    return new Promise((ok, falha) => {
+        const p = spawn(process.execPath, [script], { cwd, stdio: "ignore" });
+        p.on("error", falha);
+        p.on("close", (code) => (code === 0 ? ok() : falha(new Error(`install.js do ffmpeg-static saiu com ${code}`))));
+    });
 }
 
 function rodar(bin, args) {
