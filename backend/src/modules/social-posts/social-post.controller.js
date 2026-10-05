@@ -5,6 +5,7 @@ import logger from "../../config/logger.js";
 import { gerarRascunhos, publicarProximo, statusAgente } from "./social-agent.service.js";
 import * as fb from "./facebook.client.js";
 import { criarReelDoDia } from "./reel/reel.service.js";
+import { registrarRodada } from "../saude/saude.service.js";
 
 const comArtigo = { article: { select: { id: true, title: true, slug: true } } };
 
@@ -31,8 +32,13 @@ export const gerarAgora = asyncHandler(async (req, res) => {
     // os rascunhos e, se ainda não houver hoje, o Reel do dia
     gerarRascunhos()
         .catch((e) => logger.error("Instagram: geração manual falhou", { erro: e.message }))
-        .then(() => criarReelDoDia())
-        .catch((e) => logger.error("Instagram: Reel manual falhou", { erro: e.message }))
+        // o Reel pelo botão fica registrado como a rodada das 07:40 (aparece no painel do Guardião)
+        .then(() => registrarRodada("instagram_reel", async () => {
+            const post = await criarReelDoDia();
+            return post
+                ? { resultado: "OK", detalhe: `rascunho de Reel ${post.id} (pelo botão do admin)` }
+                : { resultado: "NADA_A_FAZER", detalhe: "sem Reel (já existe hoje, ou nenhum artigo com 3 fatos confirmados) — pelo botão" };
+        }))
         .finally(() => { gerando = false; });
     return ApiResponse.success(res, { gerando: true }, "Gerando rascunhos — eles aparecem na lista em alguns minutos", 202);
 });
