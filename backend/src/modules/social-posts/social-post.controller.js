@@ -70,6 +70,19 @@ export const rejeitar = asyncHandler(async (req, res) => {
     return ApiResponse.success(res, null, "Rejeitado");
 });
 
+// Ponte enquanto a conta nova da Meta não sai (06/10/2026: a conta antiga foi invadida e o token
+// morreu). O Hamilton posta pelo celular e marca aqui; o post vira PUBLISHED para o agendador NUNCA
+// repostar quando o token novo voltar. Link do post é opcional e só aceito do Instagram/Facebook.
+export const publicadoAMao = asyncHandler(async (req, res) => {
+    const link = String(req.body?.permalink || "").trim();
+    const permalink = /^https:\/\/(www\.)?(instagram|facebook)\.com\//.test(link) ? link : null;
+    const ok = await mudarStatus(req.params.id, ["DRAFT", "APPROVED", "FAILED"], {
+        status: "PUBLISHED", publishedAt: new Date(), errorMessage: null, ...(permalink ? { permalink } : {}),
+    });
+    if (!ok) return ApiResponse.error(res, "Este post já foi publicado ou está publicando", 409);
+    return ApiResponse.success(res, null, "Marcado como publicado à mão");
+});
+
 export const editarLegenda = asyncHandler(async (req, res) => {
     const caption = String(req.body.caption || "").trim();
     if (!caption) return ApiResponse.error(res, "Legenda vazia", 400);

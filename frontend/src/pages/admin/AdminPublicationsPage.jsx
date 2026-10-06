@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Instagram, Facebook, CheckCircle, XCircle, Send, Edit3, Trash2, ExternalLink, RefreshCw, AlertTriangle, Sparkles, Clock } from "lucide-react";
+import { Instagram, Facebook, CheckCircle, XCircle, Send, Edit3, Trash2, ExternalLink, RefreshCw, AlertTriangle, Sparkles, Clock, Copy, Download, Smartphone } from "lucide-react";
 import { socialPostsApi } from "../../api/socialPosts.js";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -106,6 +106,38 @@ function PainelFacebook({ fb, onConectar, conectando }) {
     );
 }
 
+// ── Postar pelo celular ─────────────────────────────────────────────────────────────────────────
+// Ponte enquanto a conta nova da Meta não sai (06/10/2026): copiar a legenda, salvar a arte (no
+// celular abre o menu de compartilhar, direto para o Instagram) e marcar "já postei à mão" — sem
+// isso, quando o token voltar, o agendador repostaria o que já foi ao ar.
+async function copiarLegenda(texto) {
+    try { await navigator.clipboard.writeText(texto); toast.success("Legenda copiada"); }
+    catch { toast.error("Não consegui copiar — selecione o texto e copie à mão"); }
+}
+
+async function salvarMidia(post) {
+    const url = post.mediaType === "REEL" && post.videoUrl ? post.videoUrl : post.imageUrl;
+    if (!url) return toast.error("Este post não tem arte");
+    const ext = (url.split("?")[0].split(".").pop() || "jpg").toLowerCase();
+    const nome = `rota4mundos-${dayjs(post.createdAt).format("YYYYMMDD-HHmm")}.${ext}`;
+    try {
+        const blob = await (await fetch(url)).blob();
+        const arquivo = new File([blob], nome, { type: blob.type });
+        // no celular: menu de compartilhar (Instagram aparece lá); no computador: download comum
+        if (window.matchMedia("(pointer: coarse)").matches && navigator.canShare?.({ files: [arquivo] })) {
+            await navigator.share({ files: [arquivo] });
+            return;
+        }
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = nome;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    } catch (e) {
+        if (e?.name !== "AbortError") toast.error("Não consegui salvar a arte — abra a imagem e salve à mão");
+    }
+}
+
 function CartaoPost({ post, acoes, ocupado }) {
     const [editando, setEditando] = useState(false);
     const [legenda, setLegenda] = useState(post.caption);
@@ -154,6 +186,23 @@ function CartaoPost({ post, acoes, ocupado }) {
                     </>
                 ) : (
                     <p className="text-sm text-slate-700 whitespace-pre-line line-clamp-[12]">{post.caption}</p>
+                )}
+
+                {["DRAFT", "APPROVED", "FAILED"].includes(post.status) && !editando && (
+                    <div className="rounded-xl border border-dashed border-slate-300 p-3 flex flex-col gap-2">
+                        <span className="text-xs font-semibold text-slate-500 flex items-center gap-1"><Smartphone className="w-3.5 h-3.5" /> Postar pelo celular</span>
+                        <div className="flex flex-wrap gap-2">
+                            <button onClick={() => copiarLegenda(post.caption)} className="text-sm px-3 py-2 rounded-lg border border-slate-200 flex items-center gap-1">
+                                <Copy className="w-4 h-4" /> Copiar legenda
+                            </button>
+                            <button onClick={() => salvarMidia(post)} className="text-sm px-3 py-2 rounded-lg border border-slate-200 flex items-center gap-1">
+                                <Download className="w-4 h-4" /> {post.mediaType === "REEL" ? "Salvar vídeo" : "Salvar arte"}
+                            </button>
+                            <button disabled={ocupado} onClick={() => acoes.publicadoAMao(post.id)} className="text-sm px-3 py-2 rounded-lg bg-slate-800 text-white flex items-center gap-1 disabled:opacity-60">
+                                <CheckCircle className="w-4 h-4" /> Já postei à mão
+                            </button>
+                        </div>
+                    </div>
                 )}
 
                 <div className="flex flex-wrap gap-2 mt-auto pt-2">
@@ -233,17 +282,19 @@ export default function AdminPublicationsPage() {
     const editar = mut(({ id, caption }) => socialPostsApi.editarLegenda(id, caption), "Legenda atualizada");
     const publicar = mut(socialPostsApi.publicarAgora, "Publicado");
     const apagar = mut(socialPostsApi.delete, "Removido");
+    const aMao = mut(socialPostsApi.publicadoAMao, "Marcado como publicado à mão");
     const conectarFb = useMutation({
         mutationFn: socialPostsApi.conectarFacebook,
         onSuccess: (r) => { window.location.href = r.data.data.url; },
         onError: (e) => toast.error(erroDe(e)),
     });
 
-    const ocupado = [aprovar, rejeitar, editar, publicar, apagar].some((m) => m.isPending);
+    const ocupado = [aprovar, rejeitar, editar, publicar, apagar, aMao].some((m) => m.isPending);
     const acoes = {
         aprovar: (id) => aprovar.mutate(id),
         rejeitar: (id) => rejeitar.mutate(id),
         editar: (id, caption) => editar.mutate({ id, caption }),
+        publicadoAMao: (id) => window.confirm("Você já postou este conteúdo no Instagram pelo celular? Ele sai da fila e não será publicado de novo.") && aMao.mutate(id),
         publicar: (id) => window.confirm(`Publicar agora no ${rede === "FACEBOOK" ? "Facebook" : "Instagram"}?`) && publicar.mutate(id),
         apagar: (id) => apagar.mutate(id),
     };

@@ -6,6 +6,7 @@ export const socialPostsApi = {
     gerar: () => apiClient.post("/social-posts/gerar"),
     aprovar: (id) => apiClient.post(`/social-posts/${id}/aprovar`),
     rejeitar: (id) => apiClient.post(`/social-posts/${id}/rejeitar`),
+    publicadoAMao: (id) => apiClient.post(`/social-posts/${id}/publicado-a-mao`),
     editarLegenda: (id, caption) => apiClient.put(`/social-posts/${id}`, { caption }),
     publicarAgora: (id) => apiClient.post(`/social-posts/${id}/publicar-agora`),
     delete: (id) => apiClient.delete(`/social-posts/${id}`),

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-    listSocialPosts, statusInstagram, gerarAgora, aprovar, rejeitar, editarLegenda, publicarAgora, deleteSocialPost,
+    listSocialPosts, statusInstagram, gerarAgora, aprovar, rejeitar, editarLegenda, publicarAgora, deleteSocialPost, publicadoAMao,
     conectarFacebook, retornoFacebook,
 } from "./social-post.controller.js";
 import { authMiddleware, authorizeRoles } from "../../middlewares/authMiddleware.js";
@@ -19,6 +19,7 @@ router.post("/gerar", gerarAgora);
 router.post("/facebook/conectar", authorizeRoles("ADMIN"), conectarFacebook);
 router.post("/:id/aprovar", aprovar);
 router.post("/:id/rejeitar", rejeitar);
+router.post("/:id/publicado-a-mao", publicadoAMao);
 router.put("/:id", editarLegenda);
 router.post("/:id/publicar-agora", authorizeRoles("ADMIN"), publicarAgora);
 router.delete("/:id", deleteSocialPost);
