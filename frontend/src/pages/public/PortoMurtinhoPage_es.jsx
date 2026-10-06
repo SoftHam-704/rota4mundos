@@ -260,7 +260,8 @@ export default function PortoMurtinhoPageEs() {
                 name={{ first: "Porto", second: "Murtinho" }}
                 tagline="La última ciudad brasileña antes del cruce — donde el Río Paraguay separa dos mundos."
                 scene="ponte"
-                image="/cities/porto_murtinho.jpg"
+                image="/cities/porto_murtinho_ilustrativa.jpg"
+                imageNote="Imagen ilustrativa"
                 accentColor="#F4A261"
                 stats={[
                     { label: "Habitantes (Censo 2022)", value: 12859 },

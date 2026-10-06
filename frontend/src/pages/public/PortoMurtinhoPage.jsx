@@ -276,7 +276,8 @@ export default function PortoMurtinhoPage() {
                 name={{ first: "Porto", second: "Murtinho" }}
                 tagline="A última cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos."
                 scene="ponte"
-                image="/cities/porto_murtinho.jpg"
+                image="/cities/porto_murtinho_ilustrativa.jpg"
+                imageNote="Imagem ilustrativa"
                 accentColor="#F4A261"
                 stats={[
                     { label: "Habitantes (Censo 2022)", value: 12859 },

@@ -153,7 +153,9 @@ function Particles({ kind, accent, isMobile }) {
  *  accentColor  — override do accent da cena (opcional)
  *  stats        — [{ label, value, prefix?, suffix? }, ...]
  */
-export default function CityHero({ country, countryFlag, region, name, tagline, scene, image, accentColor, stats = [] }) {
+// imageNote (opcional): legenda discreta sobre a foto, ex. "Imagem ilustrativa" — usada enquanto a
+// cidade não tem foto oficial (Porto Murtinho, 06/10/2026: ilustração até a foto da visita do Hamilton).
+export default function CityHero({ country, countryFlag, region, name, tagline, scene, image, imageNote, accentColor, stats = [] }) {
     const cfg     = sceneAccent[scene] ?? sceneAccent.pantanal;
     const accent  = accentColor ?? cfg.accent;
     const isMobile = useMediaQuery("(max-width: 767px)");
@@ -216,6 +218,15 @@ export default function CityHero({ country, countryFlag, region, name, tagline, 
                     }}
                 />
             </motion.div>
+
+            {imageNote && (
+                <span style={{
+                    position: "absolute", right: 16, bottom: 16, zIndex: 30,
+                    fontSize: 11, letterSpacing: "0.06em", color: "rgba(255,255,255,0.72)",
+                    background: "rgba(6,27,51,0.55)", padding: "4px 10px", borderRadius: 6,
+                    fontFamily: "Inter, sans-serif", pointerEvents: "none",
+                }}>{imageNote}</span>
+            )}
 
             {/* gradientes */}
             <div style={{
