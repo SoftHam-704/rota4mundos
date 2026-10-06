@@ -180,6 +180,12 @@ export async function gerarRascunhos() {
  * publica o próximo post com arte. Sem formato (publicar agora), qualquer um.
  */
 export async function publicarProximo(id, { formato } = {}) {
+    // Trava do Hamilton (06/10/2026): a conta @rota4mundos foi invadida — nada sai para ela, nem
+    // por engano, até a conta nova existir. Os aprovados esperam na fila; o agendamento vira
+    // "nada a fazer" (não alarma o Guardião todo dia por um problema já conhecido).
+    if (process.env.INSTAGRAM_PAUSADO === "true") {
+        return { publicado: false, pausado: true, motivo: "publicação pausada: conta do Instagram em troca (INSTAGRAM_PAUSADO=true)" };
+    }
     await ig.renovarTokenSePreciso().catch((e) => logger.error("Instagram: falha ao renovar token", { erro: e.message }));
 
     const post = id

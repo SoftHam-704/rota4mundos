@@ -39,7 +39,7 @@ export function startSocialJob() {
         logger.info(`Instagram [cron ${formato}]: ${r.publicado ? `publicado ${r.permalink}` : `nada publicado — ${r.motivo}`}`);
         if (r.publicado) return { resultado: "OK", detalhe: `publicado ${r.permalink}` };
         // fila vazia não é falha: é o Hamilton ainda não ter aprovado
-        if (/nenhum post aprovado/.test(r.motivo)) return { resultado: "NADA_A_FAZER", detalhe: r.motivo };
+        if (r.pausado || /nenhum post aprovado/.test(r.motivo)) return { resultado: "NADA_A_FAZER", detalhe: r.motivo };
         return { resultado: "FALHOU", detalhe: r.motivo };
     });
     cron.schedule("0 12 * * *", publicar("IMAGE"), TZ);

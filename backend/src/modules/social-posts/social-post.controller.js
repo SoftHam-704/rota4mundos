@@ -98,7 +98,7 @@ export const publicarAgora = asyncHandler(async (req, res) => {
     const r = await publicarProximo(post.id); // só publica se estiver APPROVED (reserva atômica)
     return r.publicado
         ? ApiResponse.success(res, r, "Publicado")
-        : ApiResponse.error(res, `Não publicou: ${r.motivo}`, 502);
+        : ApiResponse.error(res, `Não publicou: ${r.motivo}`, r.pausado ? 409 : 502);
 });
 
 export const deleteSocialPost = asyncHandler(async (req, res) => {
