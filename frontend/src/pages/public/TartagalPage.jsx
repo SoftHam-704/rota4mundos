@@ -223,7 +223,7 @@ export default function TartagalPage() {
                 countryFlag="🇦🇷"
                 region="Salta - NOA"
                 name={{ first: "Tartagal", second: "" }}
-                tagline="Cinco povos originarios, floresta das Yungas e o carnaval multicultural mais vivo do norte argentino."
+                tagline="Cinco povos originários, a floresta das Yungas e o carnaval multicultural mais vivo do norte argentino."
                 scene="andes"
                 image="/cities/tartagal.jpg"
                 accentColor="#10b981"

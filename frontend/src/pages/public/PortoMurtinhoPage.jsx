@@ -274,7 +274,7 @@ export default function PortoMurtinhoPage() {
                 countryFlag="🇧🇷"
                 region="Mato Grosso do Sul"
                 name={{ first: "Porto", second: "Murtinho" }}
-                tagline="A ultima cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos."
+                tagline="A última cidade brasileira antes da travessia — onde o Rio Paraguai separa dois mundos."
                 scene="ponte"
                 image="/cities/porto_murtinho.jpg"
                 accentColor="#F4A261"

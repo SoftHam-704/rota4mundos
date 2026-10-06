@@ -216,7 +216,7 @@ export default function MejillonesPage() {
                 countryFlag="🇨🇱"
                 region="Regiao de Antofagasta"
                 name={{ first: "Mejillones", second: "" }}
-                tagline="O encerramento simbolico da travessia continental — porto artesanal, camanchaca e o por do sol mais emocionante do Pacifico."
+                tagline="O encerramento simbólico da travessia continental — porto artesanal, camanchaca e o pôr do sol mais emocionante do Pacífico."
                 scene="pacifico"
                 image="/cities/mejillones.jpg"
                 accentColor="#0891b2"

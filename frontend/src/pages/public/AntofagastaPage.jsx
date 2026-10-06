@@ -223,7 +223,7 @@ export default function AntofagastaPage() {
                 countryFlag="🇨🇱"
                 region="Regiao de Antofagasta"
                 name={{ first: "Antofagasta", second: "" }}
-                tagline="Onde o Atacama beija o Pacifico — capital do cobre, dos observatorios e da maior vista continental do oceano."
+                tagline="Onde o Atacama beija o Pacífico — capital do cobre, dos observatórios e da maior vista continental do oceano."
                 scene="pacifico"
                 image="/cities/antofagasta.jpg"
                 accentColor="#38bdf8"

@@ -270,7 +270,7 @@ export default function BonitoPage() {
                 countryFlag="🇧🇷"
                 region="Mato Grosso do Sul"
                 name={{ first: "Bonito", second: "" }}
-                tagline="Rios cristalinos de 40 metros de visibilidade — onde a lei de 1997 protege o que o turismo poderia ter destruido."
+                tagline="Rios cristalinos de 40 metros de visibilidade — onde a lei de 1997 protege o que o turismo poderia ter destruído."
                 scene="rio-cristalino"
                 image="/cities/bonito.jpg"
                 accentColor="#22d3ee"

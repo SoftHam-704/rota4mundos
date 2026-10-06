@@ -223,7 +223,7 @@ export default function MariscalEstigarribiaPage() {
                 countryFlag="🇵🇾"
                 region="Departamento Boqueron"
                 name={{ first: "Mariscal", second: "Estigarribia" }}
-                tagline="Novo polo logistico do Chaco — cruzamento estrategico entre a rota bioceanica e a Transchaco."
+                tagline="Novo polo logístico do Chaco — cruzamento estratégico entre a Rota Bioceânica e a Transchaco."
                 scene="chaco"
                 image="/cities/mariscal_estigarribia.jpg"
                 accentColor="#a78bfa"

@@ -223,7 +223,7 @@ export default function JujuyPage() {
                 countryFlag="🇦🇷"
                 region="Provincia de Jujuy"
                 name={{ first: "Jujuy", second: "" }}
-                tagline="Quebrada de Humahuaca UNESCO — 10.000 anos de historia continua nos canions andinos mais coloridos do mundo."
+                tagline="Quebrada de Humahuaca, patrimônio da UNESCO — 10.000 anos de história contínua nos cânions andinos mais coloridos do mundo."
                 scene="andes"
                 image="/cities/jujuy.jpg"
                 accentColor="#f43f5e"

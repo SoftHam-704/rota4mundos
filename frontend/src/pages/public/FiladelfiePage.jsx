@@ -223,7 +223,7 @@ export default function FiladelfiePage() {
                 countryFlag="🇵🇾"
                 region="Departamento Boqueron"
                 name={{ first: "Filadelfia", second: "" }}
-                tagline="Colonia mennonita que transformou o deserto do Chaco em polo agroindustrial."
+                tagline="Colônia menonita que transformou o deserto do Chaco em polo agroindustrial."
                 scene="chaco"
                 image="/cities/filadelfia.jpg"
                 accentColor="#84cc16"

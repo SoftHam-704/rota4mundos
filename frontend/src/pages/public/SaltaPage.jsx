@@ -223,7 +223,7 @@ export default function SaltaPage() {
                 countryFlag="🇦🇷"
                 region="Provincia de Salta"
                 name={{ first: "Salta", second: "La Linda" }}
-                tagline="A alma folclorica dos Andes argentinos — colonial, vibrante e portao para as nuvens."
+                tagline="A alma folclórica dos Andes argentinos — colonial, vibrante e portão para as nuvens."
                 scene="andes"
                 image="/cities/salta.jpg"
                 accentColor="#f97316"
