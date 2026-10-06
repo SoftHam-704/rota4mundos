@@ -8,14 +8,17 @@ const TZ = { timezone: "America/Campo_Grande" };
 
 // Agente Publicitário (Instagram). Roda só com 1 nó de API (como o Repórter): com mais nós, publicaria em dobro.
 // Cada rodada fica em agent_runs (rota de saúde do Guardião).
+/** Uma rodada de rascunhos do Publicitário — usada pelo agendador e por scripts/rodar-agora.mjs. */
+export async function rodadaRascunhos() {
+    const r = await gerarRascunhos();
+    const criados = r.reportagens + r.serie;
+    const detalhe = `${r.reportagens} de reportagem, ${r.serie} da série${r.erros.length ? `; erros: ${r.erros.join(" | ").slice(0, 500)}` : ""}`;
+    return { resultado: r.erros.length && !criados ? "FALHOU" : criados ? "OK" : "NADA_A_FAZER", detalhe };
+}
+
 export function startSocialJob() {
     // 07:30 — depois do Repórter (07:00): reportagens novas viram rascunho; a série completa a fila
-    cron.schedule("30 7 * * *", () => registrarRodada("instagram_rascunhos", async () => {
-        const r = await gerarRascunhos();
-        const criados = r.reportagens + r.serie;
-        const detalhe = `${r.reportagens} de reportagem, ${r.serie} da série${r.erros.length ? `; erros: ${r.erros.join(" | ").slice(0, 500)}` : ""}`;
-        return { resultado: r.erros.length && !criados ? "FALHOU" : criados ? "OK" : "NADA_A_FAZER", detalhe };
-    }), TZ);
+    cron.schedule("30 7 * * *", () => registrarRodada("instagram_rascunhos", rodadaRascunhos), TZ);
 
     // 07:40 — o Reel do dia (a reportagem mais forte das últimas 48 h, com 3 fatos conferidos)
     cron.schedule("40 7 * * *", () => registrarRodada("instagram_reel", async () => {
