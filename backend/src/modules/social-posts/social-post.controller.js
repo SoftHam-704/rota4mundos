@@ -61,7 +61,7 @@ export const aprovar = asyncHandler(async (req, res) => {
         { status: "APPROVED", approvedAt: new Date(), errorMessage: null, containerId: null });
     if (!ok) return ApiResponse.error(res, "Este post não pode ser aprovado agora (já aprovado, publicado ou removido)", 409);
     logger.info(`Instagram: post ${req.params.id} aprovado por ${req.user.email}`);
-    return ApiResponse.success(res, null, "Aprovado — sai no próximo horário (12:00 ou 19:00)");
+    return ApiResponse.success(res, null, "Aprovado — sai no próximo horário (09:00, 12:00 ou 19:00)");
 });
 
 export const rejeitar = asyncHandler(async (req, res) => {

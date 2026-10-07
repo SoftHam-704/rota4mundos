@@ -23,7 +23,7 @@ async function startServer() {
         // Inicia IRIS — busca diária de notícias
         startAiNewsJob();
 
-        // Agente do Instagram — rascunhos 07:30, publicação 12:00 e 19:00
+        // Agente do Instagram — rascunhos 07:30, publicação 09:00, 12:00 e 19:00
         startSocialJob();
 
         // Agente Historiador — 06:00, só com HISTORIADOR_ATIVO=true

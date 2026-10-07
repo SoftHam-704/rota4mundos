@@ -32,7 +32,7 @@ export function startSocialJob() {
         return { resultado: n ? "OK" : "NADA_A_FAZER", detalhe: `${n} vídeo(s) apagado(s)` };
     }), TZ);
 
-    // 12:00 — posts com arte; 19:00 — o Reel (sem Reel aprovado, o próximo post). Nada sai sem aprovação.
+    // 09:00 e 12:00 — posts com arte (o 09:00 entrou em 07/10/2026 para escoar a fila); 19:00 — o Reel (sem Reel aprovado, o próximo post). Nada sai sem aprovação.
     // Dois agendamentos separados: não depende do fuso do servidor para saber qual é qual.
     const publicar = (formato) => () => registrarRodada("instagram_publicacao", async () => {
         const r = await publicarProximo(null, { formato });
@@ -42,8 +42,9 @@ export function startSocialJob() {
         if (r.pausado || /nenhum post aprovado/.test(r.motivo)) return { resultado: "NADA_A_FAZER", detalhe: r.motivo };
         return { resultado: "FALHOU", detalhe: r.motivo };
     });
+    cron.schedule("0 9 * * *", publicar("IMAGE"), TZ);
     cron.schedule("0 12 * * *", publicar("IMAGE"), TZ);
     cron.schedule("0 19 * * *", publicar("REEL"), TZ);
 
-    logger.info("Instagram: agente agendado — rascunhos 07:30, Reel 07:40, publicação 12:00 (arte) e 19:00 (Reel) (America/Campo_Grande)");
+    logger.info("Instagram: agente agendado — rascunhos 07:30, Reel 07:40, publicação 09:00 e 12:00 (arte) e 19:00 (Reel) (America/Campo_Grande)");
 }

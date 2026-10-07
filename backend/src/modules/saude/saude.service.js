@@ -15,7 +15,7 @@ export const AGENTES = {
     historiador: { nome: "Historiador", horarios: ["06:00"], ativo: () => process.env.HISTORIADOR_ATIVO === "true" },
     reporter: { nome: "Repórter", horarios: ["06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"], ativo: () => true },
     instagram_rascunhos: { nome: "Publicitário — rascunhos", horarios: ["07:30"], ativo: () => true },
-    instagram_publicacao: { nome: "Publicitário — publicação", horarios: ["12:00", "19:00"], ativo: () => true },
+    instagram_publicacao: { nome: "Publicitário — publicação", horarios: ["09:00", "12:00", "19:00"], ativo: () => true },
     instagram_reel: { nome: "Publicitário — Reel do dia", horarios: ["07:40"], ativo: () => true },
     instagram_limpeza: { nome: "Publicitário — limpeza de vídeos", horarios: [], ativo: () => true },
 };

@@ -176,7 +176,7 @@ export async function gerarRascunhos() {
 /** Publica um post aprovado. Sem id, pega o próximo da fila (reportagem primeiro, depois o mais antigo aprovado). */
 /**
  * Publica o próximo post aprovado (ou o `id` indicado).
- * `formato`: "IMAGE" (12:00) só posts com arte; "REEL" (19:00) prefere o Reel e, sem Reel aprovado,
+ * `formato`: "IMAGE" (09:00 e 12:00) só posts com arte; "REEL" (19:00) prefere o Reel e, sem Reel aprovado,
  * publica o próximo post com arte. Sem formato (publicar agora), qualquer um.
  */
 export async function publicarProximo(id, { formato } = {}) {
@@ -323,5 +323,5 @@ export async function statusAgente() {
     try { conta = await ig.conta(); cota = await ig.cota(); }
     catch (e) { erroConta = e.message; }
 
-    return { conta, cota, erroConta, tokenRenovadoEm: renovadoEm, porStatus, horarios: ["12:00", "19:00"], facebook: await fb.status() };
+    return { conta, cota, erroConta, tokenRenovadoEm: renovadoEm, porStatus, horarios: ["09:00", "12:00", "19:00"], facebook: await fb.status() };
 }

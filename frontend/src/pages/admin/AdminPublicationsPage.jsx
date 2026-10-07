@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import dayjs from "dayjs";
 
 // Agente do Instagram: ele prepara arte + legenda revisada; aqui um humano aprova.
-// Nada vai ao ar sem aprovação. Os aprovados saem às 12:00 e às 19:00.
+// Nada vai ao ar sem aprovação. Os aprovados saem às 09:00, 12:00 e 19:00.
 
 const STATUS = {
     DRAFT:      { label: "Para aprovar", bg: "#FEF9C3", text: "#854D0E" },
@@ -56,7 +56,7 @@ function PainelConta({ status, onGerar, gerando }) {
             {!erroConta && (
                 <div className="flex flex-wrap gap-6 text-sm text-slate-600">
                     <div><span className="text-slate-400">Cota da Meta hoje</span><br />{cota ? `${cota.usado} de ${cota.limite}` : "—"}</div>
-                    <div><span className="text-slate-400">Publicação automática</span><br />12:00 e 19:00</div>
+                    <div><span className="text-slate-400">Publicação automática</span><br />09:00, 12:00 e 19:00</div>
                     <div><span className="text-slate-400">Token renovado em</span><br />{tokenRenovadoEm ? dayjs(tokenRenovadoEm).format("DD/MM/YYYY") : "—"}</div>
                     <div><span className="text-slate-400">Para aprovar</span><br />{porStatus.DRAFT || 0}</div>
                     <div><span className="text-slate-400">Na fila</span><br />{porStatus.APPROVED || 0}</div>
@@ -303,7 +303,7 @@ export default function AdminPublicationsPage() {
         <div>
             <div className="mb-6">
                 <h1 className="font-display text-3xl font-bold text-primary-950">Publicações</h1>
-                <p className="text-slate-500 mt-1">O agente prepara arte e legenda revisada (e um Reel por dia); você aprova. Os posts aprovados saem às 12:00 e o Reel às 19:00.</p>
+                <p className="text-slate-500 mt-1">O agente prepara arte e legenda revisada (e um Reel por dia); você aprova. Os posts aprovados saem às 09:00 e 12:00, e o Reel às 19:00.</p>
             </div>
 
             <PainelConta status={status} gerando={status?.gerando || gerar.isPending} onGerar={() => gerar.mutate()} />
