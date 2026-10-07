@@ -48,6 +48,21 @@ export function authMiddleware(req, res, next) {
 }
 
 /**
+ * Para rotas públicas que mostram mais a quem está logado: devolve o usuário do token, se houver
+ * um válido, ou null — nunca recusa a requisição.
+ */
+export function usuarioOpcional(req) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) return null;
+    try {
+        const d = jwt.verify(authHeader.split(" ")[1], env.JWT_SECRET);
+        return { id: d.id, email: d.email, role: d.role, name: d.name };
+    } catch {
+        return null;
+    }
+}
+
+/**
  * Middleware de autorização por roles
  * @param {string[]} allowedRoles - Array de roles permitidas
  */

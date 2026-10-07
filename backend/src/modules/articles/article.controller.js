@@ -2,6 +2,10 @@ import { prisma } from "../../config/database.js";
 import { ApiResponse } from "../../utils/apiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import logger from "../../config/logger.js";
+import { usuarioOpcional } from "../../middlewares/authMiddleware.js";
+
+// rascunho, agendado e arquivado só para a redação; visitante enxerga só o publicado
+const daRedacao = (req) => ["ADMIN", "EDITOR"].includes(usuarioOpcional(req)?.role);
 
 export const createArticle = asyncHandler(async (req, res) => {
     const { title, slug, excerpt, content, categoryId, tags, status, scheduledFor, lang, metaTitle, metaDesc } = req.body;
@@ -36,7 +40,8 @@ export const listArticles = asyncHandler(async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     const where = { lang };
-    if (status !== "all") where.status = status;
+    if (!daRedacao(req)) where.status = "PUBLISHED";
+    else if (status !== "all") where.status = status;
     if (search) where.OR = [{ title: { contains: search, mode: "insensitive" } }, { excerpt: { contains: search, mode: "insensitive" } }];
     // categoria por id ou por slug (ex.: ?category=historias-da-rota); excludeCategory tira uma seção da lista
     if (category) where.category = { is: { OR: [{ id: category }, { slug: category }] } };
@@ -74,7 +79,7 @@ export const getArticleBySlug = asyncHandler(async (req, res) => {
         },
     });
 
-    if (!article) return ApiResponse.error(res, "Artigo não encontrado", 404);
+    if (!article || (article.status !== "PUBLISHED" && !daRedacao(req))) return ApiResponse.error(res, "Artigo não encontrado", 404);
 
     // Incrementa contador de visualizações
     await prisma.article.update({ where: { id: article.id }, data: { viewCount: { increment: 1 } } });
