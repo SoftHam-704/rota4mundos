@@ -114,8 +114,18 @@ export async function aguardarConteiner(containerId, { video = false } = {}) {
  */
 export async function publicarConteiner({ containerId, caption, desde }) {
     try {
-        const r = await chamar("POST", `/${await userId()}/media_publish`, { creation_id: containerId }, "publicar");
-        return await detalhes(r.id);
+        // 9007/2207027 "Media ID is not available": a Meta disse FINISHED mas ainda não liberou a mídia
+        // (comum com vários posts em sequência). Não publicou nada — espera e tenta de novo.
+        for (let tentativa = 1; ; tentativa++) {
+            try {
+                const r = await chamar("POST", `/${await userId()}/media_publish`, { creation_id: containerId }, "publicar");
+                return await detalhes(r.id);
+            } catch (e) {
+                if (tentativa >= 4 || !/9007|2207027/.test(e.message)) throw e;
+                logger.warn(`Instagram: mídia ainda não liberada pela Meta, nova tentativa em ${10 * tentativa}s`);
+                await esperar(10_000 * tentativa);
+            }
+        }
     } catch (erro) {
         const existente = await procurarPublicado(caption, desde).catch(() => null);
         if (existente) {
