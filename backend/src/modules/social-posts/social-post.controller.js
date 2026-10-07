@@ -95,10 +95,18 @@ export const editarLegenda = asyncHandler(async (req, res) => {
 export const publicarAgora = asyncHandler(async (req, res) => {
     const post = await carregar(req.params.id, res);
     if (!post) return;
-    const r = await publicarProximo(post.id); // só publica se estiver APPROVED (reserva atômica)
-    return r.publicado
-        ? ApiResponse.success(res, r, "Publicado")
-        : ApiResponse.error(res, `Não publicou: ${r.motivo}`, r.pausado ? 409 : 502);
+    if (process.env.INSTAGRAM_PAUSADO === "true" && post.platform === "INSTAGRAM") {
+        return ApiResponse.error(res, "Não publicou: publicação pausada (INSTAGRAM_PAUSADO=true)", 409);
+    }
+    if (post.status !== "APPROVED") return ApiResponse.error(res, "Só sai o que está aprovado", 409);
+    // A Meta leva de segundos (arte) a minutos (Reel) — a tela não espera: responde já e publica em
+    // segundo plano. O resultado fica no próprio post (PUBLISHED com link, ou FAILED com o motivo).
+    publicarProximo(post.id)
+        .then((r) => logger.info(`Instagram [publicar agora]: ${r.publicado ? `publicado ${r.permalink}` : `não publicou — ${r.motivo}`}`))
+        .catch((e) => logger.error("Instagram: publicar agora falhou", { erro: e.message }));
+    return ApiResponse.success(res, null, post.mediaType === "REEL"
+        ? "Publicando o Reel — a Meta leva alguns minutos; a tela atualiza sozinha"
+        : "Publicando — a tela atualiza sozinha", 202);
 });
 
 export const deleteSocialPost = asyncHandler(async (req, res) => {

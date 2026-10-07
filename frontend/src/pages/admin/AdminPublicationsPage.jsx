@@ -266,7 +266,8 @@ export default function AdminPublicationsPage() {
     const { data: postsData, isLoading } = useQuery({
         queryKey: ["social-posts", rede, aba],
         queryFn: () => socialPostsApi.list({ platform: rede, ...(aba && { status: aba }) }),
-        refetchInterval: status?.gerando ? 15000 : false,
+        // enquanto algo está sendo gerado ou publicado (Reel leva minutos na Meta), a lista se atualiza sozinha
+        refetchInterval: (q) => (status?.gerando || (q.state.data?.data?.data || []).some((p) => p.status === "PUBLISHING") ? 10000 : false),
     });
     const posts = postsData?.data?.data || [];
 
@@ -280,7 +281,12 @@ export default function AdminPublicationsPage() {
     const aprovar = mut(socialPostsApi.aprovar, "Aprovado");
     const rejeitar = mut(socialPostsApi.rejeitar, "Rejeitado");
     const editar = mut(({ id, caption }) => socialPostsApi.editarLegenda(id, caption), "Legenda atualizada");
-    const publicar = mut(socialPostsApi.publicarAgora, "Publicado");
+    const publicar = useMutation({
+        mutationFn: socialPostsApi.publicarAgora,
+        // o servidor marca "Publicando" um instante depois de responder — recarrega de novo para a lista pegar
+        onSuccess: (r) => { atualizar(); setTimeout(atualizar, 5000); toast.success(r?.data?.message || "Publicando"); },
+        onError: (e) => { atualizar(); toast.error(erroDe(e)); },
+    });
     const apagar = mut(socialPostsApi.delete, "Removido");
     const aMao = mut(socialPostsApi.publicadoAMao, "Marcado como publicado à mão");
     const conectarFb = useMutation({
